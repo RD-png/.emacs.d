@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: vvselms
+# key: vvselms
+# --
+$sql = "SELECT $1 FROM ${2:table}";
+$${3:result} = $${4:database}->query($sql);
+$$3 = $$3->fetch_all(${5:type});

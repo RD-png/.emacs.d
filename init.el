@@ -12,15 +12,6 @@
 ;; Set default transparency values
 (defvar efs/frame-transparency '(100 . 100))
 
-(use-package dashboard
-  :ensure t
-  :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-startup-banner 'official)
-    (setq dashboard-items '((recents  . 5)
-                            (projects . 5)))
-    (setq dashboard-banner-logo-title ""))
-
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 
@@ -89,6 +80,15 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (setq create-lockfiles nil)
+
+(use-package dashboard
+  :ensure t
+  :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-startup-banner 'official)
+    (setq dashboard-items '((recents  . 5)
+                            (projects . 5)))
+    (setq dashboard-banner-logo-title ""))
 
 (setq inhibit-startup-message t)
 
@@ -500,11 +500,7 @@
 
 (use-package python-mode
   :ensure t
-  :hook (python-mode . lsp-deferred)
-  :custom
-  (dap-python-debugger 'debugpy)
-  :config
-  (require 'dap-python))
+  :hook (python-mode . lsp-deferred))
 
 (use-package pyvenv
   :after python-mode

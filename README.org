@@ -1,2 +1,0 @@
-* Emacs Config
-** See Emacs.org for config settings

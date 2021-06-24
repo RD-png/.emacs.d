@@ -26,21 +26,6 @@ Below we will define some default values to be used throughout the config
 
 #+end_src
 
-* Dashboard
-
-Simple main menu, with a list of recent files and projects
-
-#+begin_src emacs-lisp
-  (use-package dashboard
-    :ensure t
-    :config
-      (dashboard-setup-startup-hook)
-      (setq dashboard-startup-banner 'official)
-      (setq dashboard-items '((recents  . 5)
-                              (projects . 5)))
-      (setq dashboard-banner-logo-title ""))
-#+end_src
-
 * Startup Performance
 
 Tracks performace of config on startup, useful to see if it is taking too long for the config to load, as it could indicate that there is issues with a package etc
@@ -153,7 +138,22 @@ Keeps folders where you are using emacs clean
 
 * Basic UI Configuration
 
-General emacs ui config
+** Dashboard
+
+Simple main menu, with a list of recent files and projects
+
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+      (dashboard-setup-startup-hook)
+      (setq dashboard-startup-banner 'official)
+      (setq dashboard-items '((recents  . 5)
+                              (projects . 5)))
+      (setq dashboard-banner-logo-title ""))
+#+end_src
+
+** General emacs ui config
 
 #+begin_src emacs-lisp
 
@@ -764,11 +764,7 @@ There are a number of other language servers for Python so if you find that =pyl
 
   (use-package python-mode
     :ensure t
-    :hook (python-mode . lsp-deferred)
-    :custom
-    (dap-python-debugger 'debugpy)
-    :config
-    (require 'dap-python))
+    :hook (python-mode . lsp-deferred))
 
 #+end_src
 

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: realsnippetname
+# key: realsnippetname
+# --
+
+print_r(); die();

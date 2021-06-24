@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: vvp
+# key: vvp
+# --
+// DEBUG
+echo '<pre style="background: black; color: white;">'; print_r($1); echo '</pre>'; die();
+
