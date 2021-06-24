@@ -23,6 +23,7 @@
            gcs-done))
 
 (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+(server-start)
 
 ;; Initialize package sources
 (require 'package)
@@ -457,10 +458,6 @@
       (org-babel-tangle))))
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
-
-;; (defun efs/lsp-mode-setup ()
-;;   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-;;   (lsp-headerline-breadcrumb-mode))
 
 (use-package lsp-mode
   :straight t

@@ -43,6 +43,7 @@ Tracks performace of config on startup, useful to see if it is taking too long f
              gcs-done))
 
   (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+  (server-start)
 
 #+end_src
 
@@ -666,10 +667,6 @@ When this org file is changed and saved it will update and generate a new init.e
 Lsp-mode, kind of heavy, but is the only protocol worth using
 
 #+begin_src emacs-lisp
-
-  ;; (defun efs/lsp-mode-setup ()
-  ;;   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  ;;   (lsp-headerline-breadcrumb-mode))
 
   (use-package lsp-mode
     :straight t
