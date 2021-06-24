@@ -308,9 +308,7 @@
   (setq org-log-into-drawer t)
 
   (setq org-agenda-files
-        '("~/.emacs.d/OrgFiles/Tasks.org"
-          "~/.emacs.d/OrgFiles/Habits.org"
-          "~/.emacs.d/OrgFiles/Birthdays.org"))
+        '("~/.emacs.d/OrgFiles/Tasks.org"))
 
   (require 'org-habit)
   (add-to-list 'org-modules 'org-habit)

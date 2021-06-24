@@ -1,27 +1,30 @@
-* Inbox
+* CURRENTLY WORKING ON
+** FESP POWER BI
+*** TODO From the reportDashboardData function assign the data to the relevant graph
 
-** TODO Commit config updates
-  [2020-10-09 Fri 10:05]
-  [[file:~/Projects/Code/emacs-from-scratch/OrgFiles/Tasks.org::*Inbox][Inbox]]
+*** REVIEW Consider changing how requests are fired off, seems there is some conflicts with computed properties that will cause performance issues, may be better to directly set the store from the MultiSelect components. As would reduce the amount of data that is being passed between files.
 
-** TODO Update Journal capture template
-  [2020-10-09 Fri 10:06]
-  [[file:~/Projects/Code/emacs-from-scratch/init.el::"j" "Journal Entries"]]
+*** REVIEW Store a list of all possible fields that could be in the selects and filter via javascript, this would make far more sense than constantly sending requests to the back end. This will not work for skus as we need to break down atts for each skus to filter them, this will have to use an api call.
 
-* Active
+*** REVIEW Currently there are too many watchers and computeds which are hard to keep track of when there is so many reactive/ref properties involved.
 
-** NEXT Merge the PR                                                  :work:
-DEADLINE: <2020-10-12 Mon>
-** NEXT Reply to John's e-mail                             :note:work:email:
-:PROPERTIES:
-:Effort:   3
-:END:
-** NEXT Buy milk
-:PROPERTIES:
-:Effort:   20
-:END:
+*** DONE Store the selected parameters for products/skus/sources etc in the store
 
-** DONE Finish documentation
-CLOSED: [2020-10-09 Fri 09:30] SCHEDULED: <2020-10-10 Sat>
+* STOCK CONTROL
 
-* Backlog
+
+* UPCOMING WORKS
+** TODO Make a hub that links to all sections of the system
+
+
+* FINISHED WORKS
+** DONE Change the under performing products page to use a year long period (rolling);
+** DONE Add totals for the year for each of the platforms
+** DONE Change the column names on the csv to be more user friendly
+** DONE Add the sku identifier for the platforms
+** DONE Fix require for the ebay request file for the update platform ids script
+** DONE Final testing of update platform ids script
+** DONE Pull in the relevant identifiers for the platforms which are stored in the sku_am_eb table, these will be used to find the urls for the sku on the platforms
+** DONE Add section to import skus which shows the user the skus which have been recently added to the sku_am_eb_new
+** DONE Make github repo for fespbi
+** DONE Test all conditions of the updatePowerbi.php script, ensure that all the feilds that dont get calculated get reported to the users
