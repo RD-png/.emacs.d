@@ -491,7 +491,9 @@
 
 (use-package typescript-mode
   :straight t
-  :mode "\\.ts\\'"
+  :mode
+  ("\\.ts\\'"
+   "\\.vue\\'")
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
@@ -516,19 +518,19 @@
 
 (add-hook 'php-mode-hook #'lsp-php-install-save-hooks)
 
-(use-package vue-mode
-  :straight t
-  :mode "\\.vue\\'"
-  :hook
-  (vue-mode . lsp-deferred)
-  :config
-  (setq lsp-javascript-format-enable t)
-  (setq lsp-javascript-suggest-complete-js-docs nil)
-  (setq mmm-submode-decoration-level 0)
-  (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
-  (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
-  (jit-lock-mode nil)
-  (global-set-key (kbd "C-c C-l") 'vue-mode-reparse))
+;; (use-package vue-mode
+;;   :straight t
+;;   :mode "\\.vue\\'"
+;;   :hook
+;;   (vue-mode . lsp-deferred)
+;;   :config
+;;   (setq lsp-javascript-format-enable t)
+;;   (setq lsp-javascript-suggest-complete-js-docs nil)
+;;   (setq mmm-submode-decoration-level 0)
+;;   (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
+;;   (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
+;;   (jit-lock-mode nil)
+;;   (global-set-key (kbd "C-c C-l") 'vue-mode-reparse))
 
 (use-package company
   :ensure t
@@ -775,15 +777,6 @@
               (backward-kill-word 1))))
       (kill-region cp (- cp 1)))         ;; word is non-english word
     ))
-
-;; (defun custom-avy-copy-line ()
-;;   (interactive)
-;;   (let ((oldpos (point)))
-;;     (avy-goto-line)
-;;     (back-to-indentation)
-;;     (kill-line)
-;;     (yank)
-;;     (goto-char oldpos)))
 
 (defun custom-avy-copy-line ()
   (interactive)
