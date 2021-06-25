@@ -609,14 +609,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(rainbow-delimiters-depth-1-face ((t (:foreground "#fef691"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "#8f87de"))))
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
  '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
  '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "#f66d9b"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "#38c172"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#fef691"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#e3342f"))))
  '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "#e3342f")))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
 
 (use-package popup-kill-ring
   :ensure t
