@@ -23,6 +23,7 @@
            gcs-done))
 
 (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+(server-force-delete)
 (server-start)
 
 ;; Initialize package sources
@@ -158,29 +159,27 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-   (set-foreground-color "#c5c8c6")
-   (set-background-color "#1d1f21")
+;; (use-package ample-theme
+;;   :init
+;;   (load-theme 'ample t))
 
-   (custom-set-faces
-'(company-preview
-  ((t (:background "#1d1f21" :foreground "white" :underline t))))
-'(company-preview-common
-  ((t (:inherit company-preview))))
-'(company-tooltip
-  ((t (:background "#1d1f21" :foreground "white"))))
-'(company-tooltip-selection
-  ((t (:background "steelblue" :foreground "white"))))
-;; '(lsp-ui-doc-background
-;;   ((t (:background-color "#1d1f21" :foreground "white"))))
-;; '(company-tooltip-common
-;;   ((((type x)) (:background "#1d1f21" :foreground "white" :weight bold))
-;;    (t (:background "#1d1f21" :foreground "white"))))
-;; '(company-tooltip-common-selection
-;;   ((((type x)) (:background "#1d1f21" :foreground "white" :weight bold))
-;;    (t (:background "#1d1f21" :foreground "white"))))
-)
+(load-theme 'desert t)
 
-   ;;(popup-summary-face "#1d1f21")
+(set-foreground-color "#c5c8c6")
+(set-background-color "#1d1f21")
+
+
+;; For the default theme
+(custom-set-faces
+ '(company-preview
+   ((t (:background "#1d1f21" :foreground "white" :underline t))))
+ '(company-preview-common
+   ((t (:inherit company-preview))))
+ '(company-tooltip
+   ((t (:background "#1d1f21" :foreground "white"))))
+ '(company-tooltip-selection
+   ((t (:background "steelblue" :foreground "white"))))
+ )
 
 (use-package all-the-icons)
 
@@ -597,6 +596,27 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (show-paren-mode 1)
+
+;; Colors for # colors
+(use-package rainbow-mode
+  :defer t
+  :hook (org-mode
+         emacs-lisp-mode
+         typescript-mode))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#fef691"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#8f87de"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#f66d9b"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#38c172"))))
+ '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "#e3342f")))))
 
 (use-package popup-kill-ring
   :ensure t
