@@ -159,10 +159,6 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-;; (use-package ample-theme
-;;   :init
-;;   (load-theme 'ample t))
-
 (load-theme 'desert t)
 
 (set-foreground-color "#c5c8c6")
@@ -810,6 +806,6 @@
 (global-set-key (kbd "C-c l") #'custom-avy-copy-line)
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-a") #'smart-beginning-of-line)
-(global-set-key (kbd "M-[") #'shift-right)
-(global-set-key (kbd "M-]") #'shift-left)
+(global-set-key (kbd "M-]") #'shift-right)
+(global-set-key (kbd "M-[") #'shift-left)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
