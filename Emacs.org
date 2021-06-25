@@ -1242,8 +1242,25 @@ Dial the GC threshold back down so that garbage collection happens more frequent
         (kill-region cp (- cp 1)))         ;; word is non-english word
       ))
 
+  ;; (defun custom-avy-copy-line ()
+  ;;   (interactive)
+  ;;   (let ((oldpos (point)))
+  ;;     (avy-goto-line)
+  ;;     (back-to-indentation)
+  ;;     (kill-line)
+  ;;     (yank)
+  ;;     (goto-char oldpos)))
+
+  (defun custom-avy-copy-line ()
+    (interactive)
+    (save-excursion
+      (avy-goto-line)
+      (back-to-indentation)
+      (kill-line)
+      (yank)))
+
   (global-set-key (kbd "C-c w") #'copy-word)
-  (global-set-key (kbd "C-c l") #'avy-kill-ring-save-whole-line)
+  (global-set-key (kbd "C-c l") #'custom-avy-copy-line)
   (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
   (global-set-key (kbd "C-a") #'smart-beginning-of-line)
   (global-set-key (kbd "M-[") #'shift-right)
