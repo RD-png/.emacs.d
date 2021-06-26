@@ -82,7 +82,7 @@
  '(font-lock-preprocessor-face ((t (:foreground "MediumPurple3"))))
  '(font-lock-regexp-grouping-backslash ((t (:bold t :weight bold))))
  '(font-lock-regexp-grouping-construct ((t (:bold t :weight bold))))
- '(font-lock-string-face ((t (:foreground "#ffa0a0"))))
+ '(font-lock-string-face ((t (:foreground "green3"))))
  '(font-lock-type-face ((t (:bold t :foreground "PaleGreen3" :weight bold))))
  '(font-lock-variable-name-face ((t (:foreground "ghost white"))))
  '(font-lock-warning-face ((t (:bold t :foreground "goldenrod" :weight bold))))
