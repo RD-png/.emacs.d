@@ -76,13 +76,12 @@
  '(font-lock-constant-face ((t (:foreground "#ffa0a0"))))
  '(font-lock-doc-face ((t (:foreground "IndianRed3"))))
  '(font-lock-function-name-face ((t (:bold t :foreground "PaleGreen3" :weight bold))))
- '(php-function-call ((t (:foreground "LightSkyBlue2"))))
  '(font-lock-keyword-face ((t (:foreground "khaki"))))
  '(font-lock-negation-char-face ((t (nil))))
  '(font-lock-preprocessor-face ((t (:foreground "MediumPurple3"))))
  '(font-lock-regexp-grouping-backslash ((t (:bold t :weight bold))))
  '(font-lock-regexp-grouping-construct ((t (:bold t :weight bold))))
- '(font-lock-string-face ((t (:foreground "green3"))))
+ '(font-lock-string-face ((t (:foreground "#ffa0a0"))))
  '(font-lock-type-face ((t (:bold t :foreground "PaleGreen3" :weight bold))))
  '(font-lock-variable-name-face ((t (:foreground "ghost white"))))
  '(font-lock-warning-face ((t (:bold t :foreground "goldenrod" :weight bold))))
@@ -164,7 +163,10 @@
  '(widget-documentation ((t (:foreground "lime green"))))
  '(widget-field ((t (:background "dim gray"))))
  '(widget-inactive ((t (:foreground "grey70"))))
- '(widget-single-line-field ((t (:background "dim gray")))) )
+ '(widget-single-line-field ((t (:background "dim gray"))))
+ ;; PHP SPECIFIC
+ '(php-function-call ((t (:foreground "LightSkyBlue2"))))
+ )
 
 ;;;###autoload
 (when load-file-name
