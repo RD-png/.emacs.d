@@ -47,7 +47,7 @@
  '(font-lock-comment-face ((t (:foreground "grey35"))))
  '(font-lock-constant-face ((t (:foreground "#CA729E"))))
  '(font-lock-doc-face ((t (:foreground "IndianRed3"))))
- '(font-lock-function-name-face ((t (:bold t :foreground "#a4c460" :weight bold))))
+ '(font-lock-function-name-face ((t (:foreground "#a4c460"))))
  '(font-lock-keyword-face ((t (:foreground "khaki"))))
  '(font-lock-negation-char-face ((t (nil))))
  '(font-lock-preprocessor-face ((t (:foreground "MediumPurple3"))))
