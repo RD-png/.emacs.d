@@ -66,8 +66,6 @@ Track performance on startup of emacs, this is useful to see if any packages are
 
 #+end_src
 
-*
-
 * Packages System
 ** Melpa / Org / Elpa
 
