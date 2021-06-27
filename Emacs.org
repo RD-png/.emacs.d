@@ -92,6 +92,7 @@ Define packages archives where we will all the packages we need for the configur
   (setq use-package-always-ensure t)
 
 #+end_src
+
 ** Straight
 
 Alternative package management method
@@ -122,6 +123,7 @@ Alternative package management method
   (require 'straight-x)
 
 #+end_src
+
 ** Auto Update Packages
 Checks all packages for updates when emacs is launched
 
@@ -137,6 +139,7 @@ Checks all packages for updates when emacs is launched
     (auto-package-update-at-time "09:00"))
 
 #+end_src
+
 * UI
 ** Dashboard
 
@@ -209,6 +212,7 @@ Set the default font and the font to use for different types of text within the 
   (set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height efs/default-variable-font-size :weight 'regular)
 
 #+end_src
+
 ** Theme
 
 Set theme colour theme for emacs
@@ -251,6 +255,7 @@ Useful modeline to replace the default one
     :custom ((doom-modeline-height 15)))
 
 #+end_src
+
 ** Completion And Menus
 
 #+begin_src emacs-lisp
@@ -293,6 +298,7 @@ Useful modeline to replace the default one
     (ivy-prescient-mode 1))
 
 #+end_src
+
 ** Which Key
 
 Suggests next key presses when you type a command in, helpful for remembering the 1000s of emacs bindings
@@ -316,6 +322,7 @@ Remove the annoying minor modes
 (use-package diminish)
 
 #+end_src
+
 ** Helpful Help Commands
 
 Provides actually useful information for emacs related commands
@@ -334,6 +341,7 @@ Provides actually useful information for emacs related commands
     ([remap describe-key] . helpful-key))
 
 #+end_src
+
 * Workflow
 ** Switch Panes
 
@@ -354,6 +362,7 @@ Change how emacs handles changing between buffers in the current perspective
     ([remap other-window] . switch-window))
 
 #+end_src
+
 ** Follow Splits
 
 Cursor will jump to a new split
@@ -375,6 +384,7 @@ Cursor will jump to a new split
   (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 
 #+end_src
+
 ** Workspaces
 
 Think of these like sessions, where you can open multiple buffers and group them into a perspective
@@ -393,6 +403,7 @@ Think of these like sessions, where you can open multiple buffers and group them
       (persp-mode)))
 
 #+end_src
+
 ** Avy
 
 Allows quick movement in files
@@ -406,6 +417,7 @@ Allows quick movement in files
     ("M-m" . avy-goto-word-0))
 
 #+end_src
+
 ** Clean Folders
 
 Keep folders clean when you are using emacs
@@ -420,6 +432,7 @@ Keep folders clean when you are using emacs
   (setq create-lockfiles nil)
 
 #+end_src
+
 * Org Mode
 ** Better Font Faces
 
@@ -646,6 +659,7 @@ We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]
     (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
 #+end_src
+
 * Terminals
 ** Eshell
 
@@ -679,7 +693,7 @@ Elisp Shell, really clean to use
     (eshell-git-prompt-use-theme 'powerline))
 
 #+end_src
-*
+
 * Development
 ** Company Mode
 
@@ -719,6 +733,7 @@ Basically handles anything popup related
     :hook (company-mode . company-box-mode))
 
 #+end_src
+
 ** Lsp
 *** Lsp-mode
 
@@ -740,6 +755,7 @@ Lsp-mode, languge protocol that has support for a lot of languages
     (lsp-enable-which-key-integration t))
 
 #+end_src
+
 *** Lsp-ui
 
 UI enhancements for emacs, disabled most of these as 99% of the time they offer me very little help if I know the language I am coding in
@@ -763,6 +779,7 @@ UI enhancements for emacs, disabled most of these as 99% of the time they offer 
     (setq lsp-completion-show-detail nil))
 
 #+end_src
+
 *** Lsp-ivy
 
 Intergrates with ivy to make it easier to search things by name in code
@@ -794,6 +811,7 @@ Support for php completions and error checking via lsp language server
   (add-hook 'php-mode-hook #'lsp-php-install-save-hooks)
 
 #+end_src
+
 *** TypeScript
 
 Currently using this for both .vue and .ts files, also provies completion and error checking via lsp server
@@ -810,6 +828,7 @@ Currently using this for both .vue and .ts files, also provies completion and er
     (setq typescript-indent-level 2))
 
 #+end_src
+
 *** Python
 
 Check python server is install, install if it is not
@@ -829,6 +848,7 @@ Again use lsp server for python for completions and error checking
     :hook (python-mode . lsp-deferred))
 
 #+end_src
+
 *** Vue
 
 Currently not using vue mode as it is fairly slow, but will save my configuration for it here if it sees any updates might give it another try
@@ -1137,6 +1157,7 @@ General settings for coding
   (setq-default indent-tabs-mode nil)
 
 #+end_src
+
 * Runtime
 
 Run garbage collection more often but in less time
@@ -1146,6 +1167,7 @@ Run garbage collection more often but in less time
 (setq gc-cons-threshold (* 2 1000 1000))
 
 #+end_src
+
 * Rebinds
 
  Custom functions for keybinds and just general functionality I wanted
