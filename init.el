@@ -136,7 +136,7 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-(load-theme 'desert t)
+(load-theme 'desert2 t)
 
 (set-foreground-color "#c5c8c6")
 (set-background-color "#1d1f21")
@@ -144,22 +144,15 @@
 
 ;; For the default theme
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-preview ((t (:background "#1d1f21" :foreground "white" :underline t))))
- '(company-preview-common ((t (:inherit company-preview))))
- '(company-tooltip ((t (:background "#1d1f21" :foreground "white"))))
- '(company-tooltip-selection ((t (:background "steelblue" :foreground "white"))))
- '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "#fef691"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
- '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
+ '(company-preview
+   ((t (:background "#1d1f21" :foreground "white" :underline t))))
+ '(company-preview-common
+   ((t (:inherit company-preview))))
+ '(company-tooltip
+   ((t (:background "#1d1f21" :foreground "white"))))
+ '(company-tooltip-selection
+   ((t (:background "steelblue" :foreground "white"))))
+ )
 
 (use-package all-the-icons)
 
@@ -628,7 +621,19 @@
          emacs-lisp-mode
          typescript-mode))
 
-
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#fef691"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
+ '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
 
 (use-package yasnippet
   :hook (prog-mode . yas-minor-mode)
@@ -793,10 +798,3 @@
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("d3410e81d6e5627c70898b7ab6dfc1f2d455ad60ac3d85c1051e28662c75d0b6" "7e8da9dd6c8d0e04e58d5803451c6486cb7b9df88f9f696a8dfc66863e20efb7" "81780c2d38d85183dd448c799c0a166ca8cd9188d9c7b33bafc2a28f03dc3354" "2200526bf90acda0f17c433371efdb9ce07d3b6901baaaacd50f61a77bc392ea" "06b7088178f2892d623cf48d50cf65be024d53027db5d94703138a7d1c0b7d6b" "74c2fa4cca0558a48ce14a3406a8bd0d79a6a710a0f37ad1e1d14a529bcdfe7f" "fe21a5b06aaeace88c22d43bffa3ca1d48c3f2288160a8462d3a0209cc520c54" "03f0942ff73577f4ccf6030197e7ce7995b0d6b041c1c753e3eba90a8021daac" "59cc25a819e1c12969348a0b61d003a18bd3da03ddb60c22efb7929c58e94568" default)))

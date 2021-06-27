@@ -221,7 +221,7 @@ Set theme colour theme for emacs
 
   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-  (load-theme 'desert t)
+  (load-theme 'desert2 t)
 
   (set-foreground-color "#c5c8c6")
   (set-background-color "#1d1f21")
