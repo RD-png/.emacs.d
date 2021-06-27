@@ -1,17 +1,33 @@
-#+title: Emacs Config
+#+title: Emacs
 #+author: Ryan Denby
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
-* Intro
+* Config Init
+** Auto-tangle Configuration File
 
-My configuration file for emacs, this file when saved will automatically generate the init.el file
+When the org file is updated and saved it will update and generate a new init.el file for emacs to read
 
-Below we will define some default values to be used throughout the config
+#+begin_src emacs-lisp
+
+  ;; Function to automatically generate a .el for our .org configuration files
+  (defun efs/org-babel-tangle-config ()
+    (when (string-equal (file-name-directory (buffer-file-name))
+                        (expand-file-name user-emacs-directory))
+      (let ((org-confirm-babel-evaluate nil))
+        (org-babel-tangle))))
+
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
+#+end_src
+
+** Configuration Defaults
+
+Define some default values to be used throughout the configuration
+Run (byte-recompile-directory package-user-dir nil 'force) on fresh install
 
 #+begin_src emacs-lisp
 
   ;; native comp
-  ;; run (byte-recompile-directory package-user-dir nil 'force) on fresh install
   (setq comp-deferred-compilation t)
   (setq comp-speed 3)
   (setq comp-async-report-warnings-errors nil)
@@ -26,31 +42,36 @@ Below we will define some default values to be used throughout the config
 
 #+end_src
 
-* Startup Performance
+** Statrup Performance
 
-Tracks performace of config on startup, useful to see if it is taking too long for the config to load, as it could indicate that there is issues with a package etc
+Track performance on startup of emacs, this is useful to see if any packages are causing performance issues
 
 #+begin_src emacs-lisp
 
-  ;; The default is 800 kilobytes.  Measured in bytes.
   (setq gc-cons-threshold (* 50 1000 1000))
 
   (defun efs/display-startup-time ()
     (message "Emacs loaded in %s with %d garbage collections."
              (format "%.2f seconds"
                      (float-time
-                       (time-subtract after-init-time before-init-time)))
+                      (time-subtract after-init-time before-init-time)))
              gcs-done))
 
+  ;; Call the function
   (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+
+  ;; Kill server if there is one and start fresh
   (server-force-delete)
   (server-start)
 
 #+end_src
 
-* Package System Setup
+*
 
-Define package archives where we will pull up the packages for the config
+* Packages System
+** Melpa / Org / Elpa
+
+Define packages archives where we will all the packages we need for the configuration
 
 #+begin_src emacs-lisp
 
@@ -65,7 +86,7 @@ Define package archives where we will pull up the packages for the config
   (unless package-archive-contents
     (package-refresh-contents))
 
-    ;; Initialize use-package on non-Linux platforms (incase I ever use emacs on windows)
+  ;; Initialize use-package on non-Linux platforms (incase I ever use emacs on windows)
   (unless (package-installed-p 'use-package)
     (package-install 'use-package))
 
@@ -73,22 +94,22 @@ Define package archives where we will pull up the packages for the config
   (setq use-package-always-ensure t)
 
 #+end_src
+** Straight
 
-** Straight.el
-
-Package management
+Alternative package management method
 
 #+begin_src emacs-lisp
+
   ;; Bootstrap straight.el
   (defvar bootstrap-version)
   (let ((bootstrap-file
-        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
         (bootstrap-version 5))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
           (url-retrieve-synchronously
-          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-          'silent 'inhibit-cookies)
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
         (goto-char (point-max))
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
@@ -103,12 +124,8 @@ Package management
   (require 'straight-x)
 
 #+end_src
-
-** Automatic Package Updates
-
-Checks all packages for updates when emacs is started, good to keep packages up to date to avoid any issues with speed etc
-
-Force emacs to check for updates while open by using M-x auto-package-update-now
+** Auto Update Packages
+Checks all packages for updates when emacs is launched
 
 #+begin_src emacs-lisp
 
@@ -122,40 +139,27 @@ Force emacs to check for updates while open by using M-x auto-package-update-now
     (auto-package-update-at-time "09:00"))
 
 #+end_src
-
-* Keep Folders Clean
-
-Keeps folders where you are using emacs clean
-
-#+begin_src emacs-lisp
-
-  (use-package no-littering)
-
-  ;; Disable auto saving and backups and symbolic link files
-  (setq make-backup-files nil)
-  (setq auto-save-default nil)
-  (setq create-lockfiles nil)
-
-#+end_src
-
-* Basic UI Configuration
-
+* UI
 ** Dashboard
 
 Simple main menu, with a list of recent files and projects
 
 #+begin_src emacs-lisp
+
   (use-package dashboard
     :ensure t
     :config
-      (dashboard-setup-startup-hook)
-      (setq dashboard-startup-banner 'official)
-      (setq dashboard-items '((recents  . 5)
-                              (projects . 5)))
-      (setq dashboard-banner-logo-title ""))
+    (dashboard-setup-startup-hook)
+    (setq dashboard-startup-banner 'official)
+    (setq dashboard-items '((recents  . 5)
+                            (projects . 5)))
+    (setq dashboard-banner-logo-title ""))
+
 #+end_src
 
-** General emacs ui config
+** Emacs Specific UI
+
+Customize the built in emacs user interface features, mainly turn them off
 
 #+begin_src emacs-lisp
 
@@ -164,7 +168,7 @@ Simple main menu, with a list of recent files and projects
   (scroll-bar-mode -1)        ; Disable visible scrollbar
   (tool-bar-mode -1)          ; Disable the toolbar
   (tooltip-mode -1)           ; Disable tooltips
-  (set-fringe-mode 10)        
+  (set-fringe-mode 10)
 
   (menu-bar-mode -1)            ; Disable the menu bar
 
@@ -192,47 +196,9 @@ Simple main menu, with a list of recent files and projects
 
 #+end_src
 
-** Switch Panes
+** Font
 
-Logical way of navigating between panes in a buffer, no spamming C-x o to cycle panes
-
-#+begin_src emacs-lisp
-  (use-package switch-window
-    :ensure t
-    :config
-      (setq switch-window-input-style 'minibuffer)
-      (setq switch-window-increase 4)
-      (setq switch-window-threshold 2)
-      (setq switch-window-shortcut-style 'qwerty)
-      (setq switch-window-qwerty-shortcuts
-          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
-    :bind
-      ([remap other-window] . switch-window))
-#+end_src
-
-** Follow splits
-
-Cursor will jump to a pane when you make a new split
-
-#+begin_src emacs-lisp
-  (defun split-and-follow-horizontally ()
-    (interactive)
-    (split-window-below)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
-
-  (defun split-and-follow-vertically ()
-    (interactive)
-    (split-window-right)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
-#+end_src
-
-** Font Configuration
-
-Config for font, using font variable defined at start of config
+Set the default font and the font to use for different types of text within the application
 
 #+begin_src emacs-lisp
 
@@ -245,11 +211,9 @@ Config for font, using font variable defined at start of config
   (set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height efs/default-variable-font-size :weight 'regular)
 
 #+end_src
+** Theme
 
-* UI Configuration
-** Color Theme
-
-Theme, stuff
+Set theme colour theme for emacs
 
 #+begin_src emacs-lisp
 
@@ -275,31 +239,65 @@ Theme, stuff
 
 #+end_src
 
-** Better Modeline
+* UI Extensions
+** Modeline
 
-Modeline from doom as it is simple and clean, as the default one is pretty useless 
+Useful modeline to replace the default one
+
+#+begin_src emacs-lisp
+
+  (use-package all-the-icons)
+
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
+
+#+end_src
+** Completion And Menus
 
 #+begin_src emacs-lisp
 
-(use-package all-the-icons)
+  (use-package ivy
+    :diminish
+    :bind (("C-s" . swiper)
+           :map ivy-minibuffer-map
+           ("TAB" . ivy-alt-done)
+           :map ivy-switch-buffer-map
+           ("C-l" . ivy-done)
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-k" . ivy-previous-line)
+           ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
 
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
+  (use-package ivy-rich
+    :after ivy
+    :init
+    (ivy-rich-mode 1))
+
+  (use-package counsel
+    :bind (("C-M-j" . 'counsel-switch-buffer)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history))
+    :custom
+    (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+    :config
+    (counsel-mode 1))
+
+  (use-package ivy-prescient
+    :after counsel
+    :custom
+    (ivy-prescient-enable-filtering nil)
+    :config
+    ;; Uncomment the following line to have sorting remembered across sessions!
+                                          ;(prescient-persist-mode 1)
+    (ivy-prescient-mode 1))
 
 #+end_src
-
-** Diminish
-
-Hide minor modes
-
-#+begin_src emacs-lisp
-  (use-package diminish)
-#+end_src
-
 ** Which Key
 
-Will provide possible key combinations for you after a prefix, useful if you can remember the full command
+Suggests next key presses when you type a command in, helpful for remembering the 1000s of emacs bindings
 
 #+begin_src emacs-lisp
 
@@ -311,85 +309,18 @@ Will provide possible key combinations for you after a prefix, useful if you can
 
 #+end_src
 
-** Ivy and Counsel and Avy
+** Diminish
 
-Ivy is a completion framework, can be used for everything, mainly use it for files etc
-
-[[https://github.com/Yevgnen/ivy-rich][ivy-rich]] adds extra columns to a few of the Counsel commands to provide more information about each item.
+Remove the annoying minor modes
 
 #+begin_src emacs-lisp
 
-    (use-package ivy
-      :diminish
-      :bind (("C-s" . swiper)
-             :map ivy-minibuffer-map
-             ("TAB" . ivy-alt-done)
-             :map ivy-switch-buffer-map
-             ("C-l" . ivy-done)
-             ("C-d" . ivy-switch-buffer-kill)
-             :map ivy-reverse-i-search-map
-             ("C-k" . ivy-previous-line)
-             ("C-d" . ivy-reverse-i-search-kill))
-      :config
-      (ivy-mode 1))
-
-    (use-package ivy-rich
-      :after ivy
-      :init
-      (ivy-rich-mode 1))
-
-    (use-package counsel
-      :bind (("C-M-j" . 'counsel-switch-buffer)
-             :map minibuffer-local-map
-             ("C-r" . 'counsel-minibuffer-history))
-      :custom
-      (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-      :config
-      (counsel-mode 1))
-
-  (use-package avy
-    :ensure t
-    :bind
-      ("M-s" . avy-goto-char)
-      ("M-m" . avy-goto-word-0))
+(use-package diminish)
 
 #+end_src
-
-*** Improved Candidate Sorting with prescient.el
-
-prescient.el provides some helpful behavior for sorting Ivy completion candidates based on how recently or frequently you select them.  This can be especially helpful when using =M-x= to run commands that you don't have bound to a key but still need to access occasionally.
-
-#+begin_src emacs-lisp
-
-  (use-package ivy-prescient
-    :after counsel
-    :custom
-    (ivy-prescient-enable-filtering nil)
-    :config
-    ;; Uncomment the following line to have sorting remembered across sessions!
-    ;(prescient-persist-mode 1)
-    (ivy-prescient-mode 1))
-
-#+end_src
-
-** Workspaces
-
-#+begin_src emacs-lisp
-
-  (use-package perspective
-    :demand t
-    :bind (("C-x x s" . persp-switch)
-           ("C-x x n" . persp-next)
-           ("C-x k" . persp-kill-buffer*))
-    :custom
-    (persp-initial-frame-name "Main")
-    :config
-    (unless (equal persp-mode t)
-      (persp-mode)))
-
-#+end_src
-
 ** Helpful Help Commands
+
+Provides actually useful information for emacs related commands
 
 #+begin_src emacs-lisp
 
@@ -405,7 +336,92 @@ prescient.el provides some helpful behavior for sorting Ivy completion candidate
     ([remap describe-key] . helpful-key))
 
 #+end_src
+* Workflow
+** Switch Panes
 
+Change how emacs handles changing between buffers in the current perspective
+
+#+begin_src emacs-lisp
+
+  (use-package switch-window
+    :ensure t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    (setq switch-window-shortcut-style 'qwerty)
+    (setq switch-window-qwerty-shortcuts
+          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
+    :bind
+    ([remap other-window] . switch-window))
+
+#+end_src
+** Follow Splits
+
+Cursor will jump to a new split
+
+#+begin_src emacs-lisp
+
+  (defun split-and-follow-horizontally ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+  (global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+
+  (defun split-and-follow-vertically ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
+  (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+
+#+end_src
+** Workspaces
+
+Think of these like sessions, where you can open multiple buffers and group them into a perspective
+
+#+begin_src emacs-lisp
+
+  (use-package perspective
+    :demand t
+    :bind (("C-x x s" . persp-switch)
+           ("C-x x n" . persp-next)
+           ("C-x k" . persp-kill-buffer*))
+    :custom
+    (persp-initial-frame-name "Main")
+    :config
+    (unless (equal persp-mode t)
+      (persp-mode)))
+
+#+end_src
+** Avy
+
+Allows quick movement in files
+
+#+begin_src emacs-lisp
+
+  (use-package avy
+    :ensure t
+    :bind
+    ("M-s" . avy-goto-char)
+    ("M-m" . avy-goto-word-0))
+
+#+end_src
+** Clean Folders
+
+Keep folders clean when you are using emacs
+
+#+begin_src emacs-lisp
+
+  (use-package no-littering)
+
+  ;; Disable auto saving and backups and symbolic link files
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq create-lockfiles nil)
+
+#+end_src
 * Org Mode
 ** Better Font Faces
 
@@ -632,403 +648,10 @@ We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]
     (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
 #+end_src
-
-** Auto-tangle Configuration Files
-
-When this org file is changed and saved it will update and generate a new init.el file
-
-#+begin_src emacs-lisp
-
-  ;; Automatically tangle our Emacs.org config file when we save it
-  (defun efs/org-babel-tangle-config ()
-    (when (string-equal (file-name-directory (buffer-file-name))
-                        (expand-file-name user-emacs-directory))
-      ;; Dynamic scoping to the rescue
-      (let ((org-confirm-babel-evaluate nil))
-        (org-babel-tangle))))
-
-  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
-
-#+end_src
-
-* Development
-
-** Languages
-*** IDE Features with lsp-mode
-**** lsp-mode
-
-Lsp-mode, kind of heavy, but is the only protocol worth using
-
-#+begin_src emacs-lisp
-
-  (use-package lsp-mode
-    :straight t
-    :commands lsp
-    :hook (lsp)
-    :init (setq lsp-inhibit-message t
-                lsp-eldoc-render-all nil
-                lsp-highlight-symbol-at-point nil)
-    :config
-    (setq lsp-enable-snippet t)
-    (setq lsp-headerline-breadcrumb-segments nil)
-    (setq lsp-headerline-breadcrumb-enable nil)
-    (lsp-enable-which-key-integration t))
-
-
-#+end_src
-
-**** lsp-ui
-
-[[https://emacs-lsp.github.io/lsp-ui/][lsp-ui]] is a set of UI enhancements built on top of =lsp-mode= which make Emacs feel even more like an IDE.  Check out the screenshots on the =lsp-ui= homepage (linked at the beginning of this paragraph) to see examples of what it can do.
-
-#+begin_src emacs-lisp
-
-  (use-package lsp-ui
-    :straight t
-    :hook (lsp-mode . lsp-ui-mode)
-    :config
-    (setq lsp-ui-sideline-ignore-duplicate t)
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-      (setq lsp-ui-doc-enable nil)
-      (setq lsp-eldoc-enable-hover nil)
-      (setq lsp-modeline-diagnostics-enable nil)
-      (setq lsp-ui-doc-show-with-cursor nil)
-      (setq lsp-signature-auto-activate nil)
-      (setq lsp-ui-doc-show-with-mouse nil)
-      (setq lsp-headerline-breadcrumb-enable nil)
-      (setq lsp-ui-sideline-show-code-actions nil)
-      (setq lsp-completion-show-detail nil))
-
-
-#+end_src
-
-**** lsp-ivy
-
-[[https://github.com/emacs-lsp/lsp-ivy][lsp-ivy]] integrates Ivy with =lsp-mode= to make it easy to search for things by name in your code.  When you run these commands, a prompt will appear in the minibuffer allowing you to type part of the name of a symbol in your code.  Results will be populated in the minibuffer so that you can find what you're looking for and jump to that location in the code upon selecting the result.
-
-Try these commands with =M-x=:
-
-- =lsp-ivy-workspace-symbol= - Search for a symbol name in the current project workspace
-- =lsp-ivy-global-workspace-symbol= - Search for a symbol name in all active project workspaces
-
-#+begin_src emacs-lisp
-
-   (use-package lsp-ivy
-     :after lsp)
-
-#+end_src
-
-*** TypeScript
-
-#+begin_src emacs-lisp
-
-      (use-package typescript-mode
-        :straight t
-        :mode
-        ("\\.ts\\'"
-         "\\.vue\\'")
-        :hook (typescript-mode . lsp-deferred)
-        :config
-        (setq typescript-indent-level 2))
-
-#+end_src
-
-*Important note!*  For =lsp-mode= to work with TypeScript (and JavaScript) you will need to install a language server on your machine.  If you have Node.js installed, the easiest way to do that is by running the following command:
-
-#+begin_src shell :tangle no
-
-npm install -g typescript-language-server typescript
-
-#+end_src
-
-This will install the [[https://github.com/theia-ide/typescript-language-server][typescript-language-server]] and the TypeScript compiler package.
-
-*** Python
-
-Check the python server is installed, install if not
-
-#+begin_src sh :tangle no
-
-pip install --user "python-language-server[all]"
-
-#+end_src
-
-There are a number of other language servers for Python so if you find that =pyls= doesn't work for you, consult the =lsp-mode= [[https://emacs-lsp.github.io/lsp-mode/page/languages/][language configuration documentation]] to try the others!
-
-#+begin_src emacs-lisp
-
-  (use-package python-mode
-    :ensure t
-    :hook (python-mode . lsp-deferred))
-
-#+end_src
-
-You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =pyvenv-activate= command should configure Emacs to cause =lsp-mode= and =dap-mode= to use the virtual environment when they are loaded, just select the path to your virtual environment before loading your project.
-
-#+begin_src emacs-lisp
-
-  (use-package pyvenv
-    :after python-mode
-    :config
-    (pyvenv-mode 1))
-
-#+end_src
-
-*** Php
-#+begin_src emacs-lisp
-
-  (use-package php-mode
-    :straight t
-    :mode "\\.php\\'"
-    :hook (php-mode . lsp-deferred))
-
-  (defun lsp-php-install-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
-
-  (add-hook 'php-mode-hook #'lsp-php-install-save-hooks)
-
-#+end_src
-
-*** Vue
-
-For any vue related files
-
-#+begin_src emacs-lisp
-
-  ;; (use-package vue-mode
-  ;;   :straight t
-  ;;   :mode "\\.vue\\'"
-  ;;   :hook
-  ;;   (vue-mode . lsp-deferred)
-  ;;   :config
-  ;;   (setq lsp-javascript-format-enable t)
-  ;;   (setq lsp-javascript-suggest-complete-js-docs nil)
-  ;;   (setq mmm-submode-decoration-level 0)
-  ;;   (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
-  ;;   (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
-  ;;   (jit-lock-mode nil)
-  ;;   (global-set-key (kbd "C-c C-l") 'vue-mode-reparse))
-
-#+end_src
-
-** Company Mode
-
-Basically where everything popup related will appear
-
-#+begin_src emacs-lisp
-  (use-package company
-    :ensure t
-    :hook (lsp-mode . company-mode)
-    :bind (:map company-active-map
-                ("<tab>" . company-complete-selection))
-    :config
-    (progn
-      (setq company-idle-delay 0.0
-            company-minimum-prefix-length 1)     
-      (define-key company-active-map [tab] nil)
-      (define-key company-active-map (kbd "TAB") nil)
-      (advice-add 'company-tng--supress-post-completion :override #'ignore)
-      (global-company-mode 1))
-
-    (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-
-    (defun company-mode/backend-with-yas (backend)
-    (if
-        (or (not company-mode/enable-yas)
-            (and (listp backend) (member 'company-yasnippet backend))
-            )
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
-
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
-
-    (use-package company-box
-      :hook (company-mode . company-box-mode))
-
-#+end_src
-
-** Projectile
-
-Project management plugin, dont really use it that much
-
-#+begin_src emacs-lisp
-
-  (use-package projectile
-    :diminish projectile-mode
-    :config (projectile-mode)
-    :custom ((projectile-completion-system 'ivy))
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
-    :init
-    ;; NOTE: Set this to the folder where you keep your Git repos!
-    (when (file-directory-p "~/Documents/Projects")
-      (setq projectile-project-search-path '("~/Documents/Projects")))
-    (setq projectile-switch-project-action #'projectile-dired))
-
-  (use-package counsel-projectile
-    :after projectile
-    :config (counsel-projectile-mode))
-
-#+end_src
-
-** Magit
-
-Best thing that emacs has to offer
-
-#+begin_src emacs-lisp
-
-  (use-package magit
-    :commands magit-status
-    :custom
-    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
-  ;; NOTE: Make sure to configure a GitHub token before using this package!
-  ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-  ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
-  (use-package forge
-    :after magit)
-
-#+end_src
-
-** Commenting
-
-Comments stuff
-
-#+begin_src emacs-lisp
-
-  (use-package evil-nerd-commenter
-    :bind ("C-;" . evilnc-comment-or-uncomment-lines))
-
-#+end_src
-
-** Rainbow Delimiters
-
-Added colour to brackets / delimiters etc
-
-#+begin_src emacs-lisp
-
-  (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
-
-  (show-paren-mode 1)
-
-  ;; Colors for # colors
-  (use-package rainbow-mode
-    :defer t
-    :hook (org-mode
-           emacs-lisp-mode
-           typescript-mode))
-
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
-   '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
-   '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
-   '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
-   '(rainbow-delimiters-depth-5-face ((t (:foreground "#fef691"))))
-   '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
-   '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
-   '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
-#+end_src
-
-** General Development
-*** Popup Kill Ring
-
-Viewable ring for all text recently killed
-
-#+begin_src emacs-lisp
-  (use-package popup-kill-ring
-    :ensure t
-    :bind ("M-y" . popup-kill-ring))
-#+end_src
-
-*** Yasnippet
-
-Snippets for coding etc
-
-#+begin_src emacs-lisp
-
-  (use-package yasnippet
-    :hook (prog-mode . yas-minor-mode)
-    :config
-    (yas-reload-all))
-
-#+end_src
-
-*** General Editing Config
-
-#+begin_src emacs-lisp
-
-  (setq-default tab-width 2)
-  (setq-default indent-tabs-mode nil)
-
-#+end_src
-
-*** Flycheck
-
-Syntax checking
-
-#+begin_src emacs-lisp
-  (use-package flycheck
-    :defer t
-    :hook(lsp-mode . flycheck-mode))
-#+end_src
-
-*** Smart Parens
-
-Smart ending for parens
-
-#+begin_src emacs-lisp
-  (use-package smartparens
-    :hook (prog-mode . smartparens-mode))
-#+end_src
-
-*** Hightlight Matching Braces
-
-#+begin_src emacs-lisp
-
-  (use-package paren
-    :config
-    (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
-    (show-paren-mode 1))
-
-#+end_src
-
-*** Clean Whitespace
-
-#+begin_src emacs-lisp
-
-   (use-package ws-butler
-     :hook ((text-mode . ws-butler-mode)
-            (prog-mode . ws-butler-mode)))
-
-#+end_src
-
 * Terminals
-** vterm
-
-Terminal emulator that can be run inside emacs
-
-#+begin_src emacs-lisp
-
-  (use-package vterm
-    :commands vterm
-    :config
-    (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
-    ;;(setq vterm-shell "zsh")                       ;; Set this to customize the shell to launch
-    (setq vterm-max-scrollback 10000))
-
-#+end_src
-
 ** Eshell
 
-Shell written in elisp
+Elisp Shell, really clean to use
 
 #+begin_src emacs-lisp
 
@@ -1057,15 +680,400 @@ Shell written in elisp
 
     (eshell-git-prompt-use-theme 'powerline))
 
+#+end_src
+*
+* Development
+** Company Mode
+
+Basically handles anything popup related
+
+#+begin_src emacs-lisp
+
+  (use-package company
+    :ensure t
+    :hook (lsp-mode . company-mode)
+    :bind (:map company-active-map
+                ("<tab>" . company-complete-selection))
+    :config
+    (progn
+      (setq company-idle-delay 0.0
+            company-minimum-prefix-length 1)
+      (define-key company-active-map [tab] nil)
+      (define-key company-active-map (kbd "TAB") nil)
+      (advice-add 'company-tng--supress-post-completion :override #'ignore)
+      (global-company-mode 1))
+
+    (defvar company-mode/enable-yas t
+      "Enable yasnippet for all backends.")
+
+    (defun company-mode/backend-with-yas (backend)
+      (if
+          (or (not company-mode/enable-yas)
+              (and (listp backend) (member 'company-yasnippet backend))
+              )
+          backend
+        (append (if (consp backend) backend (list backend))
+                '(:with company-yasnippet))))
+
+    (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
+
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
+
+#+end_src
+** Lsp
+*** Lsp-mode
+
+Lsp-mode, languge protocol that has support for a lot of languages
+
+#+begin_src emacs-lisp
+
+  (use-package lsp-mode
+    :straight t
+    :commands lsp
+    :hook (lsp)
+    :init (setq lsp-inhibit-message t
+                lsp-eldoc-render-all nil
+                lsp-highlight-symbol-at-point nil)
+    :config
+    (setq lsp-enable-snippet t)
+    (setq lsp-headerline-breadcrumb-segments nil)
+    (setq lsp-headerline-breadcrumb-enable nil)
+    (lsp-enable-which-key-integration t))
+
+#+end_src
+*** Lsp-ui
+
+UI enhancements for emacs, disabled most of these as 99% of the time they offer me very little help if I know the language I am coding in
+
+#+begin_src emacs-lisp
+
+  (use-package lsp-ui
+    :straight t
+    :hook (lsp-mode . lsp-ui-mode)
+    :config
+    (setq lsp-ui-sideline-ignore-duplicate t)
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+    (setq lsp-ui-doc-enable nil)
+    (setq lsp-eldoc-enable-hover nil)
+    (setq lsp-modeline-diagnostics-enable nil)
+    (setq lsp-ui-doc-show-with-cursor nil)
+    (setq lsp-signature-auto-activate nil)
+    (setq lsp-ui-doc-show-with-mouse nil)
+    (setq lsp-headerline-breadcrumb-enable nil)
+    (setq lsp-ui-sideline-show-code-actions nil)
+    (setq lsp-completion-show-detail nil))
+
+#+end_src
+*** Lsp-ivy
+
+Intergrates with ivy to make it easier to search things by name in code
+
+#+begin_src emacs-lisp
+
+  (use-package lsp-ivy
+    :after lsp)
 
 #+end_src
 
-* File Management
+** Languages
+*** PHP
+
+Support for php completions and error checking via lsp language server
+
+#+begin_src emacs-lisp
+
+  (use-package php-mode
+    :straight t
+    :mode "\\.php\\'"
+    :hook (php-mode . lsp-deferred))
+
+  ;; Format current php buffer on save
+  (defun lsp-php-install-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
+  (add-hook 'php-mode-hook #'lsp-php-install-save-hooks)
+
+#+end_src
+*** TypeScript
+
+Currently using this for both .vue and .ts files, also provies completion and error checking via lsp server
+
+#+begin_src emacs-lisp
+
+  (use-package typescript-mode
+    :straight t
+    :mode
+    ("\\.ts\\'"
+     "\\.vue\\'")
+    :hook (typescript-mode . lsp-deferred)
+    :config
+    (setq typescript-indent-level 2))
+
+#+end_src
+*** Python
+
+Check python server is install, install if it is not
+
+#+begin_src sh :tangle no
+
+pip install --user "python-language-server[all]"
+
+#+end_src
+
+Again use lsp server for python for completions and error checking
+
+#+begin_src emacs-lisp
+
+  (use-package python-mode
+    :ensure t
+    :hook (python-mode . lsp-deferred))
+
+#+end_src
+*** Vue
+
+Currently not using vue mode as it is fairly slow, but will save my configuration for it here if it sees any updates might give it another try
+
+#+begin_src emacs-lisp
+
+  ;; (use-package vue-mode
+  ;;   :straight t
+  ;;   :mode "\\.vue\\'"
+  ;;   :hook
+  ;;   (vue-mode . lsp-deferred)
+  ;;   :config
+  ;;   (setq lsp-javascript-format-enable t)
+  ;;   (setq lsp-javascript-suggest-complete-js-docs nil)
+  ;;   (setq mmm-submode-decoration-level 0)
+  ;;   (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
+  ;;   (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
+  ;;   (jit-lock-mode nil)
+  ;;   (global-set-key (kbd "C-c C-l") 'vue-mode-reparse))
+
+#+end_src
+
+** Projectile
+
+Project management packages, not really using it that much, could remove it in the future
+
+#+begin_src emacs-lisp
+
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    ;; NOTE: Set this to the folder where you keep your Git repos!
+    (when (file-directory-p "~/Documents/Projects")
+      (setq projectile-project-search-path '("~/Documents/Projects")))
+    (setq projectile-switch-project-action #'projectile-dired))
+
+  (use-package counsel-projectile
+    :after projectile
+    :config (counsel-projectile-mode))
+
+#+end_src
+
+** Magit
+
+Best package emacs has
+
+#+begin_src emacs-lisp
+
+  (use-package magit
+    :commands magit-status
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+  ;; NOTE: Make sure to configure a GitHub token before using this package!
+  ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+  ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+  (use-package forge
+    :after magit)
+
+#+end_src
+
+** Commenting
+
+Comments stuff out based on the mode
+
+#+begin_src emacs-lisp
+
+  (use-package evil-nerd-commenter
+    :bind ("C-;" . evilnc-comment-or-uncomment-lines))
+
+#+end_src
+
+** Rainbow Delimiters
+
+Add colours to brackets and delimiters
+
+#+begin_src emacs-lisp
+
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  (show-paren-mode 1)
+
+  ;; Colors for # colors
+  (use-package rainbow-mode
+    :defer t
+    :hook (org-mode
+           emacs-lisp-mode
+           typescript-mode))
+
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
+   '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
+   '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
+   '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
+   '(rainbow-delimiters-depth-5-face ((t (:foreground "#fef691"))))
+   '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
+   '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
+   '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
+
+#+end_src
+
+** Yasnippet
+
+Templates for repeated code
+
+#+begin_src emacs-lisp
+
+  (use-package yasnippet
+    :hook (prog-mode . yas-minor-mode)
+    :config
+    (yas-reload-all))
+
+#+end_src
+
+** Kill Ring
+
+Browsable ring of recently killed text
+
+#+begin_src emacs-lisp
+
+  (use-package popup-kill-ring
+    :ensure t
+    :bind ("M-y" . popup-kill-ring))
+
+#+end_src
+
+** Flycheck
+
+Syntax checking
+
+#+begin_src emacs-lisp
+
+  (use-package flycheck
+    :defer t
+    :hook(lsp-mode . flycheck-mode))
+
+#+end_src
+
+** Smart Parens
+
+Smart match pairs for parens
+
+#+begin_src emacs-lisp
+
+  (use-package smartparens
+    :hook (prog-mode . smartparens-mode))
+
+#+end_src
+
+** Highlught Matching Braces
+
+Highlight braces when hovering
+
+#+begin_src emacs-lisp
+
+  (use-package paren
+    :config
+    (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
+    (show-paren-mode 1))
+
+#+end_src
+
+** Clean Whitespace
+
+Remove white space from current buffer on save
+
+#+begin_src emacs-lisp
+
+  (use-package hungry-delete
+    :ensure t
+    :config
+    (global-hungry-delete-mode))
+
+#+end_src
+
 ** Dired
 
-File browser for emacs
+Emacs file browser
 
-*** Key Bindings
+*** Configuration
+#+begin_src emacs-lisp
+
+  (use-package dired
+    :ensure nil
+    :commands (dired dired-jump)
+    :bind (("C-x C-j" . dired-jump))
+    :custom ((dired-listing-switches "-agho --group-directories-first"))
+    )
+
+  (use-package dired-rainbow
+    :defer 2
+    :config
+    (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
+    (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
+    (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
+    (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
+    (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
+    (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
+    (dired-rainbow-define media "#de751f" ("mp3" "mp4" "mkv" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
+    (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
+    (dired-rainbow-define log "#c17d11" ("log"))
+    (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
+    (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
+    (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
+    (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
+    (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+    (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
+    (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
+    (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
+    (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
+    (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
+    (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
+
+  (use-package dired-single
+    :commands (dired dired-jump))
+
+  (use-package all-the-icons-dired
+    :hook (dired-mode . all-the-icons-dired-mode))
+
+  (use-package dired-open
+    :commands (dired dired-jump)
+    :config
+    ;; Doesn't work as expected!
+    ;;(add-to-list 'dired-open-functions #'dired-open-xdg t)
+    (setq dired-open-extensions '(("png" . "feh")
+                                  ("mkv" . "mpv"))))
+
+  (use-package dired-hide-dotfiles
+    :hook (dired-mode . dired-hide-dotfiles-mode))
+
+#+end_src
+
+Below is some bindings for dired
+
 **** Navigation
 
 *Emacs*
@@ -1121,72 +1129,28 @@ File browser for emacs
 - =S= - Create a symbolic link to this file
 - =L= - Load an Emacs Lisp file into Emacs
 
-*** Configuration
+** General Editing Settings
+
+General settings for coding
 
 #+begin_src emacs-lisp
 
-  (use-package dired
-    :ensure nil
-    :commands (dired dired-jump)
-    :bind (("C-x C-j" . dired-jump))
-    :custom ((dired-listing-switches "-agho --group-directories-first"))
-    )
-
-  (use-package dired-rainbow
-      :defer 2
-      :config
-      (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
-      (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
-      (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
-      (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
-      (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
-      (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
-      (dired-rainbow-define media "#de751f" ("mp3" "mp4" "mkv" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
-      (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
-      (dired-rainbow-define log "#c17d11" ("log"))
-      (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
-      (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
-      (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
-      (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
-      (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
-      (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
-      (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
-      (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
-      (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
-      (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
-      (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
-
-  (use-package dired-single
-    :commands (dired dired-jump))
-
-  (use-package all-the-icons-dired
-    :hook (dired-mode . all-the-icons-dired-mode))
-
-  (use-package dired-open
-    :commands (dired dired-jump)
-    :config
-    ;; Doesn't work as expected!
-    ;;(add-to-list 'dired-open-functions #'dired-open-xdg t)
-    (setq dired-open-extensions '(("png" . "feh")
-                                  ("mkv" . "mpv"))))
-
-  (use-package dired-hide-dotfiles
-    :hook (dired-mode . dired-hide-dotfiles-mode))
+  (setq-default tab-width 2)
+  (setq-default indent-tabs-mode nil)
 
 #+end_src
+* Runtime
 
-* Runtime Performance
-
-Dial the GC threshold back down so that garbage collection happens more frequently but in less time.
+Run garbage collection more often but in less time
 
 #+begin_src emacs-lisp
 
-  ;; Make gc pauses faster by decreasing the threshold.
-  (setq gc-cons-threshold (* 2 1000 1000))
+(setq gc-cons-threshold (* 2 1000 1000))
 
 #+end_src
+* Rebinds
 
-* Rebinds And Custom Commands
+ Custom functions for keybinds and just general functionality I wanted
 
 #+begin_src emacs-lisp
 
