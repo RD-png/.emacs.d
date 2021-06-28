@@ -1,0 +1,3 @@
+We need to remember any selected fields before other selects filter them out
+
+
