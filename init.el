@@ -656,11 +656,6 @@
   (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
   (show-paren-mode 1))
 
-(use-package hungry-delete
-  :ensure t
-  :config
-  (global-hungry-delete-mode))
-
 (use-package dired
   :ensure nil
   :commands (dired dired-jump)

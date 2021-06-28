@@ -1020,19 +1020,6 @@ Highlight braces when hovering
 
 #+end_src
 
-** Clean Whitespace
-
-Remove white space from current buffer on save
-
-#+begin_src emacs-lisp
-
-  (use-package hungry-delete
-    :ensure t
-    :config
-    (global-hungry-delete-mode))
-
-#+end_src
-
 ** Dired
 
 Emacs file browser
