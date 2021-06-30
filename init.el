@@ -1,11 +1,11 @@
 ;; Function to automatically generate a .el for our .org configuration files
-(defun efs/org-babel-tangle-config ()
+(defun org-babel-tangle-config ()
   (when (string-equal (file-name-directory (buffer-file-name))
                       (expand-file-name user-emacs-directory))
     (let ((org-confirm-babel-evaluate nil))
       (org-babel-tangle))))
 
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 ;; native comp
 (setq comp-deferred-compilation t)
@@ -14,11 +14,11 @@
 (setq warning-minimum-level :error)
 
 ;; Set default font size values
-(defvar efs/default-font-size 150)
-(defvar efs/default-variable-font-size 150)
+(defvar default-font-size 150)
+(defvar default-variable-font-size 150)
 
 ;; Set default transparency values
-(defvar efs/frame-transparency '(100 . 100))
+(defvar frame-transparency '(100 . 100))
 
 ;; Default to utf-8
 (setq default-buffer-file-coding-system 'utf-8)
@@ -35,7 +35,7 @@
 
 (setq gc-cons-threshold (* 50 1000 1000))
 
-(defun efs/display-startup-time ()
+(defun display-startup-time ()
   (message "Emacs loaded in %s with %d garbage collections."
            (format "%.2f seconds"
                    (float-time
@@ -43,7 +43,7 @@
            gcs-done))
 
 ;; Call the function
-(add-hook 'emacs-startup-hook #'efs/display-startup-time)
+(add-hook 'emacs-startup-hook #'display-startup-time)
 
 ;; Kill server if there is one and start fresh
 (require 'server nil t)
@@ -128,8 +128,8 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Set frame transparency
-(set-frame-parameter (selected-frame) 'alpha efs/frame-transparency)
-(add-to-list 'default-frame-alist `(alpha . ,efs/frame-transparency))
+(set-frame-parameter (selected-frame) 'alpha frame-transparency)
+(add-to-list 'default-frame-alist `(alpha . ,frame-transparency))
 (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -144,13 +144,13 @@
 (setq scroll-conservatively 100
       scroll-preserve-screen-position t)
 
-(set-face-attribute 'default nil :font "Source Code Pro" :height efs/default-font-size)
+(set-face-attribute 'default nil :font "Source Code Pro" :height default-font-size)
 
 ;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Source Code Pro" :height efs/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "Source Code Pro" :height default-font-size)
 
 ;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height efs/default-variable-font-size :weight 'regular)
+(set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height default-variable-font-size :weight 'regular)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
@@ -290,7 +290,7 @@
 (setq auto-save-default nil)
 (setq create-lockfiles nil)
 
-(defun efs/org-font-setup ()
+(defun org-font-setup ()
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
@@ -320,7 +320,7 @@
   (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
   (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
 
-(defun efs/org-mode-setup ()
+(defun org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1))
@@ -328,7 +328,7 @@
 (use-package org
   :pin org
   :commands (org-capture org-agenda)
-  :hook (org-mode . efs/org-mode-setup)
+  :hook (org-mode . org-mode-setup)
   :config
   (setq org-ellipsis " ▾")
 
@@ -445,20 +445,20 @@
   (define-key global-map (kbd "C-c j")
     (lambda () (interactive) (org-capture nil "jj")))
 
-  (efs/org-font-setup))
+  (org-font-setup))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
   :custom
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-(defun efs/org-mode-visual-fill ()
+(defun org-mode-visual-fill ()
   (setq visual-fill-column-width 100
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
-  :hook (org-mode . efs/org-mode-visual-fill))
+  :hook (org-mode . org-mode-visual-fill))
 
 (with-eval-after-load 'org
   (org-babel-do-load-languages
@@ -476,7 +476,7 @@
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
-(defun efs/configure-eshell ()
+(defun configure-eshell ()
   ;; Save command history when commands are entered
   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
 
@@ -492,7 +492,7 @@
   :after eshell)
 
 (use-package eshell
-  :hook (eshell-first-time-mode . efs/configure-eshell)
+  :hook (eshell-first-time-mode . configure-eshell)
   :config
 
   (with-eval-after-load 'esh-opt
