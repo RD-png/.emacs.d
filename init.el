@@ -141,7 +141,8 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Better scrolling
-(setq scroll-conservatively 100)
+(setq scroll-conservatively 100
+      scroll-preserve-screen-position t)
 
 (set-face-attribute 'default nil :font "Source Code Pro" :height efs/default-font-size)
 
@@ -220,7 +221,8 @@
   :config
   (setq which-key-idle-delay 1))
 
-(use-package diminish)
+(use-package diminish
+  :straight t)
 
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
@@ -500,48 +502,29 @@
   (eshell-git-prompt-use-theme 'powerline))
 
 (use-package company
-  :ensure t
-  :hook (lsp-mode . company-mode)
+  :defines company-backends
+  :diminish company-mode
   :bind (:map company-active-map
               ("<tab>" . company-complete-selection))
+  :straight t
+  :custom
+  (company-dabbrev-downcase nil)
   :config
-  (progn
-    (setq company-idle-delay 0.0
+  (add-hook 'after-init-hook 'global-company-mode)
+      (setq company-idle-delay 0.0
           company-minimum-prefix-length 1)
-    (define-key company-active-map [tab] nil)
-    (define-key company-active-map (kbd "TAB") nil)
-    (advice-add 'company-tng--supress-post-completion :override #'ignore)
-    (global-company-mode 1))
-
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-
-  (defun company-mode/backend-with-yas (backend)
-    (if
-        (or (not company-mode/enable-yas)
-            (and (listp backend) (member 'company-yasnippet backend))
-            )
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
-
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
-
-(use-package company-box
-  :hook (company-mode . company-box-mode))
+      (global-company-mode 1))
 
 (use-package lsp-mode
   :straight t
-  :commands lsp
   :hook (lsp)
-  :init (setq lsp-inhibit-message t
-              lsp-eldoc-render-all nil
-              lsp-highlight-symbol-at-point nil)
-  :config
-  (setq lsp-enable-snippet t)
-  (setq lsp-headerline-breadcrumb-segments nil)
-  (setq lsp-headerline-breadcrumb-enable nil)
-  (lsp-enable-which-key-integration t))
+  :custom
+  (lsp-signature-render-documentation nil)   
+  (lsp-enable-snippet t)  
+  (lsp-document-sync-method nil)
+  (lsp-print-performance t)
+  (lsp-before-save-edits nil)
+  (lsp-signature-render-documentation t))
 
 (use-package lsp-ui
   :straight t
@@ -657,11 +640,12 @@
  '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
 
 (use-package yasnippet
+  :ensure t
   :hook (prog-mode . yas-minor-mode)
+  :init
+  (yas-global-mode 1)
   :config
-  (yas-reload-all)
-  :custom
-  (yas-global-mode 1))
+  (yas-reload-all))
 
 (use-package popup-kill-ring
   :ensure t
@@ -735,8 +719,6 @@
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)))
-
-(setq gc-cons-threshold (* 2 1000 1000))
 
 (defun copy-word ()
   (interactive)
@@ -822,3 +804,7 @@
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
+
+;; Unbind annoying keybinds
+(unbind-key "C-x C-n") ;; useless command
+(unbind-key "M-`")
