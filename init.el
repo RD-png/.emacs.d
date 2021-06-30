@@ -20,6 +20,19 @@
 ;; Set default transparency values
 (defvar efs/frame-transparency '(100 . 100))
 
+;; Default to utf-8
+(setq default-buffer-file-coding-system 'utf-8)
+
+;; Syntax highlight for all buffers
+(global-font-lock-mode t)
+
+;; When using gui confirm before closing
+(when (window-system)
+(setq confirm-kill-emacs 'yes-or-no-p))
+
+;; Weird
+(setq system-uses-terminfo nil)
+
 (setq gc-cons-threshold (* 50 1000 1000))
 
 (defun efs/display-startup-time ()
@@ -33,8 +46,12 @@
 (add-hook 'emacs-startup-hook #'efs/display-startup-time)
 
 ;; Kill server if there is one and start fresh
-(server-force-delete)
-(server-start)
+(require 'server nil t)
+(use-package server
+  :if window-system
+  :init
+  (when (not (server-running-p server-name))
+    (server-start)))
 
 ;; Initialize package sources
 (require 'package)
@@ -242,16 +259,21 @@
   (other-window 1))
 (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 
-(use-package perspective
-  :demand t
-  :bind (("C-x x s" . persp-switch)
-         ("C-x x n" . persp-next)
-         ("C-x k" . persp-kill-buffer*))
-  :custom
-  (persp-initial-frame-name "Main")
-  :config
-  (unless (equal persp-mode t)
-    (persp-mode)))
+(use-package eyebrowse
+  :init
+  (progn
+    (defun my/create-eyebrowse-setup ()
+      (interactive)
+      "Create a default window config, if none is present"
+      (when (not (eyebrowse--window-config-present-p 2))
+        ;; there's probably a better way to do this, creating two workspaces
+        (eyebrowse-switch-to-window-config-2)
+        (eyebrowse-switch-to-window-config-1)))
+    (setq eyebrowse-wrap-around t
+          eyebrowse-new-workspace t)
+    (eyebrowse-mode 1)
+    (global-set-key (kbd "C-c C-'") 'eyebrowse-next-window-config)
+    (add-hook 'after-init-hook #'my/create-eyebrowse-setup)))
 
 (use-package avy
   :ensure t
@@ -599,10 +621,9 @@
   :commands magit-status
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(global-set-key (kbd "C-c g") 'magit-status)
 
-;; NOTE: Make sure to configure a GitHub token before using this package!
-;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+
 (use-package forge
   :after magit)
 
@@ -638,7 +659,9 @@
 (use-package yasnippet
   :hook (prog-mode . yas-minor-mode)
   :config
-  (yas-reload-all))
+  (yas-reload-all)
+  :custom
+  (yas-global-mode 1))
 
 (use-package popup-kill-ring
   :ensure t
@@ -706,6 +729,12 @@
 
 (setq-default tab-width 2)
 (setq-default indent-tabs-mode nil)
+
+(use-package multiple-cursors
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-c C-<" . mc/mark-all-like-this)))
 
 (setq gc-cons-threshold (* 2 1000 1000))
 
