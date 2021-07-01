@@ -2,6 +2,10 @@
 ** FESP POWER BI
 *** TODO From the reportDashboardData function assign the data to the relevant graph
 
+*** TODO Make suppliers select filter the categories select
+
+*** DONE Fix the scrolling for the skus, when its filtered it will keep puttin the scroll back to the middle even if you  are at the end of the filtered list of options, only been able to replicate this with the skus select menu
+
 *** DONE Store the selected parameters for products/skus/sources etc in the store
 
 *** DONE Change how filters are applied to the selects
@@ -11,6 +15,9 @@
 
 * UPCOMING WORKS
 ** TODO Make a hub that links to all sections of the system
+
+* Api Orders
+** TODO Changes the previous 90 days of orders for ebay and change the buyer name to the username, we will need to pull this from ebay via a csv of some sort.
 
 
 * FINISHED WORKS
