@@ -1,8 +1,16 @@
 * CURRENTLY WORKING ON
 ** FESP POWER BI
-*** TODO From the reportDashboardData function assign the data to the relevant graph
+*** TODO Add pie chart showing the precentage of total sales for each source
 
-*** TODO Make suppliers select filter the categories select
+*** TODO Insert more data into powerbi to test how the page handles a larger date range
+
+***  TODO Get oldest and most recent sale (this can be done on page mount and does not need to updated)
+
+*** DONE From the reportDashboardData function assign the data to the relevant graph
+
+*** DONE When filtering skus, it may be worth passing a list of the skus that were selected before the list gets filtered, and have php find the interescts between the new options and the prior selected options and then pass this back. This could reduce the hang time when filtering for a large range that will return around 30k skus.
+
+*** DONE Make suppliers select filter the categories select
 
 *** DONE Fix the scrolling for the skus, when its filtered it will keep puttin the scroll back to the middle even if you  are at the end of the filtered list of options, only been able to replicate this with the skus select menu
 
@@ -11,6 +19,7 @@
 *** DONE Change how filters are applied to the selects
 
 * STOCK CONTROL
+** TODO Filter stock control tables by alphabetical
 
 
 * UPCOMING WORKS
