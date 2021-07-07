@@ -1,0 +1,7 @@
+1. Do some comparisons of the set 12 months and the rolling 12 months and ensure they make sense
+
+2. Put the rolling predictions into the the main stockPredictions method, or maybe have it in a seperate method depending on how slow it is to load the additional data
+
+3. Begin adding the new ebay source into the ebay request, check the data that is returned form the order matches the same format as the other sources.
+
+4. Change the csv based methods for ebay request to use the seller hub format since ebay are removing the file exchange
