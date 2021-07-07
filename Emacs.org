@@ -860,6 +860,17 @@ Again use lsp server for python for completions and error checking
 
 #+end_src
 
+*** Nix
+
+Syntax / error checking for nix
+
+#+begin_src emacs-lisp
+
+  (use-package nix-mode
+    :mode "\\.nix\\'")
+
+#+end_src
+
 *** Vue
 
 Currently not using vue mode as it is fairly slow, but will save my configuration for it here if it sees any updates might give it another try

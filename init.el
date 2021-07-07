@@ -570,6 +570,9 @@
   :ensure t
   :hook (python-mode . lsp-deferred))
 
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
 ;; (use-package vue-mode
 ;;   :straight t
 ;;   :mode "\\.vue\\'"
