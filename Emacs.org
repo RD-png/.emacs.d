@@ -57,6 +57,8 @@ Run (byte-recompile-directory package-user-dir nil 'force) on fresh install
 
 ** Daemon
 
+Run emacs daemon
+
 #+BEGIN_SRC sh :shebang #!/usr/bin/env bash
   emacs --daemon
 #+END_SRC
