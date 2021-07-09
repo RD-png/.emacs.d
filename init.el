@@ -560,8 +560,8 @@
 (use-package typescript-mode
   :straight t
   :mode
-  ("\\.ts\\'")
-   ;; "\\.vue\\'")
+  ("\\.ts\\'"
+   "\\.js\\'")
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
