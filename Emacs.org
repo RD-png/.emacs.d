@@ -189,37 +189,37 @@ Customize the built in emacs user interface features, mainly turn them off
 
 #+begin_src emacs-lisp
 
-    (setq inhibit-startup-message t)
+  (setq inhibit-startup-message t)
 
-    (scroll-bar-mode -1)        ; Disable visible scrollbar
-    (tool-bar-mode -1)          ; Disable the toolbar
-    (tooltip-mode -1)           ; Disable tooltips
-    (set-fringe-mode 10)
+  (scroll-bar-mode -1)        ; Disable visible scrollbar
+  (tool-bar-mode -1)          ; Disable the toolbar
+  (tooltip-mode -1)           ; Disable tooltips
+  (set-fringe-mode 10)
 
-    (menu-bar-mode -1)            ; Disable the menu bar
+  (menu-bar-mode -1)            ; Disable the menu bar
 
-    (column-number-mode)
-    (global-display-line-numbers-mode t) ; Line numbers
+  (column-number-mode)
+  (global-display-line-numbers-mode t) ; Line numbers
 
-    ;; y or n instead of yes or no
-    (defalias 'yes-or-no-p 'y-or-n-p)
+  ;; y or n instead of yes or no
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
-    ;; Set frame transparency
-    (set-frame-parameter (selected-frame) 'alpha frame-transparency)
-    (add-to-list 'default-frame-alist `(alpha . ,frame-transparency))
-    (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-    (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  ;; Set frame transparency
+  (set-frame-parameter (selected-frame) 'alpha frame-transparency)
+  (add-to-list 'default-frame-alist `(alpha . ,frame-transparency))
+  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-    ;; Disable line numbers for some modes
-    (dolist (mode '(org-mode-hook
-                    term-mode-hook
-                    shell-mode-hook
-                    eshell-mode-hook))
-      (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-    ;; Better scrolling
-    (setq scroll-conservatively 100
-          scroll-preserve-screen-position t)
+  ;; Better scrolling
+  (setq scroll-conservatively 100
+        scroll-preserve-screen-position t)
 
 #+end_src
 
@@ -834,8 +834,8 @@ Currently using this for both .vue and .ts files, also provies completion and er
   (use-package typescript-mode
     :straight t
     :mode
-    ("\\.ts\\'"
-     "\\.vue\\'")
+    ("\\.ts\\'")
+     ;; "\\.vue\\'")
     :hook (typescript-mode . lsp-deferred)
     :config
     (setq typescript-indent-level 2))
@@ -875,23 +875,32 @@ Syntax / error checking for nix
 
 *** Vue
 
-Currently not using vue mode as it is fairly slow, but will save my configuration for it here if it sees any updates might give it another try
+Custom major mode that will hook mode based on which tags cursor is inside, use typescript even for none typescript script tags as it has built in support for vue related functions
 
 #+begin_src emacs-lisp
 
-  ;; (use-package vue-mode
-  ;;   :straight t
-  ;;   :mode "\\.vue\\'"
-  ;;   :hook
-  ;;   (vue-mode . lsp-deferred)
-  ;;   :config
-  ;;   (setq lsp-javascript-format-enable t)
-  ;;   (setq lsp-javascript-suggest-complete-js-docs nil)
-  ;;   (setq mmm-submode-decoration-level 0)
-  ;;   (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
-  ;;   (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
-  ;;   (jit-lock-mode nil)
-  ;;   (global-set-key (kbd "C-c C-l") 'vue-mode-reparse))
+  (use-package multi-web-mode
+    :ensure t
+    :hook (multi-web-mode . lsp-mode))
+
+  (require 'multi-web-mode)
+  (setq mweb-default-major-mode 'typescript-mode)
+  (setq mweb-tags '((html-mode "<template[^>]*>" "</template>")
+                    (css-mode "<style[^>]*>" "</style>")))
+
+  (setq mweb-filename-extensions '("vue"))
+  (multi-web-global-mode 1)
+
+#+end_src
+
+*** Css
+
+Will be used with .vue files
+
+#+begin_src emacs-lisp
+
+  (use-package css-mode
+    :ensure t)
 
 #+end_src
 

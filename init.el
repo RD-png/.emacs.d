@@ -560,8 +560,8 @@
 (use-package typescript-mode
   :straight t
   :mode
-  ("\\.ts\\'"
-   "\\.vue\\'")
+  ("\\.ts\\'")
+   ;; "\\.vue\\'")
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
@@ -573,19 +573,20 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
-;; (use-package vue-mode
-;;   :straight t
-;;   :mode "\\.vue\\'"
-;;   :hook
-;;   (vue-mode . lsp-deferred)
-;;   :config
-;;   (setq lsp-javascript-format-enable t)
-;;   (setq lsp-javascript-suggest-complete-js-docs nil)
-;;   (setq mmm-submode-decoration-level 0)
-;;   (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
-;;   (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
-;;   (jit-lock-mode nil)
-;;   (global-set-key (kbd "C-c C-l") 'vue-mode-reparse))
+(use-package multi-web-mode
+  :ensure t
+  :hook (multi-web-mode . lsp-mode))
+
+(require 'multi-web-mode)
+(setq mweb-default-major-mode 'typescript-mode)
+(setq mweb-tags '((html-mode "<template[^>]*>" "</template>")
+                  (css-mode "<style[^>]*>" "</style>")))
+
+(setq mweb-filename-extensions '("vue"))
+(multi-web-global-mode 1)
+
+(use-package css-mode
+  :ensure t)
 
 (use-package projectile
   :diminish projectile-mode

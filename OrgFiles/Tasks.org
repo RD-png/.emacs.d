@@ -20,7 +20,7 @@
 
 * STOCK CONTROL
 ** TODO Filter stock control tables by alphabetical
-** TODO Account for products being out of stock
+** TODO Account for products being out of stock in stock predictions
 ** DONE When adding rolling it introduced a small diff with how predictions on product info and stock predictions because of rounding, change so they match on both pages
 CLOSED: [2021-07-08 Thu 15:58]
 :LOGBOOK:
