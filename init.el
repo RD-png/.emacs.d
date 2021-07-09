@@ -580,9 +580,10 @@
 (require 'multi-web-mode)
 (setq mweb-default-major-mode 'typescript-mode)
 (setq mweb-tags '((html-mode "<template[^>]*>" "</template>")
-                  (css-mode "<style[^>]*>" "</style>")))
+                  (css-mode "<style[^>]*>" "</style>")
+                  (css-mode "<style scoped[^>]*>" "</style>")))
 
-(setq mweb-filename-extensions '("vue"))
+(setq mweb-filename-extensions '("vue"))  
 (multi-web-global-mode 1)
 
 (use-package css-mode

@@ -827,7 +827,7 @@ Support for php completions and error checking via lsp language server
 
 *** TypeScript
 
-Currently using this for both .vue and .ts files, also provies completion and error checking via lsp server
+Provide completions for js and ts files
 
 #+begin_src emacs-lisp
 
@@ -879,17 +879,18 @@ Custom major mode that will hook mode based on which tags cursor is inside, use 
 
 #+begin_src emacs-lisp
 
-  (use-package multi-web-mode
-    :ensure t
-    :hook (multi-web-mode . lsp-mode))
+    (use-package multi-web-mode
+      :ensure t
+      :hook (multi-web-mode . lsp-mode))
 
-  (require 'multi-web-mode)
-  (setq mweb-default-major-mode 'typescript-mode)
-  (setq mweb-tags '((html-mode "<template[^>]*>" "</template>")
-                    (css-mode "<style[^>]*>" "</style>")))
+    (require 'multi-web-mode)
+    (setq mweb-default-major-mode 'typescript-mode)
+    (setq mweb-tags '((html-mode "<template[^>]*>" "</template>")
+                      (css-mode "<style[^>]*>" "</style>")
+                      (css-mode "<style scoped[^>]*>" "</style>")))
 
-  (setq mweb-filename-extensions '("vue"))
-  (multi-web-global-mode 1)
+    (setq mweb-filename-extensions '("vue"))  
+    (multi-web-global-mode 1)
 
 #+end_src
 
