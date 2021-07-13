@@ -4,7 +4,7 @@
 
 *** TODO Insert more data into powerbi to test how the page handles a larger date range
 
-***  TODO Get oldest and most recent sale (this can be done on page mount and does not need to updated)
+*** TODO Get oldest and most recent sale (this can be done on page mount and does not need to updated)
 
 *** DONE From the reportDashboardData function assign the data to the relevant graph
 
@@ -36,6 +36,7 @@ CLOSED: [2021-07-08 Thu 15:44]
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2021-07-08 Thu 15:44]
 :END:
+
 
 * UPCOMING WORKS
 ** TODO Make a hub that links to all sections of the system

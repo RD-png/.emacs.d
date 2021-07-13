@@ -81,14 +81,6 @@ Track performance on startup of emacs, this is useful to see if any packages are
   ;; Call the function
   (add-hook 'emacs-startup-hook #'display-startup-time)
 
-  ;; Kill server if there is one and start fresh
-  (require 'server nil t)
-  (use-package server
-    :if window-system
-    :init
-    (when (not (server-running-p server-name))
-      (server-start)))
-
 #+end_src
 
 * Packages System
@@ -220,6 +212,14 @@ Customize the built in emacs user interface features, mainly turn them off
   ;; Better scrolling
   (setq scroll-conservatively 100
         scroll-preserve-screen-position t)
+
+;; Kill server if there is one and start fresh
+  (require 'server nil t)
+  (use-package server
+    :if window-system
+    :init
+    (when (not (server-running-p server-name))
+      (server-start)))
 
 #+end_src
 

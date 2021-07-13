@@ -45,14 +45,6 @@
 ;; Call the function
 (add-hook 'emacs-startup-hook #'display-startup-time)
 
-;; Kill server if there is one and start fresh
-(require 'server nil t)
-(use-package server
-  :if window-system
-  :init
-  (when (not (server-running-p server-name))
-    (server-start)))
-
 ;; Initialize package sources
 (require 'package)
 
@@ -114,35 +106,43 @@
 
 (setq inhibit-startup-message t)
 
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
-(set-fringe-mode 10)
+  (scroll-bar-mode -1)        ; Disable visible scrollbar
+  (tool-bar-mode -1)          ; Disable the toolbar
+  (tooltip-mode -1)           ; Disable tooltips
+  (set-fringe-mode 10)
 
-(menu-bar-mode -1)            ; Disable the menu bar
+  (menu-bar-mode -1)            ; Disable the menu bar
 
-(column-number-mode)
-(global-display-line-numbers-mode t) ; Line numbers
+  (column-number-mode)
+  (global-display-line-numbers-mode t) ; Line numbers
 
-;; y or n instead of yes or no
-(defalias 'yes-or-no-p 'y-or-n-p)
+  ;; y or n instead of yes or no
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Set frame transparency
-(set-frame-parameter (selected-frame) 'alpha frame-transparency)
-(add-to-list 'default-frame-alist `(alpha . ,frame-transparency))
-(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+  ;; Set frame transparency
+  (set-frame-parameter (selected-frame) 'alpha frame-transparency)
+  (add-to-list 'default-frame-alist `(alpha . ,frame-transparency))
+  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-;; Better scrolling
-(setq scroll-conservatively 100
-      scroll-preserve-screen-position t)
+  ;; Better scrolling
+  (setq scroll-conservatively 100
+        scroll-preserve-screen-position t)
+
+;; Kill server if there is one and start fresh
+  (require 'server nil t)
+  (use-package server
+    :if window-system
+    :init
+    (when (not (server-running-p server-name))
+      (server-start)))
 
 (set-face-attribute 'default nil :font "Source Code Pro" :height default-font-size)
 
