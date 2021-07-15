@@ -912,18 +912,19 @@ Project management packages, not really using it that much, could remove it in t
 
 #+begin_src emacs-lisp
 
-  (use-package projectile
-    :diminish projectile-mode
-    :config (projectile-mode)
-    :custom ((projectile-completion-system 'ivy))
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
-    :init
-    (projectile-mode 1))
+    (use-package projectile
+      :diminish projectile-mode
+      :config (projectile-mode)
+      :custom ((projectile-completion-system 'ivy))
+      :bind-keymap
+      ("C-c p" . projectile-command-map)
+      :init
+      (projectile-mode 1)
+      (setq projectile-switch-project-action #'projectile-dired))
 
-  (use-package counsel-projectile
-    :after projectile
-    :config (counsel-projectile-mode))
+    (use-package counsel-projectile
+      :after projectile
+      :config (counsel-projectile-mode))
 
 #+end_src
 

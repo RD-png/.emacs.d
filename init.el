@@ -597,7 +597,8 @@
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
-  (projectile-mode 1))
+  (projectile-mode 1)
+  (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
   :after projectile
