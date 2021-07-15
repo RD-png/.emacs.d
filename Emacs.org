@@ -53,6 +53,9 @@ Run (byte-recompile-directory package-user-dir nil 'force) on fresh install
   ;; Weird
   (setq system-uses-terminfo nil)
 
+  ;; Set exec paths for npm packages on nix
+  (add-to-list 'exec-path "/root/.config/.npm-global/bin")
+
 #+end_src
 
 ** Daemon
