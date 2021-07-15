@@ -1,10 +1,22 @@
 * CURRENTLY WORKING ON
 ** FESP POWER BI
-*** TODO Add pie chart showing the precentage of total sales for each source
+*** DONE Add pie chart showing the precentage of total sales for each source
+CLOSED: [2021-07-14 Wed 08:23]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-14 Wed 08:23]
+:END:
+
 
 *** TODO Insert more data into powerbi to test how the page handles a larger date range
 
-*** TODO Get oldest and most recent sale (this can be done on page mount and does not need to updated)
+*** TODO Return the sales trends data in a format for the graphs and total the amount of unique orders
+
+*** DONE Get oldest and most recent sale (this can be done on page mount and does not need to updated)
+CLOSED: [2021-07-14 Wed 08:22]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-14 Wed 08:22]
+:END:
+
 
 *** DONE From the reportDashboardData function assign the data to the relevant graph
 
@@ -20,17 +32,21 @@
 
 * STOCK CONTROL
 ** TODO Filter stock control tables by alphabetical
+
 ** TODO Account for products being out of stock in stock predictions
+
 ** DONE When adding rolling it introduced a small diff with how predictions on product info and stock predictions because of rounding, change so they match on both pages
 CLOSED: [2021-07-08 Thu 15:58]
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2021-07-08 Thu 15:58]
 :END:
+
 ** DONE Keep track if date when item cost is changed
 CLOSED: [2021-07-07 Wed 12:37]
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2021-07-07 Wed 12:37]
 :END:
+
 ** DONE Add a rolling 12 months to predicitions
 CLOSED: [2021-07-08 Thu 15:44]
 :LOGBOOK:
@@ -43,16 +59,26 @@ CLOSED: [2021-07-08 Thu 15:44]
 
 * Api Orders
 ** TODO Changes the previous 90 days of orders for ebay and change the buyer name to the username, we will need to pull this from ebay via a csv of some sort.
+
 ** TODO Add another ebay account to EbayRequest.php, add into fesp anywhere that has exceptions for source
 
 * FINISHED WORKS
-** DONE Change the under performing products page to use a year long period (rolling);
+** DONE Change the under performing products page to use a year long period (rolling)
+
 ** DONE Add totals for the year for each of the platforms
+
 ** DONE Change the column names on the csv to be more user friendly
+
 ** DONE Add the sku identifier for the platforms
+
 ** DONE Fix require for the ebay request file for the update platform ids script
+
 ** DONE Final testing of update platform ids script
+
 ** DONE Pull in the relevant identifiers for the platforms which are stored in the sku_am_eb table, these will be used to find the urls for the sku on the platforms
+
 ** DONE Add section to import skus which shows the user the skus which have been recently added to the sku_am_eb_new
+
 ** DONE Make github repo for fespbi
+
 ** DONE Test all conditions of the updatePowerbi.php script, ensure that all the feilds that dont get calculated get reported to the users

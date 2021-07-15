@@ -100,8 +100,8 @@
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner 'official)
-  (setq dashboard-items '((recents  . 5)
-                          (projects . 5)))
+  (setq dashboard-items '((recents  . 10)
+                          (projects . 10)))
   (setq dashboard-banner-logo-title ""))
 
 (setq inhibit-startup-message t)
@@ -275,6 +275,7 @@
           eyebrowse-new-workspace t)
     (eyebrowse-mode 1)
     (global-set-key (kbd "C-c C-'") 'eyebrowse-next-window-config)
+    (global-set-key (kbd "C-c C-w C-k") 'eyebrowse-close-window-config)
     (add-hook 'after-init-hook #'my/create-eyebrowse-setup)))
 
 (use-package avy
@@ -596,10 +597,7 @@
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
-  ;; NOTE: Set this to the folder where you keep your Git repos!
-  (when (file-directory-p "~/Documents/Projects")
-    (setq projectile-project-search-path '("~/Documents/Projects")))
-  (setq projectile-switch-project-action #'projectile-dired))
+  (projectile-mode 1))
 
 (use-package counsel-projectile
   :after projectile
