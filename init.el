@@ -807,7 +807,8 @@
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
+(global-set-key (kbd "C-c o d") #'lsp-describe-thing-at-point)
 
-;; Unbind annoying keybinds
-(unbind-key "C-x C-n") ;; useless command
+;; unbind annoying keybinds
+(unbind-key "c-x c-n") ;; useless command
 (unbind-key "M-`")

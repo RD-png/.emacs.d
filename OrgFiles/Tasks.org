@@ -62,6 +62,9 @@ CLOSED: [2021-07-08 Thu 15:44]
 
 ** TODO Add another ebay account to EbayRequest.php, add into fesp anywhere that has exceptions for source
 
+* Misc
+** TODO add a notes system for the orders page
+
 * FINISHED WORKS
 ** DONE Change the under performing products page to use a year long period (rolling)
 
