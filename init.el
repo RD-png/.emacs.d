@@ -546,8 +546,8 @@
   (setq lsp-ui-sideline-show-code-actions nil)
   (setq lsp-completion-show-detail nil))
 
-(use-package lsp-ivy
-  :after lsp)
+;; (use-package lsp-ivy
+;;   :after lsp)
 
 (use-package php-mode
   :straight t
