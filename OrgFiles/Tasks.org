@@ -9,7 +9,15 @@ CLOSED: [2021-07-14 Wed 08:23]
 
 *** TODO Insert more data into powerbi to test how the page handles a larger date range
 
-*** TODO Return the sales trends data in a format for the graphs and total the amount of unique orders
+*** TODO Add the orderItems table to the filters on exports page
+
+*** TODO Build a method for the custom values, e.g total atts for skus from order table
+
+*** DONE Return the sales trends data in a format for the graphs and total the amount of unique orders
+CLOSED: [2021-07-21 Wed 16:18]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-21 Wed 16:18]
+:END:
 
 *** DONE Get oldest and most recent sale (this can be done on page mount and does not need to updated)
 CLOSED: [2021-07-14 Wed 08:22]
@@ -31,7 +39,6 @@ CLOSED: [2021-07-14 Wed 08:22]
 *** DONE Change how filters are applied to the selects
 
 * STOCK CONTROL
-** TODO Filter stock control tables by alphabetical
 
 ** TODO Account for products being out of stock in stock predictions
 
