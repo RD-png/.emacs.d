@@ -821,9 +821,15 @@
 (global-set-key (kbd "C-a") #'smart-beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
-(global-set-key [C-backspace] #'aborn/backward-kill-word)
+(global-set-key [C-backspace] #'aborn/backward-kill-word)    
+
+;; Lsp binds
 (global-set-key (kbd "C-c o d") #'lsp-describe-thing-at-point)
+(global-set-key (kbd "C-c o f") #'lsp-format-buffer)
 
 ;; unbind annoying keybinds
 (unbind-key "C-x C-n") ;; useless command
 (unbind-key "M-`")
+
+;; Remove whitespace from buffer on save
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
