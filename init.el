@@ -13,6 +13,21 @@
 (setq comp-async-report-warnings-errors nil)
 (setq warning-minimum-level :error)
 
+;; Stop the native comp warnings
+(defvar grep-find-ignored-directories nil)
+(defvar grep-find-ignored-files nil)
+(defvar ido-context-switch-command nil)
+(defvar ido-cur-item nil)
+(defvar ido-cur-list nil)
+(defvar ido-default-item nil)
+(defvar inherit-input-method nil)
+(defvar oauth--token-data nil)
+(defvar tls-checktrust nil)
+(defvar tls-program nil)
+(defvar url-callback-arguments nil)
+(defvar url-callback-function nil)
+(defvar url-http-extra-headers nil)
+
 ;; Set default font size values
 (defvar default-font-size 150)
 (defvar default-variable-font-size 150)
@@ -28,7 +43,7 @@
 
 ;; When using gui confirm before closing
 (when (window-system)
-(setq confirm-kill-emacs 'yes-or-no-p))
+  (setq confirm-kill-emacs 'yes-or-no-p))
 
 ;; Weird
 (setq system-uses-terminfo nil)
@@ -810,5 +825,5 @@
 (global-set-key (kbd "C-c o d") #'lsp-describe-thing-at-point)
 
 ;; unbind annoying keybinds
-(unbind-key "c-x c-n") ;; useless command
+(unbind-key "C-x C-n") ;; useless command
 (unbind-key "M-`")
