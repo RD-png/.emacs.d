@@ -538,8 +538,8 @@
   :straight t
   :hook (lsp)
   :custom
-  (lsp-signature-render-documentation nil)   
-  (lsp-enable-snippet t)  
+  (lsp-signature-render-documentation nil)
+  (lsp-enable-snippet t)
   (lsp-document-sync-method nil)
   (lsp-print-performance t)
   (lsp-before-save-edits nil)
@@ -602,11 +602,22 @@
                   (css-mode "<style[^>]*>" "</style>")
                   (css-mode "<style scoped[^>]*>" "</style>")))
 
-(setq mweb-filename-extensions '("vue"))  
+(setq mweb-filename-extensions '("vue"))
 (multi-web-global-mode 1)
 
 (use-package css-mode
   :ensure t)
+
+(use-package haskell-mode
+  :straight t
+  :mode ("\\.hs\\'")
+  :hook (haskell-mode . lsp-deferred))
+
+;; finds executable and some additional compiler settings
+(use-package lsp-haskell
+  :ensure t
+  :after lsp-mode
+  :hook (haskell-mode . lsp-deferred))
 
 (use-package projectile
   :diminish projectile-mode
@@ -647,7 +658,7 @@
          emacs-lisp-mode
          typescript-mode))
 
-(custom-set-faces   
+(custom-set-faces
  '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
  '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
  '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
@@ -821,7 +832,7 @@
 (global-set-key (kbd "C-a") #'smart-beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
-(global-set-key [C-backspace] #'aborn/backward-kill-word)    
+(global-set-key [C-backspace] #'aborn/backward-kill-word)
 
 ;; Lsp binds
 (global-set-key (kbd "C-c o d") #'lsp-describe-thing-at-point)
