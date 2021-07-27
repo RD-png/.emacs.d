@@ -7,7 +7,11 @@ CLOSED: [2021-07-14 Wed 08:23]
 :END:
 
 
-*** TODO Insert more data into powerbi to test how the page handles a larger date range
+*** DONE Insert more data into powerbi to test how the page handles a larger date range
+CLOSED: [2021-07-26 Mon 10:37]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-26 Mon 10:37]
+:END:
 
 *** TODO Add the orderItems table to the filters on exports page
 
@@ -18,6 +22,7 @@ CLOSED: [2021-07-21 Wed 16:18]
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2021-07-21 Wed 16:18]
 :END:
+
 
 *** DONE Get oldest and most recent sale (this can be done on page mount and does not need to updated)
 CLOSED: [2021-07-14 Wed 08:22]
@@ -37,6 +42,7 @@ CLOSED: [2021-07-14 Wed 08:22]
 *** DONE Store the selected parameters for products/skus/sources etc in the store
 
 *** DONE Change how filters are applied to the selects
+
 
 * STOCK CONTROL
 
@@ -69,8 +75,10 @@ CLOSED: [2021-07-08 Thu 15:44]
 
 ** TODO Add another ebay account to EbayRequest.php, add into fesp anywhere that has exceptions for source
 
+** TODO Add method that pulls in the last 24 hours of orders and ensure that none have been missed
+
 * Misc
-** TODO add a notes system for the orders page
+** TODO add a notes system for the orders page (This has been delayed and will be included in the new customer services system)
 
 * FINISHED WORKS
 ** DONE Change the under performing products page to use a year long period (rolling)

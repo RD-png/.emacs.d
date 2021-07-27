@@ -1,3 +1,6 @@
-Do we want to apply the changes automatically after updates to arguments and filters ?
+New Ebay Platform Notes:
 
-Or do we want to apply the filters automatically but arguments only when the user clicks the apply filters button
+1. Change the AccessEbay / EbayRequest
+2. Add tables to the api_orders database
+3. Check other parts of system for channel specific changes
+4. When the additional keyset is approved make test class to pull the a test order and test that everything works as expected
