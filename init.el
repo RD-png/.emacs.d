@@ -585,16 +585,21 @@
   :config
   (setq typescript-indent-level 2))
 
-(use-package python-mode
-  :ensure t
-  :hook (python-mode . lsp-deferred))
-
 (use-package lsp-python-ms
   :ensure t
-  :init (setq lsp-python-ms-auto-install-server t)
   :hook (python-mode . (lambda ()
                          (require 'lsp-python-ms)
-                         (lsp-deferred))))
+                         (lsp-deferred)))
+  :init
+  (setq lsp-python-ms-executable (executable-find "python-language-server")))
+
+(use-package python-mode
+  :ensure t
+  :hook (python-mode . lsp-deferred)
+  :config
+  (setq python-shell-interpreter "python3")
+  (setq flycheck-python-pylint-executable (executable-find "pylint"))
+  (setq flycheck-pylintrc (substitute-in-file-name "$HOME/.pylintrc")))
 
 (use-package nix-mode
   :mode "\\.nix\\'")
