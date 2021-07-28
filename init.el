@@ -846,6 +846,12 @@
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
 
+;; Half the distance of page down and up
+(autoload 'View-scroll-half-page-forward "view") (autoload 'View-scroll-half-page-backward "view")
+(global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
+(global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
+
+
 ;; Lsp binds
 (global-set-key (kbd "C-c o d") #'lsp-describe-thing-at-point)
 (global-set-key (kbd "C-c o f") #'lsp-format-buffer)
