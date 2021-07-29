@@ -647,10 +647,9 @@
 
 (use-package magit
   :commands magit-status
+  :bind ("C-c g" . magit-status)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-(global-set-key (kbd "C-c g") 'magit-status)
-
 
 (use-package forge
   :after magit)
@@ -748,9 +747,6 @@
   ;;(add-to-list 'dired-open-functions #'dired-open-xdg t)
   (setq dired-open-extensions '(("png" . "feh")
                                 ("mkv" . "mpv"))))
-
-(use-package dired-hide-dotfiles
-  :hook (dired-mode . dired-hide-dotfiles-mode))
 
 (setq-default tab-width 2)
 (setq-default indent-tabs-mode nil)
