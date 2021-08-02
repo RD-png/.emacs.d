@@ -302,6 +302,9 @@
   ("M-s" . avy-goto-char)
   ("M-m" . avy-goto-word-0))
 
+(use-package expand-region
+  :bind ("C-}" . er/expand-region))
+
 (use-package no-littering)
 
 ;; Disable auto saving and backups and symbolic link files

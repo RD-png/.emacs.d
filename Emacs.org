@@ -469,6 +469,17 @@ Allows quick movement in files
 
 #+end_src
 
+** Expand Region
+
+Delete within delimiters
+
+#+begin_src emacs-lisp
+
+(use-package expand-region
+  :bind ("C-}" . er/expand-region))
+
+#+end_src
+
 ** Clean Folders
 
 Keep folders clean when you are using emacs
