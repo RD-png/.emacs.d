@@ -77,6 +77,8 @@ CLOSED: [2021-07-08 Thu 15:44]
 
 ** TODO Add method that pulls in the last 24 hours of orders and ensure that none have been missed
 
+** TODO Add lookup to add green / black to sku title for netting skus
+
 * Misc
 ** TODO add a notes system for the orders page (This has been delayed and will be included in the new customer services system)
 

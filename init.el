@@ -843,7 +843,9 @@
 (global-set-key (kbd "C-a") #'smart-beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
+(global-set-key (kbd "C-r") #'swiper-backward)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
+(global-set-key (kbd "C-M-<return>") #'eshell)
 
 ;; Half the distance of page down and up
 (autoload 'View-scroll-half-page-forward "view") (autoload 'View-scroll-half-page-backward "view")
