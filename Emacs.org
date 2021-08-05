@@ -182,14 +182,16 @@ Simple main menu, with a list of recent files and projects
 
 #+begin_src emacs-lisp
 
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-startup-banner 'official)
-    (setq dashboard-items '((recents  . 10)
-                            (projects . 10)))
-    (setq dashboard-banner-logo-title ""))
+      (use-package dashboard
+        :ensure t
+        :config
+        (dashboard-setup-startup-hook)
+        (setq dashboard-startup-banner 'official)
+        (setq dashboard-items '((recents  . 10)
+                                (projects . 5)
+                                (bookmarks . 5)))
+        (setq dashboard-banner-logo-title "")
+        (setq dashboard-set-file-icons t))
 
 #+end_src
 
@@ -1242,6 +1244,20 @@ General settings for coding
 
 #+end_src
 
+** Undo tree
+
+#+begin_src emacs-lisp
+
+  
+  (use-package undo-tree)
+  (global-undo-tree-mode 1)
+  (global-set-key (kbd "C-/") #'undo)
+  (defalias 'redo 'undo-tree-redo)
+  (global-set-key (kbd "C-?") #'redo)
+
+
+#+end_src
+
 * Rebinds
 
  Custom functions for keybinds and just general functionality I wanted
@@ -1344,6 +1360,7 @@ General settings for coding
   ;; Lsp binds
   (global-set-key (kbd "C-c o d") #'lsp-describe-thing-at-point)
   (global-set-key (kbd "C-c o f") #'lsp-format-buffer)
+  (global-set-key (kbd "C-c o a") #'lsp-execute-code-action)
 
   ;; unbind annoying keybinds
   (unbind-key "C-x C-n") ;; useless command

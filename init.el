@@ -119,8 +119,10 @@
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner 'official)
   (setq dashboard-items '((recents  . 10)
-                          (projects . 10)))
-  (setq dashboard-banner-logo-title ""))
+                          (projects . 5)
+                          (bookmarks . 5)))
+  (setq dashboard-banner-logo-title "")
+  (setq dashboard-set-file-icons t))
 
 (setq inhibit-startup-message t)
 
@@ -760,6 +762,12 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)))
 
+(use-package undo-tree)
+(global-undo-tree-mode 1)
+(global-set-key (kbd "C-/") #'undo)
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "C-?") #'redo)
+
 (defun copy-word ()
   (interactive)
   (save-excursion
@@ -856,6 +864,7 @@
 ;; Lsp binds
 (global-set-key (kbd "C-c o d") #'lsp-describe-thing-at-point)
 (global-set-key (kbd "C-c o f") #'lsp-format-buffer)
+(global-set-key (kbd "C-c o a") #'lsp-execute-code-action)
 
 ;; unbind annoying keybinds
 (unbind-key "C-x C-n") ;; useless command
