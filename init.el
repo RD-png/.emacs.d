@@ -235,6 +235,20 @@
                                         ;(prescient-persist-mode 1)
   (ivy-prescient-mode 1))
 
+(use-package wgrep
+  :config
+  (setq wgrep-change-readonly-file t)
+  :bind (
+         :map wgrep-mode-map
+         ("C-x C-s" . custom-wgrep-apply-save)))
+
+
+(defun custom-wgrep-apply-save ()
+  "Apply the edits and save the buffers"
+  (interactive)
+  (wgrep-finish-edit)
+  (wgrep-save-all-buffers))
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode

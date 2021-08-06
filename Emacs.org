@@ -345,6 +345,29 @@ Useful modeline to replace the default one
 
 #+end_src
 
+** Wgrep
+
+Mode to edit grep buffers
+
+#+begin_src emacs-lisp
+
+  (use-package wgrep
+    :config
+    (setq wgrep-change-readonly-file t)
+    :bind (
+           :map wgrep-mode-map
+           ("C-x C-s" . custom-wgrep-apply-save)))
+
+
+  (defun custom-wgrep-apply-save ()
+    "Apply the edits and save the buffers"
+    (interactive)
+    (wgrep-finish-edit)
+    (wgrep-save-all-buffers))
+
+
+#+end_src
+
 ** Which Key
 
 Suggests next key presses when you type a command in, helpful for remembering the 1000s of emacs bindings
@@ -1248,7 +1271,7 @@ General settings for coding
 
 #+begin_src emacs-lisp
 
-  
+
   (use-package undo-tree)
   (global-undo-tree-mode 1)
   (global-set-key (kbd "C-/") #'undo)

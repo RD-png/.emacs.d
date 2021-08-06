@@ -79,6 +79,8 @@ CLOSED: [2021-07-08 Thu 15:44]
 
 ** TODO Add lookup to add green / black to sku title for netting skus
 
+** TODO Script to pull in an orders csv for ebay / amazon and add the missing records to the database
+
 * Misc
 ** TODO add a notes system for the orders page (This has been delayed and will be included in the new customer services system)
 
