@@ -249,6 +249,15 @@
   (wgrep-finish-edit)
   (wgrep-save-all-buffers))
 
+(defun reb-query-replace (to-string)
+  "Replace current RE from point with `query-replace-regexp'."
+  (interactive
+   (progn (barf-if-buffer-read-only)
+          (list (query-replace-read-to (reb-target-binding reb-regexp)
+                                       "Query replace"  t))))
+  (with-current-buffer reb-target-buffer
+    (query-replace-regexp (reb-target-binding reb-regexp) to-string)))
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
@@ -302,7 +311,6 @@
       (interactive)
       "Create a default window config, if none is present"
       (when (not (eyebrowse--window-config-present-p 2))
-        ;; there's probably a better way to do this, creating two workspaces
         (eyebrowse-switch-to-window-config-2)
         (eyebrowse-switch-to-window-config-1)))
     (setq eyebrowse-wrap-around t
@@ -562,7 +570,11 @@
   (lsp-document-sync-method nil)
   (lsp-print-performance t)
   (lsp-before-save-edits nil)
-  (lsp-signature-render-documentation t))
+  (lsp-signature-render-documentation t)
+  :bind
+  ("C-c o d" . lsp-describe-thing-at-point)
+  ("C-c o f" . lsp-format-buffer)
+  ("C-c o a" . lsp-execute-code-action))
 
 (use-package lsp-ui
   :straight t
@@ -859,13 +871,13 @@
     (kill-line)
     (yank)))
 
+;; General binds
 (global-set-key (kbd "C-c w") #'copy-word)
 (global-set-key (kbd "C-c l") #'custom-avy-copy-line)
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-a") #'smart-beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
-(global-set-key (kbd "C-r") #'swiper-backward)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
 (global-set-key (kbd "C-M-<return>") #'eshell)
 
@@ -873,12 +885,6 @@
 (autoload 'View-scroll-half-page-forward "view") (autoload 'View-scroll-half-page-backward "view")
 (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
 (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
-
-
-;; Lsp binds
-(global-set-key (kbd "C-c o d") #'lsp-describe-thing-at-point)
-(global-set-key (kbd "C-c o f") #'lsp-format-buffer)
-(global-set-key (kbd "C-c o a") #'lsp-execute-code-action)
 
 ;; unbind annoying keybinds
 (unbind-key "C-x C-n") ;; useless command

@@ -1,5 +1,8 @@
 * CURRENTLY WORKING ON
 ** FESP POWER BI
+*** REVIEW Possibly store the selected filters in the localStorage so each user has unique
+filters they can revisit (would require a some rewriting, but nothing too crazy, only issue would be that you cant store objects in localStorage and this could lead to performance issues if we have to stringify and parse the json thought the use of the page)
+
 *** DONE Add pie chart showing the precentage of total sales for each source
 CLOSED: [2021-07-14 Wed 08:23]
 :LOGBOOK:
