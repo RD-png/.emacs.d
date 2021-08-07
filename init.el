@@ -12,6 +12,7 @@
 (setq comp-speed 3)
 (setq comp-async-report-warnings-errors nil)
 (setq warning-minimum-level :error)
+(setq package-native-compile 1)
 
 ;; Stop the native comp warnings
 (defvar grep-find-ignored-directories nil)
@@ -40,6 +41,9 @@
 
 ;; Syntax highlight for all buffers
 (global-font-lock-mode t)
+
+;; Dont save duplicate variables in kill ring
+(setq kill-do-not-save-duplicates t)
 
 ;; When using gui confirm before closing
 (when (window-system)
@@ -660,7 +664,12 @@
 (use-package lsp-haskell
   :ensure t
   :after lsp-mode
-  :hook (haskell-mode . lsp-deferred))
+  :hook (haskell-mode . lsp-deferred)
+  :custom
+  (lsp-haskell-server-path "haskell-language-server"))
+
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(setq haskell-process-type 'cabal-repl)
 
 (use-package projectile
   :diminish projectile-mode
@@ -786,7 +795,7 @@
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
-         ("C-c C-<" . mc/mark-all-like-this)))
+         ("C-c m a" . mc/mark-all-like-this)))
 
 (use-package undo-tree)
 (global-undo-tree-mode 1)
