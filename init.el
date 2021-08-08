@@ -53,7 +53,7 @@
 (setq system-uses-terminfo nil)
 
 ;; Set exec paths for npm packages on nix
-(add-to-list 'exec-path "/root/.config/.npm-global/bin")
+(add-to-list 'exec-path "/root/.npm/bin")
 
 (setq gc-cons-threshold (* 50 1000 1000))
 
