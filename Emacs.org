@@ -190,7 +190,7 @@ Simple main menu, with a list of recent files and projects
         :ensure t
         :config
         (dashboard-setup-startup-hook)
-        (setq dashboard-startup-banner 'official)
+        (setq dashboard-startup-banner "~/.emacs.d/gnu.png")
         (setq dashboard-items '((recents  . 10)
                                 (projects . 5)
                                 (bookmarks . 5)))
@@ -1168,12 +1168,22 @@ Emacs file browser
 *** Configuration
 #+begin_src emacs-lisp
 
+  (add-to-list 'load-path "~/.emacs.d/etc/modules/dired+")
+  (require 'dired-copy-paste)
   (use-package dired
     :ensure nil
     :commands (dired dired-jump)
-    :bind (("C-x C-j" . dired-jump))
-    :custom ((dired-listing-switches "-agho --group-directories-first"))
-    )
+    :bind (("C-x C-j" . dired-jump)
+           :map dired-mode-map
+           ("K" . dired-up-directory)
+           ("C-c f" . dired-copy-paste-do-copy)
+           ("C-c c f" . dired-copy-paste-do-cut)
+           ("C-c p" . dired-copy-paste-do-paste))
+    :custom
+    ((dired-listing-switches "-agho --group-directories-first")))
+
+  (use-package all-the-icons-dired
+    :hook (dired-mode . all-the-icons-dired-mode))
 
   (use-package dired-rainbow
     :defer 2
@@ -1198,20 +1208,6 @@ Emacs file browser
     (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
     (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
     (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
-
-  (use-package dired-single
-    :commands (dired dired-jump))
-
-  (use-package all-the-icons-dired
-    :hook (dired-mode . all-the-icons-dired-mode))
-
-  (use-package dired-open
-    :commands (dired dired-jump)
-    :config
-    ;; Doesn't work as expected!
-    ;;(add-to-list 'dired-open-functions #'dired-open-xdg t)
-    (setq dired-open-extensions '(("png" . "feh")
-                                  ("mkv" . "mpv"))))
 
 #+end_src
 
