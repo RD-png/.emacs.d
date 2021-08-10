@@ -753,7 +753,7 @@
          ("K" . dired-up-directory)
          ("C-c f" . dired-copy-paste-do-copy)
          ("C-c c f" . dired-copy-paste-do-cut)
-         ("C-c p" . dired-copy-paste-do-paste))
+         ("C-y" . dired-copy-paste-do-paste))
   :custom
   ((dired-listing-switches "-agho --group-directories-first")))
 

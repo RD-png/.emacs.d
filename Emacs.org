@@ -1014,7 +1014,6 @@ Will be used with .vue files
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   (setq haskell-process-type 'cabal-repl)
 
-
 #+end_src
 
 ** Projectile
@@ -1178,7 +1177,7 @@ Emacs file browser
            ("K" . dired-up-directory)
            ("C-c f" . dired-copy-paste-do-copy)
            ("C-c c f" . dired-copy-paste-do-cut)
-           ("C-c p" . dired-copy-paste-do-paste))
+           ("C-y" . dired-copy-paste-do-paste))
     :custom
     ((dired-listing-switches "-agho --group-directories-first")))
 
