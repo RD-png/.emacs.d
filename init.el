@@ -121,7 +121,7 @@
   :ensure t
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner "~/.emacs.d/gnu.png")
+  (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
   (setq dashboard-items '((recents  . 10)
                           (projects . 5)
                           (bookmarks . 5)))
@@ -176,7 +176,7 @@
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height default-variable-font-size :weight 'regular)
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
 
 (load-theme 'desert2 t)
 
@@ -387,7 +387,7 @@
   (setq org-log-into-drawer t)
 
   (setq org-agenda-files
-        '("~/.emacs.d/OrgFiles/Tasks.org"))
+        '("~/.config/emacs/OrgFiles/Tasks.org"))
 
   (require 'org-habit)
   (add-to-list 'org-modules 'org-habit)
@@ -468,28 +468,28 @@
 
   (setq org-capture-templates
     `(("t" "Tasks / Projects")
-      ("tt" "Task" entry (file+olp "~/.emacs.d/OrgFiles/Tasks.org" "Inbox")
+      ("tt" "Task" entry (file+olp "~/.config/emacs/OrgFiles/Tasks.org" "Inbox")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
       ("j" "Journal Entries")
       ("jj" "Journal" entry
-           (file+olp+datetree "~/.emacs.d/OrgFiles/Journal.org")
+           (file+olp+datetree "~/.config/emacs/OrgFiles/Journal.org")
            "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
            ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
            :clock-in :clock-resume
            :empty-lines 1)
       ("jm" "Meeting" entry
-           (file+olp+datetree "~/.emacs.d/OrgFiles/Journal.org")
+           (file+olp+datetree "~/.config/emacs/OrgFiles/Journal.org")
            "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
            :clock-in :clock-resume
            :empty-lines 1)
 
       ("w" "Workflows")
-      ("we" "Checking Email" entry (file+olp+datetree "~/.emacs.d/OrgFiles/Journal.org")
+      ("we" "Checking Email" entry (file+olp+datetree "~/.config/emacs/OrgFiles/Journal.org")
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
       ("m" "Metrics Capture")
-      ("mw" "Weight" table-line (file+headline "~/.emacs.d/OrgFiles/Metrics.org" "Weight")
+      ("mw" "Weight" table-line (file+headline "~/.config/emacs/OrgFiles/Metrics.org" "Weight")
        "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
   (define-key global-map (kbd "C-c j")
@@ -743,7 +743,7 @@
   (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
   (show-paren-mode 1))
 
-(add-to-list 'load-path "~/.emacs.d/etc/modules/dired+")
+(add-to-list 'load-path "~/.config/emacs/etc/modules/dired+")
 (require 'dired-copy-paste)
 (use-package dired
   :ensure nil
