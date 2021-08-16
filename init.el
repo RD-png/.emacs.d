@@ -868,13 +868,25 @@
       (kill-region cp (- cp 1)))         ;; word is non-english word
     ))
 
+(defun avi-kill-line-save (&optional arg)
+  "Copy to the kill ring from point to the end of the current line.
+With a prefix argument, copy that many lines from point. Negative
+arguments copy lines backward. With zero argument, copies the
+text before point to the beginning of the current line."
+  (interactive "p")
+  (save-excursion
+    (copy-region-as-kill
+     (point)
+     (progn (if arg (forward-visible-line arg)
+              (end-of-visible-line))
+            (point)))))
+
 (defun custom-avy-copy-line ()
   (interactive)
   (save-excursion
     (avy-goto-line)
     (back-to-indentation)
-    (kill-line)
-    (yank)))
+    (avi-kill-line-save)))
 
 ;; General binds
 (global-set-key (kbd "C-c w") #'copy-word)
@@ -885,6 +897,8 @@
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
 (global-set-key (kbd "C-M-<return>") #'eshell)
+(global-set-key (kbd "C-S-k") #'kill-whole-line)
+(global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/Emacs.org")))
 
 ;; Half the distance of page down and up
 (autoload 'View-scroll-half-page-forward "view") (autoload 'View-scroll-half-page-backward "view")
