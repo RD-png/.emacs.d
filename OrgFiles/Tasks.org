@@ -80,7 +80,11 @@ CLOSED: [2021-07-08 Thu 15:44]
 
 ** TODO Add method that pulls in the last 24 hours of orders and ensure that none have been missed
 
-** TODO Add lookup to add green / black to sku title for netting skus
+** DONE Add lookup to add green / black to sku title for netting skus
+CLOSED: [2021-08-16 Mon 07:58]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-08-16 Mon 07:58]
+:END:
 
 ** TODO Script to pull in an orders csv for ebay / amazon and add the missing records to the database
 

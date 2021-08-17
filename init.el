@@ -639,21 +639,20 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
-(use-package multi-web-mode
+(use-package web-mode
   :ensure t
-  :hook (multi-web-mode . lsp-mode))
-
-(require 'multi-web-mode)
-(setq mweb-default-major-mode 'typescript-mode)
-(setq mweb-tags '((html-mode "<template[^>]*>" "</template>")
-                  (css-mode "<style[^>]*>" "</style>")
-                  (css-mode "<style scoped[^>]*>" "</style>")))
-
-(setq mweb-filename-extensions '("vue"))
-(multi-web-global-mode 1)
+  :mode ("\\.vue\\'")
+  :hook (web-mode . lsp-deferred)
+  :config
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-style-padding 0)
+  (setq web-mode-script-padding 0))
 
 (use-package css-mode
-  :ensure t)
+  :ensure t
+  :mode ("\\.css\\'"))
 
 (use-package haskell-mode
   :straight t
