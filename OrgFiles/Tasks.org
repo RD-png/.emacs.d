@@ -1,7 +1,5 @@
 * CURRENTLY WORKING ON
 ** FESP POWER BI
-*** REVIEW Possibly store the selected filters in the localStorage so each user has unique
-filters they can revisit (would require a some rewriting, but nothing too crazy, only issue would be that you cant store objects in localStorage and this could lead to performance issues if we have to stringify and parse the json thought the use of the page)
 
 *** DONE Add pie chart showing the precentage of total sales for each source
 CLOSED: [2021-07-14 Wed 08:23]
@@ -16,9 +14,15 @@ CLOSED: [2021-07-26 Mon 10:37]
 - State "DONE"       from "TODO"       [2021-07-26 Mon 10:37]
 :END:
 
-*** TODO Add the orderItems table to the filters on exports page
+*** DONE Add the orderItems table to the filters on exports page
+CLOSED: [2021-08-18 Wed 16:16]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-08-18 Wed 16:16]
+:END:
 
 *** TODO Build a method for the custom values, e.g total atts for skus from order table
+
+*** TODO Possibly alert the user they are removing a the last selected column and this will remove the join condition in the arguments
 
 *** DONE Return the sales trends data in a format for the graphs and total the amount of unique orders
 CLOSED: [2021-07-21 Wed 16:18]
