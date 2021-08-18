@@ -213,13 +213,12 @@
          :map ivy-reverse-i-search-map
          ("C-k" . ivy-previous-line)
          ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
-
-(use-package ivy-rich
-  :after ivy
   :init
-  (ivy-rich-mode 1))
+  (ivy-mode 1)
+  :config
+  (setq ivy-wrap t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq enable-recursive-minibuffers t))
 
 (use-package counsel
   :bind (("C-M-j" . 'counsel-switch-buffer)
@@ -229,6 +228,32 @@
   (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
   :config
   (counsel-mode 1))
+
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1)
+  :after counsel
+  :config
+  (setq ivy-format-function #'ivy-format-function-line)
+  (setq ivy-rich-display-transformers-list
+        (plist-put ivy-rich-display-transformers-list
+                   'ivy-switch-buffer
+                   '(:columns
+                     ((ivy-rich-candidate (:width 40))
+                      (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
+                      (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
+                      (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
+                      (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
+                     :predicate
+                     (lambda (cand)
+                       (if-let ((buffer (get-buffer cand)))))))))
+
+(use-package prescient
+  :after counsel
+  :config
+  (prescient-persist-mode 1))
+
 
 (use-package ivy-prescient
   :after counsel
@@ -331,7 +356,9 @@
   ("M-m" . avy-goto-word-0))
 
 (use-package expand-region
-  :bind ("C-}" . er/expand-region))
+  :bind (("C-}" . er/expand-region)
+         ("C-{" . er/mark-inside-pairs)
+         ("M-{" . er/mark-outside-pairs)))
 
 (use-package no-littering)
 
@@ -552,22 +579,35 @@
   (eshell-git-prompt-use-theme 'powerline))
 
 (use-package company
-  :defines company-backends
-  :diminish company-mode
-  :bind (:map company-active-map
-              ("<tab>" . company-complete-selection))
-  :straight t
-  :custom
-  (company-dabbrev-downcase nil)
-  :config
-  (add-hook 'after-init-hook 'global-company-mode)
-      (setq company-idle-delay 0.0
-          company-minimum-prefix-length 1)
-      (global-company-mode 1))
+      :defines company-backends
+      :diminish company-mode
+      :bind (:map company-active-map
+                  ("<tab>" . company-complete-selection))
+      :straight t
+      :custom
+      (company-dabbrev-downcase nil)
+      :config
+      (add-hook 'after-init-hook 'global-company-mode)
+          (setq company-idle-delay 0.01
+              company-minimum-prefix-length 1
+              company-tooltip-limit 10
+              company-tooltip-align-annotations t
+              company-selection-wrap-around t
+              company-dabbrev-ignore-case t
+              company-require-match nil)
+          (global-company-mode 1))
+
+ (defun setup-lsp-company ()
+   (setq-local company-backends
+               '(company-capf company-dabbrev company-dabbrev-code)))
+
+(add-hook 'lsp-completion-mode-hook 'setup-lsp-company)
 
 (use-package lsp-mode
   :straight t
   :hook (lsp)
+  :config
+  (setq lsp-prefer-capf t)
   :custom
   (lsp-signature-render-documentation nil)
   (lsp-enable-snippet t)
@@ -595,9 +635,6 @@
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-ui-sideline-show-code-actions nil)
   (setq lsp-completion-show-detail nil))
-
-;; (use-package lsp-ivy
-;;   :after lsp)
 
 (use-package php-mode
   :straight t
@@ -887,7 +924,17 @@ text before point to the beginning of the current line."
     (back-to-indentation)
     (avi-kill-line-save)))
 
+(defun custom-delete-around-delim ()
+  (interactive)
+  (er/mark-outside-pairs)
+  (kill-region (region-beginning) (region-end))
+  (back-to-indentation)
+  (set-mark-command (point))
+  (end-of-line)
+  (delete-region (region-beginning) (region-end)))
+
 ;; General binds
+
 (global-set-key (kbd "C-c w") #'copy-word)
 (global-set-key (kbd "C-c l") #'custom-avy-copy-line)
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
