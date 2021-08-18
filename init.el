@@ -581,21 +581,20 @@
 (use-package company
       :defines company-backends
       :diminish company-mode
+      :init (global-company-mode 1)
       :bind (:map company-active-map
                   ("<tab>" . company-complete-selection))
       :straight t
       :custom
       (company-dabbrev-downcase nil)
       :config
-      (add-hook 'after-init-hook 'global-company-mode)
           (setq company-idle-delay 0.01
               company-minimum-prefix-length 1
               company-tooltip-limit 10
               company-tooltip-align-annotations t
               company-selection-wrap-around t
               company-dabbrev-ignore-case t
-              company-require-match nil)
-          (global-company-mode 1))
+              company-require-match nil))
 
  (defun setup-lsp-company ()
    (setq-local company-backends
