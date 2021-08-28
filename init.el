@@ -202,14 +202,32 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-;; Completions
-(use-package vertico
+(use-package selectrum
+  :bind (("C-M-r" . selectrum-repeat)
+         :map selectrum-minibuffer-map
+         ("C-r" . selectrum-select-from-history))
   :custom
-  (vertico-cycle t)
+  (selectrum-fix-minibuffer-height t)
+  (selectrum-num-candidates-displayed 7)
+  (selectrum-count-style 'current/matches)
+  (completion-styles '(orderless))
+  (selectrum-refine-candidates-function #'orderless-filter)
+  (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1)
+  (selectrum-prescient-enable-filtering nil)
+  (orderless-skip-highlighting (lambda () selectrum-is-active))
   :custom-face
-  (vertico-current ((t (:background "#3a3f5a"))))
+  (selectrum-current-candidate ((t (:background "#3a3f5a"))))
   :init
-  (vertico-mode))
+  (selectrum-mode 1)
+  (savehist-mode))
+
+(use-package selectrum-prescient
+  :ensure t
+  :config
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1))
 
 ;; Commands to run on completions etc
 (use-package embark
@@ -233,19 +251,13 @@
   :hook
   (embark-collect-mode . embark-consult-preview-minor-mode))
 
-;; Similar to ivy rich but better
-(use-package marginalia
-  :after vertico
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :init
-  (marginalia-mode))
-
 ;; Similar to counsel
 (use-package consult
+  :after projectile
   :demand t
   :bind (("C-s" . consult-line)
-         ("C-M-l" . consult-imenu)
+         ("C-M-s" . consult-multi-occur)
+         ("C-M-l" . consult-outline)
          ("M-g M-g" . consult-goto-line)
          ("C-S-c c" . consult-mark)
          ([remap popup-kill-ring] . consult-yank-from-kill-ring)
@@ -255,25 +267,26 @@
   (setq consult-project-root-function #'projectile-project-root)
   :custom
   (completion-in-region-function #'consult-completion-in-region)
+  (consult-line-start-from-top nil)
+  (consult-line-point-placement 'match-end)
+  (fset 'multi-occur #'consult-multi-occur)
   :init
   (setq register-preview-delay 0
         register-preview-function #'consult-register-format))
 
+;; Similar to ivy rich but better
+(use-package marginalia
+  :after selectrum
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode)
+  :config
+  (advice-add #'marginalia--project-root :override #'projectile-project-root))
+
 ;; Order of completion suggestions
 (use-package orderless
-  :init
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
-
-(use-package savehist
-  :config
-  (setq history-length 25)
-  (savehist-mode 1))
-
-(use-package prescient
-  :config
-  (prescient-persist-mode 1))
+  :after selectrum)
 
 (use-package wgrep
   :config
@@ -821,7 +834,12 @@
          ("C-c c f" . dired-copy-paste-do-cut)
          ("C-y" . dired-copy-paste-do-paste))
   :custom
-  ((dired-listing-switches "-agho --group-directories-first")))
+  ((dired-listing-switches "-agho --group-directories-first"))
+  :config
+  (setq dired-recursive-copies 'always
+        dired-recursive-deletes 'always
+        delete-by-moving-to-trash t)
+  )
 
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))

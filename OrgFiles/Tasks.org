@@ -1,6 +1,7 @@
 * CURRENTLY WORKING ON
 ** General
 *** TODO  Make alias commands more general and use hostname when applying rebuilds
+*** TODO Add vterm
 
 ** FESP POWER BI
 
