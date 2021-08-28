@@ -30,8 +30,8 @@
 (defvar url-http-extra-headers nil)
 
 ;; Set default font size values
-(defvar default-font-size 150)
-(defvar default-variable-font-size 150)
+(defvar default-font-size 140)
+(defvar default-variable-font-size 140)
 
 ;; Set default transparency values
 (defvar frame-transparency '(100 . 100))
@@ -202,67 +202,78 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)
-         :map ivy-switch-buffer-map
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
-  :init
-  (ivy-mode 1)
-  :config
-  (setq ivy-wrap t)
-  (setq ivy-count-format "(%d/%d) ")
-  (setq enable-recursive-minibuffers t))
-
-(use-package counsel
-  :bind (("C-M-j" . 'counsel-switch-buffer)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history))
+;; Completions
+(use-package vertico
   :custom
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-  :config
-  (counsel-mode 1))
-
-
-(use-package ivy-rich
+  (vertico-cycle t)
+  :custom-face
+  (vertico-current ((t (:background "#3a3f5a"))))
   :init
-  (ivy-rich-mode 1)
-  :after counsel
+  (vertico-mode))
+
+;; Commands to run on completions etc
+(use-package embark
+  :bind (:map minibuffer-mode-map
+              ("C-S-a" . embark-act)
+              ("C-c C-o" . embark-export))
   :config
-  (setq ivy-format-function #'ivy-format-function-line)
-  (setq ivy-rich-display-transformers-list
-        (plist-put ivy-rich-display-transformers-list
-                   'ivy-switch-buffer
-                   '(:columns
-                     ((ivy-rich-candidate (:width 40))
-                      (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
-                      (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
-                      (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
-                      (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
-                     :predicate
-                     (lambda (cand)
-                       (if-let ((buffer (get-buffer cand)))))))))
+  (setq embark-action-indicator
+        (lambda (map)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator))
+
+;; additional commnads for embark
+(use-package embark-consult
+  :straight '(embark-consult :host github
+                             :repo "oantolin/embark"
+                             :files ("embark-consult.el"))
+  :after (embark consult)
+  :demand t
+  :hook
+  (embark-collect-mode . embark-consult-preview-minor-mode))
+
+;; Similar to ivy rich but better
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+
+;; Similar to counsel
+(use-package consult
+  :demand t
+  :bind (("C-s" . consult-line)
+         ("C-M-l" . consult-imenu)
+         ("M-g M-g" . consult-goto-line)
+         ("C-S-c c" . consult-mark)
+         ([remap popup-kill-ring] . consult-yank-from-kill-ring)
+         :map minibuffer-local-map
+         ("C-r" . consult-history))
+  :config
+  (setq consult-project-root-function #'projectile-project-root)
+  :custom
+  (completion-in-region-function #'consult-completion-in-region)
+  :init
+  (setq register-preview-delay 0
+        register-preview-function #'consult-register-format))
+
+;; Order of completion suggestions
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
+
+(use-package savehist
+  :config
+  (setq history-length 25)
+  (savehist-mode 1))
 
 (use-package prescient
-  :after counsel
   :config
   (prescient-persist-mode 1))
-
-
-(use-package ivy-prescient
-  :after counsel
-  :custom
-  (ivy-prescient-enable-filtering nil)
-  :config
-  ;; Uncomment the following line to have sorting remembered across sessions!
-                                        ;(prescient-persist-mode 1)
-  (ivy-prescient-mode 1))
 
 (use-package wgrep
   :config
@@ -297,14 +308,11 @@
   :straight t)
 
 (use-package helpful
-  :commands (helpful-callable helpful-variable helpful-command helpful-key)
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-function] . helpful-function)
+  ([remap describe-symbol] . helpful-symbol)
+  ([remap describe-variable] . helpful-variable)
   ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
 (use-package switch-window
@@ -734,16 +742,14 @@
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
-  :custom ((projectile-completion-system 'ivy))
+  :bind (([remap projectile-ripgrep] . consult-ripgrep))
   :bind-keymap
   ("C-c p" . projectile-command-map)
+  :config
+  (setq projectile-ripgrep-action #'consult-ripgrep)
   :init
   (projectile-mode 1)
   (setq projectile-switch-project-action #'projectile-dired))
-
-(use-package counsel-projectile
-  :after projectile
-  :config (counsel-projectile-mode))
 
 (use-package magit
   :commands magit-status

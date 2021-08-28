@@ -1,4 +1,7 @@
 * CURRENTLY WORKING ON
+** General
+*** TODO  Make alias commands more general and use hostname when applying rebuilds
+
 ** FESP POWER BI
 
 *** DONE Add pie chart showing the precentage of total sales for each source
