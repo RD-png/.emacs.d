@@ -977,15 +977,6 @@ text before point to the beginning of the current line."
     (back-to-indentation)
     (avi-kill-line-save)))
 
-(defun custom-delete-around-delim ()
-  (interactive)
-  (er/mark-outside-pairs)
-  (kill-region (region-beginning) (region-end))
-  (back-to-indentation)
-  (set-mark-command (point))
-  (end-of-line)
-  (delete-region (region-beginning) (region-end)))
-
 ;; General binds
 
 (global-set-key (kbd "C-c w") #'copy-word)
