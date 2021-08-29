@@ -912,7 +912,8 @@
          ("C-c c f" . dired-copy-paste-do-cut)
          ("C-y" . dired-copy-paste-do-paste))
   :custom
-  ((dired-listing-switches "-agho --group-directories-first"))
+  ((dired-listing-switches "-agho --group-directories-first")
+   (dired-recursive-copies t))
   :config
   (setq dired-recursive-copies 'always
         dired-recursive-deletes 'always

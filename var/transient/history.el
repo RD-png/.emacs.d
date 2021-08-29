@@ -1,2 +1,5 @@
 ((magit-commit nil)
- (magit-push nil))
+ (magit-gitignore nil)
+ (magit-push nil)
+ (magit-revert
+  ("--edit")))
