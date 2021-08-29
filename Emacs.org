@@ -316,6 +316,7 @@ Useful modeline to replace the default one
   ;; Completion framework
   (use-package vertico
     :custom
+    (vertico-count 7)
     (vertico-cycle t)
     ;; (completion-styles '(substring orderless))
     (setq read-file-name-completion-ignore-case t
@@ -327,10 +328,30 @@ Useful modeline to replace the default one
 
   ;; Completion ordering
   (use-package orderless
+    :straight t
+    :demand t
     :init
     (setq completion-styles '(orderless)
           completion-category-defaults nil
           completion-category-overrides '((file (styles . (partial-completion))))))
+
+  (use-package prescient
+  :straight t
+  :demand t
+  :custom
+  (prescient-history-length 1000)
+  :config
+  (prescient-persist-mode +1))
+
+(use-package savehist
+  :straight (savehist :type built-in)
+  :hook (after-init . savehist-mode)
+  :custom
+  (savehist-file (state! "savehist.el"))
+  (savehist-additional-variables
+   '(kill-ring search-ring regexp-search-ring
+     consult--line-history evil-ex-history
+     projectile-project-command-history)))
 
   ;; Mainly for recursive minibuffers
   (use-package emacs
@@ -397,10 +418,10 @@ Useful modeline to replace the default one
   ;; Similar to ivy rich but better
   (use-package marginalia
     :after vertico
-    :custom
-    (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
     :init
     (marginalia-mode)
+    :custom
+    (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
     :config
     (advice-add #'marginalia--project-root :override #'projectile-project-root))
 
@@ -895,6 +916,8 @@ Basically handles anything popup related
 #+begin_src emacs-lisp
 
   (use-package company
+    :straight t
+    :defer 1
     :defines company-backends
     :diminish company-mode
     :init (global-company-mode 1)
@@ -903,6 +926,8 @@ Basically handles anything popup related
     :straight t
     :custom
     (company-dabbrev-downcase nil)
+    (company-tooltip-width-grow-only nil)
+    (company-text-icons-add-background t)
     :config
     (setq company-idle-delay 0.01
           company-minimum-prefix-length 1
@@ -912,11 +937,55 @@ Basically handles anything popup related
           company-dabbrev-ignore-case t
           company-require-match nil))
 
-  (defun setup-lsp-company ()
-    (setq-local company-backends
-                '(company-capf company-dabbrev company-dabbrev-code)))
 
-  (add-hook 'lsp-completion-mode-hook 'setup-lsp-company)
+  (setq-default company-backends '(company-capf))
+
+  (defvar my/company-backend-alist
+       '((text-mode (:separate company-files company-dabbrev company-yasnippet company-ispell))
+          (prog-mode (company-capf company-files company-yasnippet))
+          (conf-mode company-capf company-files company-dabbrev-code company-yasnippet)
+          (lisp-interaction-mode (:separate company-capf company-files company-yasnippet company-abbrev  company-ispell)))
+      "An alist matching modes to company backends. The backends for any mode is
+    built from this.")
+
+    (defun my/set-company-backend (modes &rest backends)
+      "Prepends backends (in order) to `company-backends' in modes"
+      (declare (indent defun))
+      (dolist (mode (list modes))
+        (if (null (car backends))
+            (setq my/company-backend-alist
+                  (delq (assq mode my/company-backend-alist)
+                        my/company-backend-alist))
+          (setf (alist-get mode my/company-backend-alist)
+                backends))))
+
+    (defun my/company-backends ()
+      (let (backends)
+        (let ((mode major-mode)
+              (modes (list major-mode)))
+          (while (setq mode (get mode 'derived-mode-parent))
+            (push mode modes))
+          (dolist (mode modes)
+            (dolist (backend (append (cdr (assq mode my/company-backend-alist))
+                                     (default-value 'company-backends)))
+              (push backend backends)))
+          (delete-dups
+           (append (cl-loop for (mode . backends) in my/company-backend-alist
+                            if (or (eq major-mode mode)  ; major modes
+                                   (and (boundp mode)
+                                        (symbol-value mode))) ; minor modes
+                            append backends)
+                   (nreverse backends))))))
+
+    (add-hook 'after-change-major-mode-hook
+                (defun my/company-setup-backends ()
+                  "Set `company-backends' for the current buffer."
+                  (setq-local company-backends (my/company-backends))))
+
+(use-package company-prescient
+  :straight t
+  :after prescient
+  :hook (company-mode . company-prescient-mode))
 
 #+end_src
 
@@ -933,7 +1002,9 @@ Lsp-mode, languge protocol that has support for a lot of languages
     :config
     (setq lsp-prefer-capf t)
     :custom
+    (lsp-modeline-diagnostics-enable nil)
     (lsp-signature-render-documentation nil)
+    (lsp-eldoc-render-all nil)
     (lsp-enable-snippet t)
     (lsp-document-sync-method nil)
     (lsp-print-performance t)
@@ -960,7 +1031,6 @@ UI enhancements for emacs, disabled most of these as 99% of the time they offer 
     (add-hook 'lsp-mode-hook 'lsp-ui-mode)
     (setq lsp-ui-doc-enable nil)
     (setq lsp-eldoc-enable-hover nil)
-    (setq lsp-modeline-diagnostics-enable nil)
     (setq lsp-ui-doc-show-with-cursor nil)
     (setq lsp-signature-auto-activate nil)
     (setq lsp-ui-doc-show-with-mouse nil)

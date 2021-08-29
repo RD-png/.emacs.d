@@ -206,95 +206,116 @@
   :custom ((doom-modeline-height 15)))
 
 ;; Completion framework
-(use-package vertico
-  :custom
-  (vertico-cycle t)
-  ;; (completion-styles '(substring orderless))
-  (setq read-file-name-completion-ignore-case t
-        read-buffer-completion-ignore-case t)
-  :custom-face
-  (vertico-current ((t (:background "#3a3f5a"))))
-  :init
-  (vertico-mode))
+  (use-package vertico
+    :custom
+    (vertico-count 7)
+    (vertico-cycle t)
+    ;; (completion-styles '(substring orderless))
+    (setq read-file-name-completion-ignore-case t
+          read-buffer-completion-ignore-case t)
+    :custom-face
+    (vertico-current ((t (:background "#3a3f5a"))))
+    :init
+    (vertico-mode))
 
-;; Completion ordering
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
+  ;; Completion ordering
+  (use-package orderless
+    :straight t
+    :demand t
+    :init
+    (setq completion-styles '(orderless)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles . (partial-completion))))))
 
-;; Mainly for recursive minibuffers
-(use-package emacs
-  :init
-  ;; Add prompt indicator to `completing-read-multiple'.
-  ;; Alternatively try `consult-completing-read-multiple'.
-  (defun crm-indicator (args)
-    (cons (concat "[CRM] " (car args)) (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-  ;; Do not allow the cursor in the minibuffer prompt
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-  ;; Enable recursive minibuffers
-  (setq enable-recursive-minibuffers t))
-
-;; Completion actions
-(use-package embark
-  :bind (:map minibuffer-mode-map
-              ("C-S-a" . embark-act)
-              ("C-c C-o" . embark-export))
-  :config
-  (setq embark-action-indicator
-        (lambda (map)
-          (which-key--show-keymap "Embark" map nil nil 'no-paging)
-          #'which-key--hide-popup-ignore-command)
-        embark-become-indicator embark-action-indicator))
-
-;; Additonal completion actions
-(use-package embark-consult
-  :straight '(embark-consult :host github
-                             :repo "oantolin/embark"
-                             :files ("embark-consult.el"))
-  :after (embark consult)
+  (use-package prescient
+  :straight t
   :demand t
-  :hook
-  (embark-collect-mode . embark-consult-preview-minor-mode))
-
-;; Similar to counsel
-(use-package consult
-  :demand t
-  :after projectile
-  :bind (("C-s" . consult-line)
-         ("C-M-s" . multi-occur)
-         ("C-M-l" . consult-outline)
-         ("M-g M-g" . consult-goto-line)
-         ("C-S-c c" . consult-mark)
-         ([remap popup-kill-ring] . consult-yank-from-kill-ring)
-         :map minibuffer-local-map
-         ("C-r" . consult-history))
-  :config
-  (setq consult-project-root-function #'projectile-project-root)
   :custom
-  (completion-in-region-function #'consult-completion-in-region)
-  (consult-line-start-from-top nil)
-  (consult-line-point-placement 'match-end)
-  (fset 'multi-occur #'consult-multi-occur)
-  :init
-  (setq register-preview-delay 0
-        register-preview-function #'consult-register-format))
-
-;; Similar to ivy rich but better
-(use-package marginalia
-  :after vertico
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :init
-  (marginalia-mode)
+  (prescient-history-length 1000)
   :config
-  (advice-add #'marginalia--project-root :override #'projectile-project-root))
+  (prescient-persist-mode +1))
+
+(use-package savehist
+  :straight (savehist :type built-in)
+  :hook (after-init . savehist-mode)
+  :custom
+  (savehist-file (state! "savehist.el"))
+  (savehist-additional-variables
+   '(kill-ring search-ring regexp-search-ring
+     consult--line-history evil-ex-history
+     projectile-project-command-history)))
+
+  ;; Mainly for recursive minibuffers
+  (use-package emacs
+    :init
+    ;; Add prompt indicator to `completing-read-multiple'.
+    ;; Alternatively try `consult-completing-read-multiple'.
+    (defun crm-indicator (args)
+      (cons (concat "[CRM] " (car args)) (cdr args)))
+    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+    ;; Do not allow the cursor in the minibuffer prompt
+    (setq minibuffer-prompt-properties
+          '(read-only t cursor-intangible t face minibuffer-prompt))
+    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+    ;; Enable recursive minibuffers
+    (setq enable-recursive-minibuffers t))
+
+  ;; Completion actions
+  (use-package embark
+    :bind (:map minibuffer-mode-map
+                ("C-S-a" . embark-act)
+                ("C-c C-o" . embark-export))
+    :config
+    (setq embark-action-indicator
+          (lambda (map)
+            (which-key--show-keymap "Embark" map nil nil 'no-paging)
+            #'which-key--hide-popup-ignore-command)
+          embark-become-indicator embark-action-indicator))
+
+  ;; Additonal completion actions
+  (use-package embark-consult
+    :straight '(embark-consult :host github
+                               :repo "oantolin/embark"
+                               :files ("embark-consult.el"))
+    :after (embark consult)
+    :demand t
+    :hook
+    (embark-collect-mode . embark-consult-preview-minor-mode))
+
+  ;; Similar to counsel
+  (use-package consult
+    :demand t
+    :after projectile
+    :bind (("C-s" . consult-line)
+           ("C-M-s" . multi-occur)
+           ("C-M-l" . consult-outline)
+           ("M-g M-g" . consult-goto-line)
+           ("C-S-c c" . consult-mark)
+           ([remap popup-kill-ring] . consult-yank-from-kill-ring)
+           :map minibuffer-local-map
+           ("C-r" . consult-history))
+    :config
+    (setq consult-project-root-function #'projectile-project-root)
+    :custom
+    (completion-in-region-function #'consult-completion-in-region)
+    (consult-line-start-from-top nil)
+    (consult-line-point-placement 'match-end)
+    (fset 'multi-occur #'consult-multi-occur)
+    :init
+    (setq register-preview-delay 0
+          register-preview-function #'consult-register-format))
+
+  ;; Similar to ivy rich but better
+  (use-package marginalia
+    :after vertico
+    :init
+    (marginalia-mode)
+    :custom
+    (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+    :config
+    (advice-add #'marginalia--project-root :override #'projectile-project-root))
 
 (use-package wgrep
   :config
@@ -633,28 +654,76 @@
   (eshell-git-prompt-use-theme 'powerline))
 
 (use-package company
-  :defines company-backends
-  :diminish company-mode
-  :init (global-company-mode 1)
-  :bind (:map company-active-map
-              ("<tab>" . company-complete-selection))
+    :straight t
+    :defer 1
+    :defines company-backends
+    :diminish company-mode
+    :init (global-company-mode 1)
+    :bind (:map company-active-map
+                ("<tab>" . company-complete-selection))
+    :straight t
+    :custom
+    (company-dabbrev-downcase nil)
+    (company-tooltip-width-grow-only nil)
+    (company-text-icons-add-background t)
+    :config
+    (setq company-idle-delay 0.01
+          company-minimum-prefix-length 1
+          company-tooltip-limit 10
+          company-tooltip-align-annotations t
+          company-selection-wrap-around t
+          company-dabbrev-ignore-case t
+          company-require-match nil))
+
+
+  (setq-default company-backends '(company-capf))
+
+  (defvar my/company-backend-alist
+       '((text-mode (:separate company-files company-dabbrev company-yasnippet company-ispell))
+          (prog-mode (company-capf company-files company-yasnippet))
+          (conf-mode company-capf company-files company-dabbrev-code company-yasnippet)
+          (lisp-interaction-mode (:separate company-capf company-files company-yasnippet company-abbrev  company-ispell)))
+      "An alist matching modes to company backends. The backends for any mode is
+    built from this.")
+
+    (defun my/set-company-backend (modes &rest backends)
+      "Prepends backends (in order) to `company-backends' in modes"
+      (declare (indent defun))
+      (dolist (mode (list modes))
+        (if (null (car backends))
+            (setq my/company-backend-alist
+                  (delq (assq mode my/company-backend-alist)
+                        my/company-backend-alist))
+          (setf (alist-get mode my/company-backend-alist)
+                backends))))
+
+    (defun my/company-backends ()
+      (let (backends)
+        (let ((mode major-mode)
+              (modes (list major-mode)))
+          (while (setq mode (get mode 'derived-mode-parent))
+            (push mode modes))
+          (dolist (mode modes)
+            (dolist (backend (append (cdr (assq mode my/company-backend-alist))
+                                     (default-value 'company-backends)))
+              (push backend backends)))
+          (delete-dups
+           (append (cl-loop for (mode . backends) in my/company-backend-alist
+                            if (or (eq major-mode mode)  ; major modes
+                                   (and (boundp mode)
+                                        (symbol-value mode))) ; minor modes
+                            append backends)
+                   (nreverse backends))))))
+
+    (add-hook 'after-change-major-mode-hook
+                (defun my/company-setup-backends ()
+                  "Set `company-backends' for the current buffer."
+                  (setq-local company-backends (my/company-backends))))
+
+(use-package company-prescient
   :straight t
-  :custom
-  (company-dabbrev-downcase nil)
-  :config
-  (setq company-idle-delay 0.01
-        company-minimum-prefix-length 1
-        company-tooltip-limit 10
-        company-tooltip-align-annotations t
-        company-selection-wrap-around t
-        company-dabbrev-ignore-case t
-        company-require-match nil))
-
-(defun setup-lsp-company ()
-  (setq-local company-backends
-              '(company-capf company-dabbrev company-dabbrev-code)))
-
-(add-hook 'lsp-completion-mode-hook 'setup-lsp-company)
+  :after prescient
+  :hook (company-mode . company-prescient-mode))
 
 (use-package lsp-mode
   :straight t
@@ -662,7 +731,9 @@
   :config
   (setq lsp-prefer-capf t)
   :custom
+  (lsp-modeline-diagnostics-enable nil)
   (lsp-signature-render-documentation nil)
+  (lsp-eldoc-render-all nil)
   (lsp-enable-snippet t)
   (lsp-document-sync-method nil)
   (lsp-print-performance t)
@@ -681,7 +752,6 @@
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   (setq lsp-ui-doc-enable nil)
   (setq lsp-eldoc-enable-hover nil)
-  (setq lsp-modeline-diagnostics-enable nil)
   (setq lsp-ui-doc-show-with-cursor nil)
   (setq lsp-signature-auto-activate nil)
   (setq lsp-ui-doc-show-with-mouse nil)
