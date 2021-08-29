@@ -37,7 +37,11 @@
 (defvar frame-transparency '(100 . 100))
 
 ;; Default to utf-8
-(setq default-buffer-file-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8-unix
+      buffer-file-coding-system 'utf-8-unix)
+
+(push "node_modules/" completion-ignored-extensions)
+(push "__pycache__/" completion-ignored-extensions)
 
 ;; Syntax highlight for all buffers
 (global-font-lock-mode t)
@@ -54,6 +58,35 @@
 
 ;; Set exec paths for npm packages on nix
 (add-to-list 'exec-path "/root/.npm/bin")
+
+(setq
+ ;; Dont show these file types in recent files
+ recentf-exclude (list (rx
+                        "COMMIT_EDITMSG"
+                        (and (or "/TAGS"
+                                 "/GTAGS"
+                                 "/GRAGS"
+                                 "/GPATH"
+                                 ".mkv"
+                                 ".avi"
+                                 (and ".mp" (any "3" "4"))
+                                 (and ".doc" (? "x"))
+                                 ".sub"
+                                 ".srt"
+                                 ".ass"
+                                 ".elc"
+                                 (and "tmp." (+ (not (any "/" "\\")))))
+                             eol))))
+
+;; General Defaults
+(setq delete-old-versions t
+      delete-by-moving-to-trash t
+      enable-recursive-minibuffers t)
+
+(blink-cursor-mode -1)
+
+;; Remove startup message
+(advice-add 'display-startup-echo-area-message :override #'ignore)
 
 (setq gc-cons-threshold (* 50 1000 1000))
 
@@ -83,7 +116,9 @@
   (package-install 'use-package))
 
 (require 'use-package)
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure nil
+      straight-disable-native-compile nil
+      straight-use-package-by-default nil)
 
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
@@ -109,6 +144,7 @@
 (require 'straight-x)
 
 (use-package auto-package-update
+  :straight t
   :custom
   (auto-package-update-interval 7)
   (auto-package-update-prompt-before-update t)
@@ -118,7 +154,7 @@
   (auto-package-update-at-time "09:00"))
 
 (use-package dashboard
-  :ensure t
+  :straight t
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
@@ -163,6 +199,7 @@
 ;; Kill server if there is one and start fresh
 (require 'server nil t)
 (use-package server
+  :demand t
   :if window-system
   :init
   (when (not (server-running-p server-name))
@@ -199,35 +236,40 @@
    ((t (:background "steelblue" :foreground "white"))))
  )
 
-(use-package all-the-icons)
+(use-package all-the-icons
+  :straight t)
 
 (use-package doom-modeline
+  :straight t
   :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
+  :custom ((doom-modeline-height 15)
+           (doom-modeline-project-detection 'project)))
 
 ;; Completion framework
-  (use-package vertico
-    :custom
-    (vertico-count 7)
-    (vertico-cycle t)
-    ;; (completion-styles '(substring orderless))
-    (setq read-file-name-completion-ignore-case t
-          read-buffer-completion-ignore-case t)
-    :custom-face
-    (vertico-current ((t (:background "#3a3f5a"))))
-    :init
-    (vertico-mode))
+(use-package vertico
+  :straight (vertico :repo "minad/vertico"
+                     :branch "main")
+  :custom
+  (vertico-count 7)
+  (vertico-cycle t)
+  ;; (completion-styles '(substring orderless))
+  (setq read-file-name-completion-ignore-case t
+        read-buffer-completion-ignore-case t)
+  :custom-face
+  (vertico-current ((t (:background "#3a3f5a"))))
+  :init
+  (vertico-mode))
 
-  ;; Completion ordering
-  (use-package orderless
-    :straight t
-    :demand t
-    :init
-    (setq completion-styles '(orderless)
-          completion-category-defaults nil
-          completion-category-overrides '((file (styles . (partial-completion))))))
+;; Completion ordering
+(use-package orderless
+  :straight t
+  :demand t
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
 
-  (use-package prescient
+(use-package prescient
   :straight t
   :demand t
   :custom
@@ -239,85 +281,93 @@
   :straight (savehist :type built-in)
   :hook (after-init . savehist-mode)
   :custom
-  (savehist-file (state! "savehist.el"))
   (savehist-additional-variables
    '(kill-ring search-ring regexp-search-ring
-     consult--line-history evil-ex-history
-     projectile-project-command-history)))
+               consult--line-history evil-ex-history
+               projectile-project-command-history)))
 
-  ;; Mainly for recursive minibuffers
-  (use-package emacs
-    :init
-    ;; Add prompt indicator to `completing-read-multiple'.
-    ;; Alternatively try `consult-completing-read-multiple'.
-    (defun crm-indicator (args)
-      (cons (concat "[CRM] " (car args)) (cdr args)))
-    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+;; Mainly for recursive minibuffers
+(use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; Alternatively try `consult-completing-read-multiple'.
+  (defun crm-indicator (args)
+    (cons (concat "[CRM] " (car args)) (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
-    ;; Do not allow the cursor in the minibuffer prompt
-    (setq minibuffer-prompt-properties
-          '(read-only t cursor-intangible t face minibuffer-prompt))
-    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-    ;; Enable recursive minibuffers
-    (setq enable-recursive-minibuffers t))
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
 
-  ;; Completion actions
-  (use-package embark
-    :bind (:map minibuffer-mode-map
-                ("C-S-a" . embark-act)
-                ("C-c C-o" . embark-export))
-    :config
-    (setq embark-action-indicator
-          (lambda (map)
-            (which-key--show-keymap "Embark" map nil nil 'no-paging)
-            #'which-key--hide-popup-ignore-command)
-          embark-become-indicator embark-action-indicator))
+;; Completion actions
+(use-package embark
+  :straight t
+  :bind (:map minibuffer-mode-map
+              ("C-S-a" . embark-act)
+              ("C-c C-o" . embark-export))
+  :config
+  (setq embark-action-indicator
+        (lambda (map)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator))
 
-  ;; Additonal completion actions
-  (use-package embark-consult
-    :straight '(embark-consult :host github
-                               :repo "oantolin/embark"
-                               :files ("embark-consult.el"))
-    :after (embark consult)
-    :demand t
-    :hook
-    (embark-collect-mode . embark-consult-preview-minor-mode))
+;; Additonal completion actions
+(use-package embark-consult
+  :straight '(embark-consult :host github
+                             :repo "oantolin/embark"
+                             :files ("embark-consult.el"))
+  :after (embark consult)
+  :demand t
+  :hook
+  (embark-collect-mode . embark-consult-preview-minor-mode))
 
-  ;; Similar to counsel
-  (use-package consult
-    :demand t
-    :after projectile
-    :bind (("C-s" . consult-line)
-           ("C-M-s" . multi-occur)
-           ("C-M-l" . consult-outline)
-           ("M-g M-g" . consult-goto-line)
-           ("C-S-c c" . consult-mark)
-           ([remap popup-kill-ring] . consult-yank-from-kill-ring)
-           :map minibuffer-local-map
-           ("C-r" . consult-history))
-    :config
-    (setq consult-project-root-function #'projectile-project-root)
-    :custom
-    (completion-in-region-function #'consult-completion-in-region)
-    (consult-line-start-from-top nil)
-    (consult-line-point-placement 'match-end)
-    (fset 'multi-occur #'consult-multi-occur)
-    :init
-    (setq register-preview-delay 0
-          register-preview-function #'consult-register-format))
+;; Similar to counsel
+(use-package consult
+  :straight t
+  :demand t
+  :after projectile
+  :bind (("C-s" . consult-line)
+         ("C-M-s" . multi-occur)
+         ("C-M-l" . consult-outline)
+         ("M-g M-g" . consult-goto-line)
+         ("C-S-c c" . consult-mark)
+         ([remap popup-kill-ring] . consult-yank-from-kill-ring)
+         :map minibuffer-local-map
+         ("C-r" . consult-history))
+  :config
+  (setq consult-project-root-function #'projectile-project-root)
+  :custom
+  (completion-in-region-function #'consult-completion-in-region)
+  (consult-line-start-from-top nil)
+  (consult-line-point-placement 'match-end)
+  (fset 'multi-occur #'consult-multi-occur)
+  :init
+  (setq register-preview-delay 0
+        register-preview-function #'consult-register-format))
 
-  ;; Similar to ivy rich but better
-  (use-package marginalia
-    :after vertico
-    :init
-    (marginalia-mode)
-    :custom
-    (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-    :config
-    (advice-add #'marginalia--project-root :override #'projectile-project-root))
+;; Similar to ivy rich but better
+(use-package marginalia
+  :straight t
+  :after vertico
+  :init
+  (marginalia-mode)
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :config
+  (advice-add #'marginalia--project-root :override #'projectile-project-root)
+  (setq marginalia-command-categories
+        (append '((projectile-find-file . project-file)
+                  (projectile-find-dir . project-file)
+                  (projectile-switch-project . file))
+                marginalia-command-categories)))
 
 (use-package wgrep
+  :straight t
   :config
   (setq wgrep-change-readonly-file t)
   :bind (
@@ -341,6 +391,8 @@
     (query-replace-regexp (reb-target-binding reb-regexp) to-string)))
 
 (use-package which-key
+  :straight t
+  :demand t
   :init (which-key-mode)
   :diminish which-key-mode
   :config
@@ -350,6 +402,7 @@
   :straight t)
 
 (use-package helpful
+  :straight t
   :bind
   ([remap describe-function] . helpful-function)
   ([remap describe-symbol] . helpful-symbol)
@@ -358,7 +411,7 @@
   ([remap describe-key] . helpful-key))
 
 (use-package switch-window
-  :ensure t
+  :straight t
   :config
   (setq switch-window-input-style 'minibuffer)
   (setq switch-window-increase 4)
@@ -384,6 +437,7 @@
 (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 
 (use-package eyebrowse
+  :straight t
   :init
   (progn
     (defun my/create-eyebrowse-setup ()
@@ -400,17 +454,22 @@
     (add-hook 'after-init-hook #'my/create-eyebrowse-setup)))
 
 (use-package avy
-  :ensure t
+  :straight t
   :bind
   ("M-s" . avy-goto-char)
-  ("M-m" . avy-goto-word-0))
+  ("M-n" . avy-goto-char-2)
+  ("M-m" . avy-goto-word-0)
+  :custom
+  (avy-single-candidate-jump nil))
 
 (use-package expand-region
+  :straight t
   :bind (("C-}" . er/expand-region)
          ("C-{" . er/mark-inside-pairs)
          ("M-{" . er/mark-outside-pairs)))
 
-(use-package no-littering)
+(use-package no-littering
+  :straight t)
 
 ;; Disable auto saving and backups and symbolic link files
 (setq make-backup-files nil)
@@ -453,6 +512,7 @@
   (visual-line-mode 1))
 
 (use-package org
+  :straight t
   :pin org
   :commands (org-capture org-agenda)
   :hook (org-mode . org-mode-setup)
@@ -574,10 +634,16 @@
 
   (org-font-setup))
 
-(use-package org-bullets
-  :hook (org-mode . org-bullets-mode)
+(use-package org-superstar
+  :straight (org-superstar-mode :host github :repo "integral-dw/org-superstar-mode")
+  :hook (org-mode . org-superstar-mode)
   :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+  (org-superstar-todo-bullet-alist
+   '(("TODO" . 9744)
+     ("DONE" . 9745)))
+  (org-superstar-cycle-headline-bullets t)
+  (org-hide-leading-stars t)
+  (org-superstar-special-todo-items t))
 
 (defun org-mode-visual-fill ()
   (setq visual-fill-column-width 100
@@ -585,6 +651,7 @@
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
+  :straight t
   :hook (org-mode . org-mode-visual-fill))
 
 (with-eval-after-load 'org
@@ -604,7 +671,7 @@
   (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
 (use-package org-roam
-  :ensure t
+  :straight t
   :init
   (setq org-roam-v2-ack t)
   :custom
@@ -641,9 +708,11 @@
         eshell-scroll-to-bottom-on-input t))
 
 (use-package eshell-git-prompt
+  :straight t
   :after eshell)
 
 (use-package eshell
+  :straight t
   :hook (eshell-first-time-mode . configure-eshell)
   :config
 
@@ -759,6 +828,30 @@
   (setq lsp-ui-sideline-show-code-actions nil)
   (setq lsp-completion-show-detail nil))
 
+(use-package direnv
+  :straight t
+  :demand t
+  :preface
+  (defun patch-direnv-environment (&rest _args)
+    (setenv "PATH" (concat emacs-binary-path ":" (getenv "PATH")))
+    (setq exec-path (cons (file-name-as-directory emacs-binary-path)
+                          exec-path)))
+  :init
+  (defconst emacs-binary-path (directory-file-name
+                               (file-name-directory
+                                (executable-find "emacsclient"))))
+  :config
+  (advice-add 'direnv-update-directory-environment
+              :after #'patch-direnv-environment)
+  (add-hook 'git-commit-mode-hook #'patch-direnv-environment)
+  (add-hook 'magit-status-mode-hook #'patch-direnv-environment)
+  (defvar my-direnv-last-buffer nil)
+  (defun update-on-buffer-change ()
+    (unless (eq (current-buffer) my-direnv-last-buffer)
+      (setq my-direnv-last-buffer (current-buffer))
+      (direnv-update-environment default-directory)))
+  (add-hook 'post-command-hook #'update-on-buffer-change))
+
 (use-package php-mode
   :straight t
   :mode "\\.php\\'"
@@ -781,7 +874,7 @@
   (setq typescript-indent-level 2))
 
 (use-package lsp-python-ms
-  :ensure t
+  :straight t
   :hook (python-mode . (lambda ()
                          (require 'lsp-python-ms)
                          (lsp-deferred)))
@@ -789,7 +882,7 @@
   (setq lsp-python-ms-executable (executable-find "python-language-server")))
 
 (use-package python-mode
-  :ensure t
+  :straight t
   :hook (python-mode . lsp-deferred)
   :config
   (setq python-shell-interpreter "python3")
@@ -797,10 +890,11 @@
   (setq flycheck-pylintrc (substitute-in-file-name "$HOME/.pylintrc")))
 
 (use-package nix-mode
+  :straight t
   :mode "\\.nix\\'")
 
 (use-package web-mode
-  :ensure t
+  :straight t
   :mode ("\\.vue\\'")
   :hook (web-mode . lsp-deferred)
   :config
@@ -811,56 +905,63 @@
   (setq web-mode-script-padding 0))
 
 (use-package css-mode
-  :ensure t
+  :straight t
   :mode ("\\.css\\'"))
 
 (use-package haskell-mode
   :straight t
   :mode ("\\.hs\\'")
-  :hook (haskell-mode . lsp-deferred))
+  :hook (haskell-mode . lsp-deferred)
+  :config
+  (setq haskell-process-type 'cabal-repl))
 
 ;; finds executable and some additional compiler settings
 (use-package lsp-haskell
-  :ensure t
+  :straight t
   :after lsp-mode
   :hook (haskell-mode . lsp-deferred)
   :custom
   (lsp-haskell-server-path "haskell-language-server"))
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(setq haskell-process-type 'cabal-repl)
 
 (use-package projectile
+  :straight t
+  :defer 10
   :diminish projectile-mode
   :config (projectile-mode)
   :bind (([remap projectile-ripgrep] . consult-ripgrep))
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :config
-  (setq projectile-ripgrep-action #'consult-ripgrep)
+  (setq projectile-switch-project-action #'projectile-dired)
   :init
-  (projectile-mode 1)
-  (setq projectile-switch-project-action #'projectile-dired))
+  (projectile-mode 1))
 
 (use-package magit
+  :straight t
   :commands magit-status
   :bind ("C-c g" . magit-status)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (use-package forge
+  :straight t
   :after magit)
 
 (use-package evil-nerd-commenter
+  :straight t
   :bind ("C-;" . evilnc-comment-or-uncomment-lines))
 
 (use-package rainbow-delimiters
+  :straight t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (show-paren-mode 1)
 
 ;; Colors for # colors
 (use-package rainbow-mode
+  :straight t
   :defer t
   :hook (org-mode
          emacs-lisp-mode
@@ -877,7 +978,8 @@
  '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
 
 (use-package yasnippet
-  :ensure t
+  :straight t
+  :diminish yas-minor-mode
   :hook (prog-mode . yas-minor-mode)
   :init
   (yas-global-mode 1)
@@ -885,15 +987,18 @@
   (yas-reload-all))
 
 (use-package popup-kill-ring
-  :ensure t
+  :straight t
   :bind ("M-y" . popup-kill-ring))
 
 (use-package flycheck
+  :straight t
   :defer t
   :hook(lsp-mode . flycheck-mode))
 
 (use-package smartparens
-  :hook (prog-mode . smartparens-mode))
+  :straight t
+  :hook (prog-mode . smartparens-mode)
+        (text-mode . smartparens-mode))
 
 (use-package paren
   :config
@@ -903,7 +1008,7 @@
 (add-to-list 'load-path "~/.config/emacs/etc/modules/dired+")
 (require 'dired-copy-paste)
 (use-package dired
-  :ensure nil
+  :straight (dired :type built-in)
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump)
          :map dired-mode-map
@@ -921,9 +1026,13 @@
   )
 
 (use-package all-the-icons-dired
+  :straight t
+  :after all-the-icons
   :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package dired-rainbow
+  :straight t
+  :after all-the-icons-dired
   :defer 2
   :config
   (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
@@ -951,16 +1060,30 @@
 (setq-default indent-tabs-mode nil)
 
 (use-package multiple-cursors
+  :straight t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c m a" . mc/mark-all-like-this)))
 
-(use-package undo-tree)
-(global-undo-tree-mode 1)
-(global-set-key (kbd "C-/") #'undo)
+(use-package undo-tree
+  :straight t
+  :diminish
+  :bind (("C-/" . #'undo)
+         ("C-?" . #'redo))
+  :custom
+  (undo-tree-auto-save-history t)
+  :init
+  (global-undo-tree-mode +1))
+
 (defalias 'redo 'undo-tree-redo)
-(global-set-key (kbd "C-?") #'redo)
+
+(when window-system
+    (use-package pretty-mode
+    :straight t
+    :init
+    (global-pretty-mode t)
+    (global-prettify-symbols-mode t)))
 
 (defun copy-word ()
   (interactive)

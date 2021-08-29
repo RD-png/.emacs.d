@@ -57,7 +57,11 @@ Run (byte-recompile-directory package-user-dir nil 'force) on fresh install
   (defvar frame-transparency '(100 . 100))
 
   ;; Default to utf-8
-  (setq default-buffer-file-coding-system 'utf-8)
+  (setq default-buffer-file-coding-system 'utf-8-unix
+        buffer-file-coding-system 'utf-8-unix)
+
+  (push "node_modules/" completion-ignored-extensions)
+  (push "__pycache__/" completion-ignored-extensions)
 
   ;; Syntax highlight for all buffers
   (global-font-lock-mode t)
@@ -75,6 +79,35 @@ Run (byte-recompile-directory package-user-dir nil 'force) on fresh install
   ;; Set exec paths for npm packages on nix
   (add-to-list 'exec-path "/root/.npm/bin")
 
+  (setq
+   ;; Dont show these file types in recent files
+   recentf-exclude (list (rx
+                          "COMMIT_EDITMSG"
+                          (and (or "/TAGS"
+                                   "/GTAGS"
+                                   "/GRAGS"
+                                   "/GPATH"
+                                   ".mkv"
+                                   ".avi"
+                                   (and ".mp" (any "3" "4"))
+                                   (and ".doc" (? "x"))
+                                   ".sub"
+                                   ".srt"
+                                   ".ass"
+                                   ".elc"
+                                   (and "tmp." (+ (not (any "/" "\\")))))
+                               eol))))
+
+  ;; General Defaults
+  (setq delete-old-versions t
+        delete-by-moving-to-trash t
+        enable-recursive-minibuffers t)
+
+  (blink-cursor-mode -1)
+
+  ;; Remove startup message
+  (advice-add 'display-startup-echo-area-message :override #'ignore)
+
 #+end_src
 
 ** Daemon
@@ -82,7 +115,9 @@ Run (byte-recompile-directory package-user-dir nil 'force) on fresh install
 Run emacs daemon
 
 #+BEGIN_SRC sh :shebang #!/usr/bin/env bash
+
   emacs --daemon
+
 #+END_SRC
 
 ** Statrup Performance
@@ -128,7 +163,10 @@ Define packages archives where we will all the packages we need for the configur
     (package-install 'use-package))
 
   (require 'use-package)
-  (setq use-package-always-ensure t)
+  (setq use-package-always-ensure nil
+        straight-disable-native-compile nil
+        straight-use-package-by-default nil)
+
 
 #+end_src
 
@@ -169,6 +207,7 @@ Checks all packages for updates when emacs is launched
 #+begin_src emacs-lisp
 
   (use-package auto-package-update
+    :straight t
     :custom
     (auto-package-update-interval 7)
     (auto-package-update-prompt-before-update t)
@@ -186,16 +225,16 @@ Simple main menu, with a list of recent files and projects
 
 #+begin_src emacs-lisp
 
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
-    (setq dashboard-items '((recents  . 10)
-                            (projects . 5)
-                            (bookmarks . 5)))
-    (setq dashboard-banner-logo-title "")
-    (setq dashboard-set-file-icons t))
+(use-package dashboard
+  :straight t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
+  (setq dashboard-items '((recents  . 10)
+                          (projects . 5)
+                          (bookmarks . 5)))
+  (setq dashboard-banner-logo-title "")
+  (setq dashboard-set-file-icons t))
 
 #+end_src
 
@@ -240,6 +279,7 @@ Customize the built in emacs user interface features, mainly turn them off
   ;; Kill server if there is one and start fresh
   (require 'server nil t)
   (use-package server
+    :demand t
     :if window-system
     :init
     (when (not (server-running-p server-name))
@@ -301,11 +341,14 @@ Useful modeline to replace the default one
 
 #+begin_src emacs-lisp
 
-  (use-package all-the-icons)
+  (use-package all-the-icons
+    :straight t)
 
   (use-package doom-modeline
+    :straight t
     :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 15)))
+    :custom ((doom-modeline-height 15)
+             (doom-modeline-project-detection 'project)))
 
 #+end_src
 
@@ -315,6 +358,8 @@ Useful modeline to replace the default one
 
   ;; Completion framework
   (use-package vertico
+    :straight (vertico :repo "minad/vertico"
+                       :branch "main")
     :custom
     (vertico-count 7)
     (vertico-cycle t)
@@ -336,22 +381,21 @@ Useful modeline to replace the default one
           completion-category-overrides '((file (styles . (partial-completion))))))
 
   (use-package prescient
-  :straight t
-  :demand t
-  :custom
-  (prescient-history-length 1000)
-  :config
-  (prescient-persist-mode +1))
+    :straight t
+    :demand t
+    :custom
+    (prescient-history-length 1000)
+    :config
+    (prescient-persist-mode +1))
 
-(use-package savehist
-  :straight (savehist :type built-in)
-  :hook (after-init . savehist-mode)
-  :custom
-  (savehist-file (state! "savehist.el"))
-  (savehist-additional-variables
-   '(kill-ring search-ring regexp-search-ring
-     consult--line-history evil-ex-history
-     projectile-project-command-history)))
+  (use-package savehist
+    :straight (savehist :type built-in)
+    :hook (after-init . savehist-mode)
+    :custom
+    (savehist-additional-variables
+     '(kill-ring search-ring regexp-search-ring
+                 consult--line-history evil-ex-history
+                 projectile-project-command-history)))
 
   ;; Mainly for recursive minibuffers
   (use-package emacs
@@ -372,6 +416,7 @@ Useful modeline to replace the default one
 
   ;; Completion actions
   (use-package embark
+    :straight t
     :bind (:map minibuffer-mode-map
                 ("C-S-a" . embark-act)
                 ("C-c C-o" . embark-export))
@@ -394,6 +439,7 @@ Useful modeline to replace the default one
 
   ;; Similar to counsel
   (use-package consult
+    :straight t
     :demand t
     :after projectile
     :bind (("C-s" . consult-line)
@@ -417,13 +463,19 @@ Useful modeline to replace the default one
 
   ;; Similar to ivy rich but better
   (use-package marginalia
+    :straight t
     :after vertico
     :init
     (marginalia-mode)
     :custom
     (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
     :config
-    (advice-add #'marginalia--project-root :override #'projectile-project-root))
+    (advice-add #'marginalia--project-root :override #'projectile-project-root)
+    (setq marginalia-command-categories
+          (append '((projectile-find-file . project-file)
+                    (projectile-find-dir . project-file)
+                    (projectile-switch-project . file))
+                  marginalia-command-categories)))
 
 #+end_src
 
@@ -434,6 +486,7 @@ Mode to edit grep buffers
 #+begin_src emacs-lisp
 
   (use-package wgrep
+    :straight t
     :config
     (setq wgrep-change-readonly-file t)
     :bind (
@@ -472,6 +525,8 @@ Suggests next key presses when you type a command in, helpful for remembering th
 #+begin_src emacs-lisp
 
   (use-package which-key
+    :straight t
+    :demand t
     :init (which-key-mode)
     :diminish which-key-mode
     :config
@@ -497,6 +552,7 @@ Provides actually useful information for emacs related commands
 #+begin_src emacs-lisp
 
   (use-package helpful
+    :straight t
     :bind
     ([remap describe-function] . helpful-function)
     ([remap describe-symbol] . helpful-symbol)
@@ -514,7 +570,7 @@ Change how emacs handles changing between buffers in the current perspective
 #+begin_src emacs-lisp
 
   (use-package switch-window
-    :ensure t
+    :straight t
     :config
     (setq switch-window-input-style 'minibuffer)
     (setq switch-window-increase 4)
@@ -556,6 +612,7 @@ Eyebrowse provides simple workspace management
 #+begin_src emacs-lisp
 
   (use-package eyebrowse
+    :straight t
     :init
     (progn
       (defun my/create-eyebrowse-setup ()
@@ -580,10 +637,13 @@ Allows quick movement in files
 #+begin_src emacs-lisp
 
   (use-package avy
-    :ensure t
+    :straight t
     :bind
     ("M-s" . avy-goto-char)
-    ("M-m" . avy-goto-word-0))
+    ("M-n" . avy-goto-char-2)
+    ("M-m" . avy-goto-word-0)
+    :custom
+    (avy-single-candidate-jump nil))
 
 #+end_src
 
@@ -594,6 +654,7 @@ Delete within delimiters
 #+begin_src emacs-lisp
 
   (use-package expand-region
+    :straight t
     :bind (("C-}" . er/expand-region)
            ("C-{" . er/mark-inside-pairs)
            ("M-{" . er/mark-outside-pairs)))
@@ -606,12 +667,13 @@ Keep folders clean when you are using emacs
 
 #+begin_src emacs-lisp
 
-  (use-package no-littering)
+    (use-package no-littering
+      :straight t)
 
-  ;; Disable auto saving and backups and symbolic link files
-  (setq make-backup-files nil)
-  (setq auto-save-default nil)
-  (setq create-lockfiles nil)
+    ;; Disable auto saving and backups and symbolic link files
+    (setq make-backup-files nil)
+    (setq auto-save-default nil)
+    (setq create-lockfiles nil)
 
 #+end_src
 
@@ -662,6 +724,7 @@ Keep folders clean when you are using emacs
     (visual-line-mode 1))
 
   (use-package org
+    :straight t
     :pin org
     :commands (org-capture org-agenda)
     :hook (org-mode . org-mode-setup)
@@ -787,20 +850,26 @@ Keep folders clean when you are using emacs
 
 *** Nicer Heading Bullets
 
-[[https://github.com/sabof/org-bullets][org-bullets]] replaces the heading stars in =org-mode= buffers with nicer looking characters that you can control.  Another option for this is [[https://github.com/integral-dw/org-superstar-mode][org-superstar-mode]] which we may cover in a later video.
+[[https://github.com/integral-dw/org-superstar-mode][org-superstar-mode]] provides nicer bullets
 
 #+begin_src emacs-lisp
 
-  (use-package org-bullets
-    :hook (org-mode . org-bullets-mode)
+  (use-package org-superstar
+    :straight (org-superstar-mode :host github :repo "integral-dw/org-superstar-mode")
+    :hook (org-mode . org-superstar-mode)
     :custom
-    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+    (org-superstar-todo-bullet-alist
+     '(("TODO" . 9744)
+       ("DONE" . 9745)))
+    (org-superstar-cycle-headline-bullets t)
+    (org-hide-leading-stars t)
+    (org-superstar-special-todo-items t))
 
 #+end_src
 
 *** Center Org Buffers
 
-We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]] to center =org-mode= buffers for a more pleasing writing experience as it centers the contents of the buffer horizontally to seem more like you are editing a document.  This is really a matter of personal preference so you can remove the block below if you don't like the behavior.
+Center content when in org buffers
 
 #+begin_src emacs-lisp
 
@@ -810,6 +879,7 @@ We use [[https://github.com/joostkremers/visual-fill-column][visual-fill-column]
     (visual-fill-column-mode 1))
 
   (use-package visual-fill-column
+    :straight t
     :hook (org-mode . org-mode-visual-fill))
 
 #+end_src
@@ -849,7 +919,7 @@ Org based note system
 #+begin_src emacs-lisp
 
   (use-package org-roam
-    :ensure t
+    :straight t
     :init
     (setq org-roam-v2-ack t)
     :custom
@@ -894,9 +964,11 @@ Elisp Shell, really clean to use
           eshell-scroll-to-bottom-on-input t))
 
   (use-package eshell-git-prompt
+    :straight t
     :after eshell)
 
   (use-package eshell
+    :straight t
     :hook (eshell-first-time-mode . configure-eshell)
     :config
 
@@ -1040,6 +1112,38 @@ UI enhancements for emacs, disabled most of these as 99% of the time they offer 
 
 #+end_src
 
+*** Direnv
+
+Uses enviroment relevant to current path
+
+#+begin_src emacs-lisp
+
+  (use-package direnv
+    :straight t
+    :demand t
+    :preface
+    (defun patch-direnv-environment (&rest _args)
+      (setenv "PATH" (concat emacs-binary-path ":" (getenv "PATH")))
+      (setq exec-path (cons (file-name-as-directory emacs-binary-path)
+                            exec-path)))
+    :init
+    (defconst emacs-binary-path (directory-file-name
+                                 (file-name-directory
+                                  (executable-find "emacsclient"))))
+    :config
+    (advice-add 'direnv-update-directory-environment
+                :after #'patch-direnv-environment)
+    (add-hook 'git-commit-mode-hook #'patch-direnv-environment)
+    (add-hook 'magit-status-mode-hook #'patch-direnv-environment)
+    (defvar my-direnv-last-buffer nil)
+    (defun update-on-buffer-change ()
+      (unless (eq (current-buffer) my-direnv-last-buffer)
+        (setq my-direnv-last-buffer (current-buffer))
+        (direnv-update-environment default-directory)))
+    (add-hook 'post-command-hook #'update-on-buffer-change))
+
+#+end_src
+
 ** Languages
 *** PHP
 
@@ -1093,7 +1197,7 @@ Again use lsp server for python for completions and error checking
 #+begin_src emacs-lisp
 
   (use-package lsp-python-ms
-    :ensure t
+    :straight t
     :hook (python-mode . (lambda ()
                            (require 'lsp-python-ms)
                            (lsp-deferred)))
@@ -1101,7 +1205,7 @@ Again use lsp server for python for completions and error checking
     (setq lsp-python-ms-executable (executable-find "python-language-server")))
 
   (use-package python-mode
-    :ensure t
+    :straight t
     :hook (python-mode . lsp-deferred)
     :config
     (setq python-shell-interpreter "python3")
@@ -1117,6 +1221,7 @@ Syntax / error checking for nix
 #+begin_src emacs-lisp
 
   (use-package nix-mode
+    :straight t
     :mode "\\.nix\\'")
 
 #+end_src
@@ -1128,7 +1233,7 @@ Custom major mode that will hook mode based on which tags cursor is inside, use 
 #+begin_src emacs-lisp
 
   (use-package web-mode
-    :ensure t
+    :straight t
     :mode ("\\.vue\\'")
     :hook (web-mode . lsp-deferred)
     :config
@@ -1147,7 +1252,7 @@ Will be used with .vue files
 #+begin_src emacs-lisp
 
   (use-package css-mode
-    :ensure t
+    :straight t
     :mode ("\\.css\\'"))
 
 #+end_src
@@ -1159,18 +1264,19 @@ Will be used with .vue files
   (use-package haskell-mode
     :straight t
     :mode ("\\.hs\\'")
-    :hook (haskell-mode . lsp-deferred))
+    :hook (haskell-mode . lsp-deferred)
+    :config
+    (setq haskell-process-type 'cabal-repl))
 
   ;; finds executable and some additional compiler settings
   (use-package lsp-haskell
-    :ensure t
+    :straight t
     :after lsp-mode
     :hook (haskell-mode . lsp-deferred)
     :custom
     (lsp-haskell-server-path "haskell-language-server"))
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  (setq haskell-process-type 'cabal-repl)
 
 #+end_src
 
@@ -1181,16 +1287,17 @@ Project management packages, not really using it that much, could remove it in t
 #+begin_src emacs-lisp
 
   (use-package projectile
+    :straight t
+    :defer 10
     :diminish projectile-mode
     :config (projectile-mode)
     :bind (([remap projectile-ripgrep] . consult-ripgrep))
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :config
-    (setq projectile-ripgrep-action #'consult-ripgrep)
+    (setq projectile-switch-project-action #'projectile-dired)
     :init
-    (projectile-mode 1)
-    (setq projectile-switch-project-action #'projectile-dired))
+    (projectile-mode 1))
 
 #+end_src
 
@@ -1201,12 +1308,14 @@ Best package emacs has
 #+begin_src emacs-lisp
 
   (use-package magit
+    :straight t
     :commands magit-status
     :bind ("C-c g" . magit-status)
     :custom
     (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
   (use-package forge
+    :straight t
     :after magit)
 
 #+end_src
@@ -1218,6 +1327,7 @@ Comments stuff out based on the mode
 #+begin_src emacs-lisp
 
   (use-package evil-nerd-commenter
+    :straight t
     :bind ("C-;" . evilnc-comment-or-uncomment-lines))
 
 #+end_src
@@ -1229,12 +1339,14 @@ Add colours to brackets and delimiters
 #+begin_src emacs-lisp
 
   (use-package rainbow-delimiters
+    :straight t
     :hook (prog-mode . rainbow-delimiters-mode))
 
   (show-paren-mode 1)
 
   ;; Colors for # colors
   (use-package rainbow-mode
+    :straight t
     :defer t
     :hook (org-mode
            emacs-lisp-mode
@@ -1259,7 +1371,8 @@ Templates for repeated code
 #+begin_src emacs-lisp
 
   (use-package yasnippet
-    :ensure t
+    :straight t
+    :diminish yas-minor-mode
     :hook (prog-mode . yas-minor-mode)
     :init
     (yas-global-mode 1)
@@ -1275,7 +1388,7 @@ Browsable ring of recently killed text
 #+begin_src emacs-lisp
 
   (use-package popup-kill-ring
-    :ensure t
+    :straight t
     :bind ("M-y" . popup-kill-ring))
 
 #+end_src
@@ -1287,6 +1400,7 @@ Syntax checking
 #+begin_src emacs-lisp
 
   (use-package flycheck
+    :straight t
     :defer t
     :hook(lsp-mode . flycheck-mode))
 
@@ -1298,8 +1412,10 @@ Smart match pairs for parens
 
 #+begin_src emacs-lisp
 
-  (use-package smartparens
-    :hook (prog-mode . smartparens-mode))
+    (use-package smartparens
+      :straight t
+      :hook (prog-mode . smartparens-mode)
+            (text-mode . smartparens-mode))
 
 #+end_src
 
@@ -1323,52 +1439,56 @@ Emacs file browser
 *** Configuration
 #+begin_src emacs-lisp
 
-    (add-to-list 'load-path "~/.config/emacs/etc/modules/dired+")
-    (require 'dired-copy-paste)
-    (use-package dired
-      :ensure nil
-      :commands (dired dired-jump)
-      :bind (("C-x C-j" . dired-jump)
-             :map dired-mode-map
-             ("K" . dired-up-directory)
-             ("C-c f" . dired-copy-paste-do-copy)
-             ("C-c c f" . dired-copy-paste-do-cut)
-             ("C-y" . dired-copy-paste-do-paste))
-      :custom
-      ((dired-listing-switches "-agho --group-directories-first")
-       (dired-recursive-copies t))
-      :config
-      (setq dired-recursive-copies 'always
-            dired-recursive-deletes 'always
-            delete-by-moving-to-trash t)
-      )
+  (add-to-list 'load-path "~/.config/emacs/etc/modules/dired+")
+  (require 'dired-copy-paste)
+  (use-package dired
+    :straight (dired :type built-in)
+    :commands (dired dired-jump)
+    :bind (("C-x C-j" . dired-jump)
+           :map dired-mode-map
+           ("K" . dired-up-directory)
+           ("C-c f" . dired-copy-paste-do-copy)
+           ("C-c c f" . dired-copy-paste-do-cut)
+           ("C-y" . dired-copy-paste-do-paste))
+    :custom
+    ((dired-listing-switches "-agho --group-directories-first")
+     (dired-recursive-copies t))
+    :config
+    (setq dired-recursive-copies 'always
+          dired-recursive-deletes 'always
+          delete-by-moving-to-trash t)
+    )
 
-    (use-package all-the-icons-dired
-      :hook (dired-mode . all-the-icons-dired-mode))
+  (use-package all-the-icons-dired
+    :straight t
+    :after all-the-icons
+    :hook (dired-mode . all-the-icons-dired-mode))
 
-    (use-package dired-rainbow
-      :defer 2
-      :config
-      (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
-      (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
-      (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
-      (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
-      (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
-      (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
-      (dired-rainbow-define media "#de751f" ("mp3" "mp4" "mkv" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
-      (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
-      (dired-rainbow-define log "#c17d11" ("log"))
-      (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
-      (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
-      (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
-      (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
-      (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
-      (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
-      (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
-      (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
-      (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
-      (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
-      (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
+  (use-package dired-rainbow
+    :straight t
+    :after all-the-icons-dired
+    :defer 2
+    :config
+    (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
+    (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
+    (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
+    (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
+    (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
+    (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
+    (dired-rainbow-define media "#de751f" ("mp3" "mp4" "mkv" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
+    (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
+    (dired-rainbow-define log "#c17d11" ("log"))
+    (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
+    (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
+    (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
+    (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
+    (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+    (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
+    (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
+    (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
+    (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
+    (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
+    (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
 #+end_src
 
@@ -1445,6 +1565,7 @@ General settings for coding
 #+begin_src emacs-lisp
 
   (use-package multiple-cursors
+    :straight t
     :bind (("C-S-c C-S-c" . mc/edit-lines)
            ("C->" . mc/mark-next-like-this)
            ("C-<" . mc/mark-previous-like-this)
@@ -1455,11 +1576,32 @@ General settings for coding
 
 #+begin_src emacs-lisp
 
-  (use-package undo-tree)
-  (global-undo-tree-mode 1)
-  (global-set-key (kbd "C-/") #'undo)
+  (use-package undo-tree
+    :straight t
+    :diminish
+    :bind (("C-/" . #'undo)
+           ("C-?" . #'redo))
+    :custom
+    (undo-tree-auto-save-history t)
+    :init
+    (global-undo-tree-mode +1))
+
   (defalias 'redo 'undo-tree-redo)
-  (global-set-key (kbd "C-?") #'redo)
+
+#+end_src
+
+** Symbols
+
+Changes lambda to symbol
+
+#+begin_src emacs-lisp
+
+  (when window-system
+      (use-package pretty-mode
+      :straight t
+      :init
+      (global-pretty-mode t)
+      (global-prettify-symbols-mode t)))
 
 #+end_src
 

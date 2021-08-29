@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        aborn/backward-kill-word
         kill-region
         ))
 
