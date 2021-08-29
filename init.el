@@ -183,6 +183,9 @@
 (set-foreground-color "#c5c8c6")
 (set-background-color "#1d1f21")
 
+;; Grep Highlight
+(custom-set-faces
+ `(match ((t (:foreground "#72a4ff")))))
 
 ;; For the default theme
 (custom-set-faces
@@ -265,7 +268,7 @@
   :demand t
   :after projectile
   :bind (("C-s" . consult-line)
-         ("C-M-s" . consult-multi-occur)
+         ("C-M-s" . multi-occur)
          ("C-M-l" . consult-outline)
          ("M-g M-g" . consult-goto-line)
          ("C-S-c c" . consult-mark)
