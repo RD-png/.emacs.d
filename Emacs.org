@@ -334,6 +334,22 @@ Set theme colour theme for emacs
 
 #+end_src
 
+** Buffers
+
+Control buffers
+
+#+begin_src emacs-lisp
+
+  (setq display-buffer-base-action
+      '(display-buffer-reuse-mode-window
+        display-buffer-reuse-window
+        display-buffer-same-window))
+
+;; If a popup does happen, don't resize windows to be equal-sized
+(setq even-window-sizes nil)
+
+#+end_src
+
 * UI Extensions
 ** Modeline
 
