@@ -1590,21 +1590,6 @@ General settings for coding
 
 #+end_src
 
-** Symbols
-
-Changes lambda to symbol
-
-#+begin_src emacs-lisp
-
-  (when window-system
-      (use-package pretty-mode
-      :straight t
-      :init
-      (global-pretty-mode t)
-      (global-prettify-symbols-mode t)))
-
-#+end_src
-
 * Rebinds
 
 Custom functions for keybinds and just general functionality I wanted

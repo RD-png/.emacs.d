@@ -1078,13 +1078,6 @@
 
 (defalias 'redo 'undo-tree-redo)
 
-(when window-system
-    (use-package pretty-mode
-    :straight t
-    :init
-    (global-pretty-mode t)
-    (global-prettify-symbols-mode t)))
-
 (defun copy-word ()
   (interactive)
   (save-excursion
