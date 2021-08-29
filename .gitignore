@@ -1,5 +1,7 @@
 /straight/
 /elpa/
+/var/forge/
+/var/org/
 /eln-cache/
 /lsp-cache/
 /recentf
