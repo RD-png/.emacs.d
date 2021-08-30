@@ -1,5 +1,0 @@
-:PROPERTIES:
-:ID:       0f05a3e6-94ae-4c83-b52e-5bb7da21c315
-:END:
-#+title: test
-wa

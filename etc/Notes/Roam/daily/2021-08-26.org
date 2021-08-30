@@ -1,9 +1,0 @@
-:PROPERTIES:
-:ID:       cce66408-6379-4cd4-ba91-ea7694a19158
-:END:
-#+title: 2021-08-26
-* 04:28 PM:
-
-* TODO Add folder inside of nixos which will hold the hosts with configuration and hardware nix files that we can reference from the flake.nix
-
-* 04:42 PM: LLL

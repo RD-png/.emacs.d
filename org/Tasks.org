@@ -1,0 +1,25 @@
+* CURRENTLY WORKING ON
+** General
+*** DONE Make alias commands more general and use hostname when applying rebuilds
+CLOSED: [2021-08-30 Mon 14:20]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-08-30 Mon 14:20]
+:END:
+
+*** TODO [#A] Add vterm
+:LOGBOOK:
+- Note taken on [2021-08-30 Mon 14:20] \\
+  If eshell causes problems we can revist it
+:END:
+
+*** TODO Fix npm / vue on nix
+
+*** TODO direnv / nix-direnv for python / haskell
+SCHEDULED: <2021-08-30 Sat>
+
+*** DONE Fix projectile-switch-buffer
+SCHEDULED: [2021-08-30 Mon 13:10]
+CLOSED: [2021-08-30 Mon 13:17]
+:Logbook:
+- State "DONE"       from "TODO"       [2021-08-30 Mon 13:17]
+:END:

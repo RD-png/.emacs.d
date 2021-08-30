@@ -1,0 +1,48 @@
+*** DONE Add pie chart showing the precentage of total sales for each source
+CLOSED: [2021-07-14 Wed 08:23]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-14 Wed 08:23]
+:END:
+
+
+*** DONE Insert more data into powerbi to test how the page handles a larger date range
+CLOSED: [2021-07-26 Mon 10:37]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-26 Mon 10:37]
+:END:
+
+*** DONE Add the orderItems table to the filters on exports page
+CLOSED: [2021-08-18 Wed 16:16]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-08-18 Wed 16:16]
+:END:
+
+*** TODO Build a method for the custom values, e.g total atts for skus from order table
+
+*** TODO Possibly alert the user they are removing a the last selected column and this will remove the join condition in the arguments
+
+*** DONE Return the sales trends data in a format for the graphs and total the amount of unique orders
+CLOSED: [2021-07-21 Wed 16:18]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-21 Wed 16:18]
+:END:
+
+
+*** DONE Get oldest and most recent sale (this can be done on page mount and does not need to updated)
+CLOSED: [2021-07-14 Wed 08:22]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-14 Wed 08:22]
+:END:
+
+
+*** DONE From the reportDashboardData function assign the data to the relevant graph
+
+*** DONE When filtering skus, it may be worth passing a list of the skus that were selected before the list gets filtered, and have php find the interescts between the new options and the prior selected options and then pass this back. This could reduce the hang time when filtering for a large range that will return around 30k skus.
+
+*** DONE Make suppliers select filter the categories select
+
+*** DONE Fix the scrolling for the skus, when its filtered it will keep puttin the scroll back to the middle even if you  are at the end of the filtered list of options, only been able to replicate this with the skus select menu
+
+*** DONE Store the selected parameters for products/skus/sources etc in the store
+
+*** DONE Change how filters are applied to the selects

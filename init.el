@@ -143,15 +143,15 @@
 ;; Load the helper package for commands like `straight-x-clean-unused-repos'
 (require 'straight-x)
 
-(use-package auto-package-update
-  :straight t
-  :custom
-  (auto-package-update-interval 7)
-  (auto-package-update-prompt-before-update t)
-  (auto-package-update-hide-results t)
-  :config
-  (auto-package-update-maybe)
-  (auto-package-update-at-time "09:00"))
+;; (use-package auto-package-update
+;;   :straight t
+;;   :custom
+;;   (auto-package-update-interval 7)
+;;   (auto-package-update-prompt-before-update t)
+;;   (auto-package-update-hide-results t)
+;;   :config
+;;   (auto-package-update-maybe)
+;;   (auto-package-update-at-time "09:00"))
 
 (use-package dashboard
   :straight t
@@ -199,6 +199,7 @@
 ;; Kill server if there is one and start fresh
 (require 'server nil t)
 (use-package server
+  :straight t
   :demand t
   :if window-system
   :init
@@ -296,6 +297,7 @@
 
 ;; Mainly for recursive minibuffers
 (use-package emacs
+  :straight (emacs :type built-in)
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; Alternatively try `consult-completing-read-multiple'.
@@ -344,6 +346,7 @@
          ("C-M-l" . consult-outline)
          ("M-g M-g" . consult-goto-line)
          ("C-S-c c" . consult-mark)
+         ("C-x M-f" . consult-recent-file)
          ([remap popup-kill-ring] . consult-yank-from-kill-ring)
          :map minibuffer-local-map
          ("C-r" . consult-history))
@@ -368,10 +371,13 @@
   (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
   :config
   (advice-add #'marginalia--project-root :override #'projectile-project-root)
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
   (setq marginalia-command-categories
         (append '((projectile-find-file . project-file)
                   (projectile-find-dir . project-file)
-                  (projectile-switch-project . file))
+                  (projectile-switch-project . project-file)
+                  (projectile-recentf . project-file)
+                  (projectile-switch-to-buffer . buffer))
                 marginalia-command-categories)))
 
 (use-package wgrep
@@ -523,7 +529,14 @@
   :straight t
   :pin org
   :commands (org-capture org-agenda)
+  :preface
+  (defun my/project-task-file ()
+    (interactive)
+    (find-file (concat "~/.config/emacs/org/Projects/" (projectile-project-name) ".org")))
+
   :hook (org-mode . org-mode-setup)
+  :bind (("M-o a" . org-agenda)
+         ("M-o p t" . my/project-task-file))
   :config
   (setq org-ellipsis " ▾")
 
@@ -531,8 +544,7 @@
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
 
-  (setq org-agenda-files
-        '("~/.config/emacs/OrgFiles/Tasks.org"))
+  (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
 
   (require 'org-habit)
   (add-to-list 'org-modules 'org-habit)
@@ -618,24 +630,20 @@
 
           ("j" "Journal Entries")
           ("jj" "Journal" entry
-           (file+olp+datetree "~/.config/emacs/OrgFiles/Journal.org")
+           (file+olp+datetree "~/.config/emacs/org/Journal.org")
            "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
            ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
            :clock-in :clock-resume
            :empty-lines 1)
           ("jm" "Meeting" entry
-           (file+olp+datetree "~/.config/emacs/OrgFiles/Journal.org")
+           (file+olp+datetree "~/.config/emacs/org/Journal.org")
            "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
            :clock-in :clock-resume
            :empty-lines 1)
 
           ("w" "Workflows")
-          ("we" "Checking Email" entry (file+olp+datetree "~/.config/emacs/OrgFiles/Journal.org")
-           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
-
-          ("m" "Metrics Capture")
-          ("mw" "Weight" table-line (file+headline "~/.config/emacs/OrgFiles/Metrics.org" "Weight")
-           "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+          ("we" "Checking Email" entry (file+olp+datetree "~/.config/emacs/org/Journal.org")
+           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
 
   (define-key global-map (kbd "C-c j")
     (lambda () (interactive) (org-capture nil "jj")))
@@ -683,7 +691,7 @@
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/.config/emacs/etc/Notes/Roam")
+  (org-roam-directory "~/.config/emacs/org/Notes/Roam")
   (org-roam-completion-everywhere t)
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%I:%M %p>: %?"
@@ -1001,6 +1009,7 @@
   (text-mode . smartparens-mode))
 
 (use-package paren
+  :straight t
   :config
   (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
   (show-paren-mode 1))
