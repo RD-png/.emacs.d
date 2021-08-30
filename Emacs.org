@@ -658,14 +658,13 @@ Allows quick movement in files
 
 #+begin_src emacs-lisp
 
-  (use-package avy
-    :straight t
-    :bind
-    ("M-s" . avy-goto-char)
-    ("M-n" . avy-goto-char-2)
-    ("M-m" . avy-goto-word-0)
-    :custom
-    (avy-single-candidate-jump nil))
+    (use-package avy
+      :straight t
+      :bind (("M-s" . avy-goto-char)
+      ("C-:" . avy-goto-char-2)
+      ("M-m" . avy-goto-word-0))
+      :custom
+      (avy-single-candidate-jump nil))
 
 #+end_src
 

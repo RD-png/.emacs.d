@@ -469,10 +469,9 @@
 
 (use-package avy
   :straight t
-  :bind
-  ("M-s" . avy-goto-char)
-  ("M-n" . avy-goto-char-2)
-  ("M-m" . avy-goto-word-0)
+  :bind (("M-s" . avy-goto-char)
+  ("C-:" . avy-goto-char-2)
+  ("M-m" . avy-goto-word-0))
   :custom
   (avy-single-candidate-jump nil))
 
