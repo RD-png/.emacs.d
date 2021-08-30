@@ -225,16 +225,16 @@ Simple main menu, with a list of recent files and projects
 
 #+begin_src emacs-lisp
 
-(use-package dashboard
-  :straight t
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
-  (setq dashboard-items '((recents  . 10)
-                          (projects . 5)
-                          (bookmarks . 5)))
-  (setq dashboard-banner-logo-title "")
-  (setq dashboard-set-file-icons t))
+  (use-package dashboard
+    :straight t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
+    (setq dashboard-items '((recents  . 10)
+                            (projects . 5)
+                            (bookmarks . 5)))
+    (setq dashboard-banner-logo-title "")
+    (setq dashboard-set-file-icons t))
 
 #+end_src
 
@@ -341,12 +341,12 @@ Control buffers
 #+begin_src emacs-lisp
 
   (setq display-buffer-base-action
-      '(display-buffer-reuse-mode-window
-        display-buffer-reuse-window
-        display-buffer-same-window))
+        '(display-buffer-reuse-mode-window
+          display-buffer-reuse-window
+          display-buffer-same-window))
 
-;; If a popup does happen, don't resize windows to be equal-sized
-(setq even-window-sizes nil)
+  ;; If a popup does happen, don't resize windows to be equal-sized
+  (setq even-window-sizes nil)
 
 #+end_src
 
@@ -672,8 +672,8 @@ Delete within delimiters
   (use-package expand-region
     :straight t
     :bind (("C-}" . er/expand-region)
-           ("C-{" . er/mark-inside-pairs)
-           ("M-{" . er/mark-outside-pairs)))
+           ("C-M-}" . er/mark-outside-pairs)
+           ("C-{" . er/mark-inside-pairs)))
 
 #+end_src
 
@@ -683,13 +683,13 @@ Keep folders clean when you are using emacs
 
 #+begin_src emacs-lisp
 
-    (use-package no-littering
-      :straight t)
+  (use-package no-littering
+    :straight t)
 
-    ;; Disable auto saving and backups and symbolic link files
-    (setq make-backup-files nil)
-    (setq auto-save-default nil)
-    (setq create-lockfiles nil)
+  ;; Disable auto saving and backups and symbolic link files
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq create-lockfiles nil)
 
 #+end_src
 
@@ -1029,51 +1029,51 @@ Basically handles anything popup related
   (setq-default company-backends '(company-capf))
 
   (defvar my/company-backend-alist
-       '((text-mode (:separate company-files company-dabbrev company-yasnippet company-ispell))
-          (prog-mode (company-capf company-files company-yasnippet))
-          (conf-mode company-capf company-files company-dabbrev-code company-yasnippet)
-          (lisp-interaction-mode (:separate company-capf company-files company-yasnippet company-abbrev  company-ispell)))
-      "An alist matching modes to company backends. The backends for any mode is
-    built from this.")
+    '((text-mode (:separate company-files company-dabbrev company-yasnippet company-ispell))
+      (prog-mode (company-capf company-files company-yasnippet))
+      (conf-mode company-capf company-files company-dabbrev-code company-yasnippet)
+      (lisp-interaction-mode (:separate company-capf company-files company-yasnippet company-abbrev  company-ispell)))
+    "An alist matching modes to company backends. The backends for any mode is
+      built from this.")
 
-    (defun my/set-company-backend (modes &rest backends)
-      "Prepends backends (in order) to `company-backends' in modes"
-      (declare (indent defun))
-      (dolist (mode (list modes))
-        (if (null (car backends))
-            (setq my/company-backend-alist
-                  (delq (assq mode my/company-backend-alist)
-                        my/company-backend-alist))
-          (setf (alist-get mode my/company-backend-alist)
-                backends))))
+  (defun my/set-company-backend (modes &rest backends)
+    "Prepends backends (in order) to `company-backends' in modes"
+    (declare (indent defun))
+    (dolist (mode (list modes))
+      (if (null (car backends))
+          (setq my/company-backend-alist
+                (delq (assq mode my/company-backend-alist)
+                      my/company-backend-alist))
+        (setf (alist-get mode my/company-backend-alist)
+              backends))))
 
-    (defun my/company-backends ()
-      (let (backends)
-        (let ((mode major-mode)
-              (modes (list major-mode)))
-          (while (setq mode (get mode 'derived-mode-parent))
-            (push mode modes))
-          (dolist (mode modes)
-            (dolist (backend (append (cdr (assq mode my/company-backend-alist))
-                                     (default-value 'company-backends)))
-              (push backend backends)))
-          (delete-dups
-           (append (cl-loop for (mode . backends) in my/company-backend-alist
-                            if (or (eq major-mode mode)  ; major modes
-                                   (and (boundp mode)
-                                        (symbol-value mode))) ; minor modes
-                            append backends)
-                   (nreverse backends))))))
+  (defun my/company-backends ()
+    (let (backends)
+      (let ((mode major-mode)
+            (modes (list major-mode)))
+        (while (setq mode (get mode 'derived-mode-parent))
+          (push mode modes))
+        (dolist (mode modes)
+          (dolist (backend (append (cdr (assq mode my/company-backend-alist))
+                                   (default-value 'company-backends)))
+            (push backend backends)))
+        (delete-dups
+         (append (cl-loop for (mode . backends) in my/company-backend-alist
+                          if (or (eq major-mode mode)  ; major modes
+                                 (and (boundp mode)
+                                      (symbol-value mode))) ; minor modes
+                          append backends)
+                 (nreverse backends))))))
 
-    (add-hook 'after-change-major-mode-hook
-                (defun my/company-setup-backends ()
-                  "Set `company-backends' for the current buffer."
-                  (setq-local company-backends (my/company-backends))))
+  (add-hook 'after-change-major-mode-hook
+            (defun my/company-setup-backends ()
+              "Set `company-backends' for the current buffer."
+              (setq-local company-backends (my/company-backends))))
 
-(use-package company-prescient
-  :straight t
-  :after prescient
-  :hook (company-mode . company-prescient-mode))
+  (use-package company-prescient
+    :straight t
+    :after prescient
+    :hook (company-mode . company-prescient-mode))
 
 #+end_src
 
@@ -1208,17 +1208,9 @@ Check python server is install, install if it is not
 
 #+end_src
 
-Again use lsp server for python for completions and error checking
+Again use lsp server for python for completions and error checking, use the the python-lsp-server no ms one.
 
 #+begin_src emacs-lisp
-
-  (use-package lsp-python-ms
-    :straight t
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-python-ms)
-                           (lsp-deferred)))
-    :init
-    (setq lsp-python-ms-executable (executable-find "python-language-server")))
 
   (use-package python-mode
     :straight t
@@ -1428,10 +1420,10 @@ Smart match pairs for parens
 
 #+begin_src emacs-lisp
 
-    (use-package smartparens
-      :straight t
-      :hook (prog-mode . smartparens-mode)
-            (text-mode . smartparens-mode))
+  (use-package smartparens
+    :straight t
+    :hook (prog-mode . smartparens-mode)
+    (text-mode . smartparens-mode))
 
 #+end_src
 
@@ -1702,7 +1694,6 @@ Custom functions for keybinds and just general functionality I wanted
       (avi-kill-line-save)))
 
   ;; General binds
-
   (global-set-key (kbd "C-c w") #'copy-word)
   (global-set-key (kbd "C-c l") #'custom-avy-copy-line)
   (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
@@ -1714,10 +1705,12 @@ Custom functions for keybinds and just general functionality I wanted
   (global-set-key (kbd "C-S-k") #'kill-whole-line)
   (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/Emacs.org")))
 
-  ;; Half the distance of page down and up
-  (autoload 'View-scroll-half-page-forward "view") (autoload 'View-scroll-half-page-backward "view")
-  (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
-  (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
+  ;; Half the distance of page down and up (does make cursor position change)
+  ;; (autoload 'View-scroll-half-page-forward "view")
+  ;; (autoload 'View-scroll-half-page-backward "view")
+  ;; (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
+  ;; (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
+
 
   ;; unbind annoying keybinds
   (unbind-key "C-x C-n") ;; useless command

@@ -473,8 +473,8 @@
 (use-package expand-region
   :straight t
   :bind (("C-}" . er/expand-region)
-         ("C-{" . er/mark-inside-pairs)
-         ("M-{" . er/mark-outside-pairs)))
+         ("C-M-}" . er/mark-outside-pairs)
+         ("C-{" . er/mark-inside-pairs)))
 
 (use-package no-littering
   :straight t)
@@ -731,71 +731,71 @@
   (eshell-git-prompt-use-theme 'powerline))
 
 (use-package company
-    :straight t
-    :defer 1
-    :defines company-backends
-    :diminish company-mode
-    :init (global-company-mode 1)
-    :bind (:map company-active-map
-                ("<tab>" . company-complete-selection))
-    :straight t
-    :custom
-    (company-dabbrev-downcase nil)
-    (company-tooltip-width-grow-only nil)
-    (company-text-icons-add-background t)
-    :config
-    (setq company-idle-delay 0.01
-          company-minimum-prefix-length 1
-          company-tooltip-limit 10
-          company-tooltip-align-annotations t
-          company-selection-wrap-around t
-          company-dabbrev-ignore-case t
-          company-require-match nil))
+  :straight t
+  :defer 1
+  :defines company-backends
+  :diminish company-mode
+  :init (global-company-mode 1)
+  :bind (:map company-active-map
+              ("<tab>" . company-complete-selection))
+  :straight t
+  :custom
+  (company-dabbrev-downcase nil)
+  (company-tooltip-width-grow-only nil)
+  (company-text-icons-add-background t)
+  :config
+  (setq company-idle-delay 0.01
+        company-minimum-prefix-length 1
+        company-tooltip-limit 10
+        company-tooltip-align-annotations t
+        company-selection-wrap-around t
+        company-dabbrev-ignore-case t
+        company-require-match nil))
 
 
-  (setq-default company-backends '(company-capf))
+(setq-default company-backends '(company-capf))
 
-  (defvar my/company-backend-alist
-       '((text-mode (:separate company-files company-dabbrev company-yasnippet company-ispell))
-          (prog-mode (company-capf company-files company-yasnippet))
-          (conf-mode company-capf company-files company-dabbrev-code company-yasnippet)
-          (lisp-interaction-mode (:separate company-capf company-files company-yasnippet company-abbrev  company-ispell)))
-      "An alist matching modes to company backends. The backends for any mode is
+(defvar my/company-backend-alist
+  '((text-mode (:separate company-files company-dabbrev company-yasnippet company-ispell))
+    (prog-mode (company-capf company-files company-yasnippet))
+    (conf-mode company-capf company-files company-dabbrev-code company-yasnippet)
+    (lisp-interaction-mode (:separate company-capf company-files company-yasnippet company-abbrev  company-ispell)))
+  "An alist matching modes to company backends. The backends for any mode is
     built from this.")
 
-    (defun my/set-company-backend (modes &rest backends)
-      "Prepends backends (in order) to `company-backends' in modes"
-      (declare (indent defun))
-      (dolist (mode (list modes))
-        (if (null (car backends))
-            (setq my/company-backend-alist
-                  (delq (assq mode my/company-backend-alist)
-                        my/company-backend-alist))
-          (setf (alist-get mode my/company-backend-alist)
-                backends))))
+(defun my/set-company-backend (modes &rest backends)
+  "Prepends backends (in order) to `company-backends' in modes"
+  (declare (indent defun))
+  (dolist (mode (list modes))
+    (if (null (car backends))
+        (setq my/company-backend-alist
+              (delq (assq mode my/company-backend-alist)
+                    my/company-backend-alist))
+      (setf (alist-get mode my/company-backend-alist)
+            backends))))
 
-    (defun my/company-backends ()
-      (let (backends)
-        (let ((mode major-mode)
-              (modes (list major-mode)))
-          (while (setq mode (get mode 'derived-mode-parent))
-            (push mode modes))
-          (dolist (mode modes)
-            (dolist (backend (append (cdr (assq mode my/company-backend-alist))
-                                     (default-value 'company-backends)))
-              (push backend backends)))
-          (delete-dups
-           (append (cl-loop for (mode . backends) in my/company-backend-alist
-                            if (or (eq major-mode mode)  ; major modes
-                                   (and (boundp mode)
-                                        (symbol-value mode))) ; minor modes
-                            append backends)
-                   (nreverse backends))))))
+(defun my/company-backends ()
+  (let (backends)
+    (let ((mode major-mode)
+          (modes (list major-mode)))
+      (while (setq mode (get mode 'derived-mode-parent))
+        (push mode modes))
+      (dolist (mode modes)
+        (dolist (backend (append (cdr (assq mode my/company-backend-alist))
+                                 (default-value 'company-backends)))
+          (push backend backends)))
+      (delete-dups
+       (append (cl-loop for (mode . backends) in my/company-backend-alist
+                        if (or (eq major-mode mode)  ; major modes
+                               (and (boundp mode)
+                                    (symbol-value mode))) ; minor modes
+                        append backends)
+               (nreverse backends))))))
 
-    (add-hook 'after-change-major-mode-hook
-                (defun my/company-setup-backends ()
-                  "Set `company-backends' for the current buffer."
-                  (setq-local company-backends (my/company-backends))))
+(add-hook 'after-change-major-mode-hook
+          (defun my/company-setup-backends ()
+            "Set `company-backends' for the current buffer."
+            (setq-local company-backends (my/company-backends))))
 
 (use-package company-prescient
   :straight t
@@ -880,14 +880,6 @@
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
-
-(use-package lsp-python-ms
-  :straight t
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-python-ms)
-                         (lsp-deferred)))
-  :init
-  (setq lsp-python-ms-executable (executable-find "python-language-server")))
 
 (use-package python-mode
   :straight t
@@ -1006,7 +998,7 @@
 (use-package smartparens
   :straight t
   :hook (prog-mode . smartparens-mode)
-        (text-mode . smartparens-mode))
+  (text-mode . smartparens-mode))
 
 (use-package paren
   :config
@@ -1176,7 +1168,6 @@ text before point to the beginning of the current line."
     (avi-kill-line-save)))
 
 ;; General binds
-
 (global-set-key (kbd "C-c w") #'copy-word)
 (global-set-key (kbd "C-c l") #'custom-avy-copy-line)
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
@@ -1188,10 +1179,12 @@ text before point to the beginning of the current line."
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/Emacs.org")))
 
-;; Half the distance of page down and up
-(autoload 'View-scroll-half-page-forward "view") (autoload 'View-scroll-half-page-backward "view")
-(global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
-(global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
+;; Half the distance of page down and up (does make cursor position change)
+;; (autoload 'View-scroll-half-page-forward "view")
+;; (autoload 'View-scroll-half-page-backward "view")
+;; (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
+;; (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
+
 
 ;; unbind annoying keybinds
 (unbind-key "C-x C-n") ;; useless command
