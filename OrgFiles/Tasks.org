@@ -2,6 +2,8 @@
 ** General
 *** TODO  Make alias commands more general and use hostname when applying rebuilds
 *** TODO Add vterm
+*** TODO Fix npm / vue on nix
+*** TODO direnv / nix-direnv for python / haskell
 
 ** FESP POWER BI
 
