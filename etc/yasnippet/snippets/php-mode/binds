@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: vvbinds
-# key: vvbinds
+# name: binds
+# key: binds
 # --
 $sql = "PRAGMA table_info('${1:table}')";
 $${2:columns} = $${3:database}->query($sql);

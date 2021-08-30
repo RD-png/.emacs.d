@@ -747,7 +747,7 @@
               ("<tab>" . company-complete-selection))
   :init
   (global-company-mode 1)
-  (setq company-minimum-prefix-length 2
+  (setq company-minimum-prefix-length 1
         company-tooltip-limit 10
         company-tooltip-align-annotations t
         company-dabbrev-ignore-case nil
@@ -802,7 +802,7 @@
 
 (use-package company-prescient
   :straight t
-  :after prescient
+  :after (prescient company)
   :hook (company-mode . company-prescient-mode))
 
 (use-package lsp-mode

@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: vvsel
-# key: vvsel
+# name: sel
+# key: sel
 # --
 $sql = "SELECT $1 FROM ${2:table}";
 $${3:result} = $${4:database}->query($sql);
