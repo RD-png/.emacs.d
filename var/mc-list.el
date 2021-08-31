@@ -5,6 +5,7 @@
       '(
         aborn/backward-kill-word
         kill-region
+        org-end-of-line
         ))
 
 (setq mc/cmds-to-run-once

@@ -1175,11 +1175,11 @@ Support for php completions and error checking via lsp language server
     :hook (php-mode . lsp-deferred))
 
   ;; Format current php buffer on save
-  (defun lsp-php-install-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  ;; (defun lsp-php-install-save-hooks ()
+  ;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  ;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
-  (add-hook 'php-mode-hook #'lsp-php-install-save-hooks)
+  ;; (add-hook 'php-mode-hook #'lsp-php-install-save-hooks)
 
 #+end_src
 
