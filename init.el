@@ -223,27 +223,19 @@
 
 ;; Grep Highlight
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-preview ((t (:background "#1d1f21" :foreground "white" :underline t))))
- '(company-preview-common ((t (:inherit company-preview))))
- '(company-tooltip ((t (:background "#1d1f21" :foreground "white"))))
- '(company-tooltip-selection ((t (:background "steelblue" :foreground "white"))))
- '(match ((t (:foreground "#72a4ff"))))
- '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "#fef691"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
- '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de"))))
- '(vertico-current ((t (:background "#3a3f5a")))))
+ `(match ((t (:foreground "#72a4ff")))))
 
 ;; For the default theme
-
+(custom-set-faces
+ '(company-preview
+   ((t (:background "#1d1f21" :foreground "white" :underline t))))
+ '(company-preview-common
+   ((t (:inherit company-preview))))
+ '(company-tooltip
+   ((t (:background "#1d1f21" :foreground "white"))))
+ '(company-tooltip-selection
+   ((t (:background "steelblue" :foreground "white"))))
+ )
 
 (setq display-buffer-base-action
       '(display-buffer-reuse-mode-window
@@ -258,7 +250,13 @@
 
 (use-package doom-modeline
   :straight t
-  :init (doom-modeline-mode 1)
+  :init
+  (doom-modeline-mode 1)
+  (setq projectile-dynamic-mode-line nil)
+  (setq doom-modeline-bar-width 3
+        doom-modeline-minor-modes nil
+        doom-modeline-github nil
+        doom-modeline-buffer-file-name-style 'relative-from-project)
   :custom ((doom-modeline-height 15)
            (doom-modeline-project-detection 'project)))
 
@@ -266,9 +264,11 @@
 (use-package vertico
   :straight (vertico :repo "minad/vertico"
                      :branch "main")
-  :custom
-  (vertico-count 7)
-  (vertico-cycle t)
+  :config
+  (setq
+   vertico-count 7
+   vertico-cycle t
+   vertico-resize nil)
   ;; (completion-styles '(substring orderless))
   (setq read-file-name-completion-ignore-case t
         read-buffer-completion-ignore-case t)
@@ -478,8 +478,8 @@
 (use-package avy
   :straight t
   :bind (("M-s" . avy-goto-char)
-  ("C-:" . avy-goto-char-2)
-  ("M-m" . avy-goto-word-0))
+         ("C-:" . avy-goto-char-2)
+         ("M-m" . avy-goto-word-0))
   :custom
   (avy-single-candidate-jump nil))
 
@@ -977,7 +977,15 @@
          emacs-lisp-mode
          typescript-mode))
 
-
+(custom-set-faces
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#fef691"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
+ '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
 
 (use-package yasnippet
   :straight t
@@ -1195,10 +1203,3 @@ text before point to the beginning of the current line."
 
 ;; Remove whitespace from buffer on save
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   '("/root/.config/emacs/org/Notes/Roam/daily/2021-08-31.org" "/root/.config/emacs/org/Notes/Roam/20210831081356-NewSkusPlan.org" "/root/.config/emacs/org/Notes/Roam/20210831125508-customerservices.org" "/root/.config/emacs/org/Projects/.nix-dotfiles.org" "/root/.config/emacs/org/Projects/ApiOrders.org" "/root/.config/emacs/org/Projects/Stock.org" "/root/.config/emacs/org/Projects/emacs.org" "/root/.config/emacs/org/FespbiReport.org" "/root/.config/emacs/org/Journal.org" "/root/.config/emacs/org/NewSkus.org" "/root/.config/emacs/org/Notes.org" "/root/.config/emacs/org/Tasks.org")))

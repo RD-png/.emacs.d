@@ -225,16 +225,16 @@ Simple main menu, with a list of recent files and projects
 
 #+begin_src emacs-lisp
 
-    (use-package dashboard
-      :straight t
-      :config
-      (dashboard-setup-startup-hook)
-      (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
-      (setq dashboard-items '((recents  . 10)
-                              (projects . 5)
-                              (bookmarks . 5)))
-      (setq dashboard-banner-logo-title "")
-      (setq dashboard-set-file-icons t))
+  (use-package dashboard
+    :straight t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
+    (setq dashboard-items '((recents  . 10)
+                            (projects . 5)
+                            (bookmarks . 5)))
+    (setq dashboard-banner-logo-title "")
+    (setq dashboard-set-file-icons t))
 
 #+end_src
 
@@ -363,9 +363,16 @@ Useful modeline to replace the default one
 
   (use-package doom-modeline
     :straight t
-    :init (doom-modeline-mode 1)
+    :init
+    (doom-modeline-mode 1)
+    (setq projectile-dynamic-mode-line nil)
+    (setq doom-modeline-bar-width 3
+          doom-modeline-minor-modes nil
+          doom-modeline-github nil
+          doom-modeline-buffer-file-name-style 'relative-from-project)
     :custom ((doom-modeline-height 15)
              (doom-modeline-project-detection 'project)))
+
 
 #+end_src
 
@@ -377,9 +384,11 @@ Useful modeline to replace the default one
   (use-package vertico
     :straight (vertico :repo "minad/vertico"
                        :branch "main")
-    :custom
-    (vertico-count 7)
-    (vertico-cycle t)
+    :config
+    (setq
+     vertico-count 7
+     vertico-cycle t
+     vertico-resize nil)
     ;; (completion-styles '(substring orderless))
     (setq read-file-name-completion-ignore-case t
           read-buffer-completion-ignore-case t)
@@ -658,13 +667,13 @@ Allows quick movement in files
 
 #+begin_src emacs-lisp
 
-    (use-package avy
-      :straight t
-      :bind (("M-s" . avy-goto-char)
-      ("C-:" . avy-goto-char-2)
-      ("M-m" . avy-goto-word-0))
-      :custom
-      (avy-single-candidate-jump nil))
+  (use-package avy
+    :straight t
+    :bind (("M-s" . avy-goto-char)
+           ("C-:" . avy-goto-char-2)
+           ("M-m" . avy-goto-word-0))
+    :custom
+    (avy-single-candidate-jump nil))
 
 #+end_src
 
