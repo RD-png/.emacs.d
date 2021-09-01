@@ -21,6 +21,8 @@ CLOSED: [2021-08-18 Wed 16:16]
 
 *** TODO Format dates for users
 
+*** TODO Fix format of table on export page
+
 *** DONE Fix how the key filter interacts with the export page
 CLOSED: [2021-09-01 Wed 08:45]
 :LOGBOOK:

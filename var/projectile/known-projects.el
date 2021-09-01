@@ -1,1 +1,1 @@
-("/opt/lampp/htdocs/Projects/fespbi/" "~/.config/emacs/" "~/.xmonad/")
+("~/.config/emacs/" "/opt/lampp/htdocs/Projects/fespbi/" "~/.xmonad/")
