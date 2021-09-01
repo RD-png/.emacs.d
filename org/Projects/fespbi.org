@@ -19,7 +19,30 @@ CLOSED: [2021-08-18 Wed 16:16]
 
 *** TODO Build a method for the custom values, e.g total atts for skus from order table
 
-*** TODO Fix how the key filter interacts with the export page
+*** TODO Format dates for users
+
+*** DONE Fix how the key filter interacts with the export page
+CLOSED: [2021-09-01 Wed 08:45]
+:LOGBOOK:
+- Note taken on [2021-09-01 Wed 08:45] \\
+  This was already handled as when the user selects keys in the filter it filters the possible selections in the skus filter
+- State "DONE"       from "TODO"       [2021-09-01 Wed 08:45]
+:END:
+
+*** TODO Display the returned data from the export query into a table, paginate results
+
+*** CANC Remove delimiters from these skus, "YOU'RE_LATE", "4  white x10,000", "4 white x10,000", Need to change for all in stock control and cache and powerbi records
+CLOSED: [2021-09-01 Wed 13:15]
+:LOGBOOK:
+- State "CANC"       from "TODO"       [2021-09-01 Wed 13:15] \\
+  The ' was not the cause of the broken query, there was a blob in one of the skus cell
+:END:
+
+*** DONE Change all methods in the FespbiController class to be returns and make the index echo back the response
+CLOSED: [2021-09-01 Wed 11:08]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-01 Wed 11:08]
+:END:
 
 *** DONE Possibly alert the user they are removing a the last selected column and this will remove the join condition in the arguments
 CLOSED: [2021-08-31 Tue 08:07]

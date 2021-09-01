@@ -1,1 +1,1 @@
-("~/.nix-dotfiles/home-manager/modules/config/emacs/" "~/.nix-dotfiles/" "~/.config/emacs/")
+("/opt/lampp/htdocs/Projects/fespbi/" "~/.config/emacs/" "~/.xmonad/")

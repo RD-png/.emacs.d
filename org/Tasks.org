@@ -23,3 +23,5 @@ CLOSED: [2021-08-30 Mon 13:17]
 :Logbook:
 - State "DONE"       from "TODO"       [2021-08-30 Mon 13:17]
 :END:
+
+*** TODO Create a interface to generate new skus
