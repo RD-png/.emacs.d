@@ -1,0 +1,6 @@
+:PROPERTIES:
+:ID:       dabc65b9-0d80-42f7-961b-f8d674c9d99c
+:END:
+#+title: 2021-08-31
+* 12:21 pm: Fespbi Meeting
+Finished meeting about the direction to take the fespbi system. We have decided to implement the basic functionality and get it up and running so we can move onto the customer services system, as they want that to be ready before the start of the next season.
