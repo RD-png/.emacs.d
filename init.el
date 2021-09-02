@@ -773,7 +773,7 @@
 
 (defvar my/company-backend-alist
   '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-    (prog-mode (:separate company-yasnippet company-capf))
+    (prog-mode (:separate company-yasnippet company-dabbrev-code company-capf))
     (conf-mode company-capf company-dabbrev-code company-yasnippet))
   "An alist matching modes to company backends. The backends for any mode is
     built from this.")
