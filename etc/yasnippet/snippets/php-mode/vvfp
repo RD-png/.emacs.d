@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: vvfp
+# key: vvfp
+# --
+file_put_contents('test.php', var_export($1, true));

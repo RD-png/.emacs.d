@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: vvforek
+# key: vvforek
+# --
+foreach ($1 as $2 => $3) {
+	$4;
+}
