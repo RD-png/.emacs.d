@@ -846,6 +846,7 @@
   :straight t
   :hook (lsp-mode . lsp-ui-mode)
   :config
+  (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-sideline-ignore-duplicate t)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   (setq lsp-ui-doc-enable nil)
