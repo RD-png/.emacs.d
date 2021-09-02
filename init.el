@@ -269,7 +269,6 @@
    vertico-count 7
    vertico-cycle t
    vertico-resize nil)
-  ;; (completion-styles '(substring orderless))
   (setq read-file-name-completion-ignore-case t
         read-buffer-completion-ignore-case t)
   :custom-face
@@ -281,10 +280,17 @@
 (use-package orderless
   :straight t
   :demand t
-  :init
+  :config
+  (defun orderless-company-fix-face+ (fn &rest args)
+    (let ((orderless-match-faces [completions-common-part]))
+      (apply fn args)))
+
   (setq completion-styles '(orderless)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
+        completion-category-overrides '((file (styles . (orderless partial-completion)))))
+
+  (with-eval-after-load 'company
+  (advice-add 'company-capf--candidates :around #'orderless-company-fix-face+)))
 
 (use-package prescient
   :straight t
@@ -754,22 +760,21 @@
               ("<tab>" . company-complete-selection))
   :init
   (global-company-mode 1)
-  (setq company-minimum-prefix-length 1
+  (setq company-backends '(company-capf)
+        company-auto-commit nil
+        company-minimum-prefix-length 1
         company-tooltip-limit 10
         company-tooltip-align-annotations t
         company-dabbrev-ignore-case nil
-        company-dabbrev-other-buffers nil
-        company-dabbrev-downcase nil
         company-require-match 'never
-        company-idle-delay 0.01))
-
-(setq-default company-backends '(company-capf))
+        company-idle-delay 0.01
+        company-dabbrev-other-buffers nil
+        company-dabbrev-downcase nil))
 
 (defvar my/company-backend-alist
-  '((text-mode (:separate company-files company-dabbrev company-yasnippet company-ispell))
-    (prog-mode (company-capf company-files company-yasnippet))
-    (conf-mode company-capf company-files company-dabbrev-code company-yasnippet)
-    (lisp-interaction-mode (:separate company-capf company-files company-yasnippet company-abbrev  company-ispell)))
+  '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
+    (prog-mode company-capf company-yasnippet)
+    (conf-mode company-capf company-dabbrev-code company-yasnippet))
   "An alist matching modes to company backends. The backends for any mode is
     built from this.")
 
@@ -807,10 +812,10 @@
             "Set `company-backends' for the current buffer."
             (setq-local company-backends (my/company-backends))))
 
-(use-package company-prescient
-  :straight t
-  :after (prescient company)
-  :hook (company-mode . company-prescient-mode))
+;; (use-package company-prescient
+;;   :straight t
+;;   :after (prescient company)
+;;   :hook (company-mode . company-prescient-mode))
 
 (use-package lsp-mode
   :straight t
