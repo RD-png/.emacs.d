@@ -773,7 +773,7 @@
 
 (defvar my/company-backend-alist
   '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-    (prog-mode company-capf company-yasnippet)
+    (prog-mode (:separate company-yasnippet company-capf))
     (conf-mode company-capf company-dabbrev-code company-yasnippet))
   "An alist matching modes to company backends. The backends for any mode is
     built from this.")
@@ -952,6 +952,9 @@
   (setq projectile-switch-project-action #'projectile-dired)
   :init
   (projectile-mode 1))
+
+(use-package rg
+  :straight t)
 
 (use-package magit
   :straight t
