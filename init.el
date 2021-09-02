@@ -760,9 +760,8 @@
               ("<tab>" . company-complete-selection))
   :init
   (global-company-mode 1)
-  (setq company-backends '(company-capf)
-        company-auto-commit nil
-        company-minimum-prefix-length 1
+  (setq company-auto-commit nil
+        company-minimum-prefix-length 2
         company-tooltip-limit 10
         company-tooltip-align-annotations t
         company-dabbrev-ignore-case nil
@@ -771,9 +770,11 @@
         company-dabbrev-other-buffers nil
         company-dabbrev-downcase nil))
 
+(setq-default company-backends '(company-capf))
+
 (defvar my/company-backend-alist
   '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-    (prog-mode (:separate company-yasnippet company-dabbrev-code company-capf))
+    (prog-mode (:separate company-capf company-yasnippet))
     (conf-mode company-capf company-dabbrev-code company-yasnippet))
   "An alist matching modes to company backends. The backends for any mode is
     built from this.")
@@ -821,7 +822,12 @@
   :straight t
   :hook (lsp)
   :config
-  (setq lsp-prefer-capf t)
+  ;; (setq lsp-completion-provider :none)
+
+  ;; Fix lsp overriding snippets ??
+  (add-hook 'lsp-after-open-hook
+            (setq-local company-backends (remove 'company-capf company-backends)))
+
   :custom
   (lsp-modeline-diagnostics-enable nil)
   (lsp-signature-render-documentation nil)
