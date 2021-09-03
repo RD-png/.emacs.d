@@ -290,7 +290,7 @@
         completion-category-overrides '((file (styles . (orderless partial-completion)))))
 
   (with-eval-after-load 'company
-  (advice-add 'company-capf--candidates :around #'orderless-company-fix-face+)))
+    (advice-add 'company-capf--candidates :around #'orderless-company-fix-face+)))
 
 (use-package prescient
   :straight t
@@ -751,6 +751,15 @@
 
   (eshell-git-prompt-use-theme 'powerline))
 
+(use-package tramp
+  :defer 5
+  :custom
+  (tramp-default-method "ssh")
+  :config
+  (put 'temporary-file-directory 'standard-value '("/tmp"))
+  (setq tramp-auto-save-directory "~/.cache/emacs/backups"
+        tramp-persistency-file-name "~/.config/emacs/data/tramp"))
+
 (use-package company
   :straight t
   :defer 1
@@ -822,11 +831,11 @@
   :straight t
   :hook (lsp)
   :config
-  ;; (setq lsp-completion-provider :none)
+  (setq lsp-completion-provider :none)
 
   ;; Fix lsp overriding snippets ??
-  (add-hook 'lsp-after-open-hook
-            (setq-local company-backends (remove 'company-capf company-backends)))
+  ;; (add-hook 'lsp-after-open-hook
+  ;;           (setq-local company-backends (remove 'company-capf company-backends)))
 
   :custom
   (lsp-modeline-diagnostics-enable nil)
