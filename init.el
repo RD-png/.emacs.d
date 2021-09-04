@@ -223,7 +223,10 @@
 
 ;; Grep Highlight
 (custom-set-faces
- `(match ((t (:foreground "#72a4ff")))))
+ `(match ((t (:foreground "#72a4ff"))))
+ `(persp-selected-face ((t (:foreground "light green"))))
+ `(doom-modeline-buffer-major-mode ((t (:foreground "light blue")))))
+
 
 ;; For the default theme
 (custom-set-faces
