@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: vvbindsms
-# key: vvbindsms
+# name: bindsms
+# key: bindsms
 # --
 $sql = "SHOW COLUMNS FROM ${1:table}";
 $${2:columns} = $${3:database}->query($sql);
