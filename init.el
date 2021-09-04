@@ -856,10 +856,10 @@
 (defvar my/company-backend-alist
   '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
     ;; (prog-mode (:separate company-capf company-yasnippet))
-    (prog-mode (:separate company-yasnippet company-capf))
+    (prog-mode (:separate company-yasnippet company-capf company-dabbrev company-dabbrev-code))
     (conf-mode company-capf company-dabbrev-code company-yasnippet))
   "An alist matching modes to company backends. The backends for any mode is
-    built from this.")
+        built from this.")
 
 (defun my/set-company-backend (modes &rest backends)
   "Prepends backends (in order) to `company-backends' in modes"
@@ -894,15 +894,6 @@
           (defun my/company-setup-backends ()
             "Set `company-backends' for the current buffer."
             (setq-local company-backends (my/company-backends))))
-
-;; This removes the duplicate company-capf entry that lsp adds
-;; (add-hook 'prog-mode-hook
-;;           (defun my/prog-mode-hook ()
-;;             (if (member 'company-capf company-backends)
-;;                 (progn
-;;                   (setq-local company-backends (remove 'company-capf company-backends))
-;;                   (message "REMOVED DUPE"))
-;;                 )))
 
 ;; (use-package company-prescient
 ;;   :straight t
