@@ -27,86 +27,86 @@ Run (byte-recompile-directory package-user-dir nil 'force) on fresh install
 
 #+begin_src emacs-lisp
 
-  ;; native comp
-  (setq comp-deferred-compilation t)
-  (setq comp-speed 3)
-  (setq comp-async-report-warnings-errors nil)
-  (setq warning-minimum-level :error)
-  (setq package-native-compile 1)
+    ;; native comp
+    (setq comp-deferred-compilation t)
+    (setq comp-speed 3)
+    (setq comp-async-report-warnings-errors nil)
+    (setq warning-minimum-level :error)
+    (setq package-native-compile 1)
 
-  ;; Stop the native comp warnings
-  (defvar grep-find-ignored-directories nil)
-  (defvar grep-find-ignored-files nil)
-  (defvar ido-context-switch-command nil)
-  (defvar ido-cur-item nil)
-  (defvar ido-cur-list nil)
-  (defvar ido-default-item nil)
-  (defvar inherit-input-method nil)
-  (defvar oauth--token-data nil)
-  (defvar tls-checktrust nil)
-  (defvar tls-program nil)
-  (defvar url-callback-arguments nil)
-  (defvar url-callback-function nil)
-  (defvar url-http-extra-headers nil)
+    ;; Stop the native comp warnings
+    (defvar grep-find-ignored-directories nil)
+    (defvar grep-find-ignored-files nil)
+    (defvar ido-context-switch-command nil)
+    (defvar ido-cur-item nil)
+    (defvar ido-cur-list nil)
+    (defvar ido-default-item nil)
+    (defvar inherit-input-method nil)
+    (defvar oauth--token-data nil)
+    (defvar tls-checktrust nil)
+    (defvar tls-program nil)
+    (defvar url-callback-arguments nil)
+    (defvar url-callback-function nil)
+    (defvar url-http-extra-headers nil)
 
-  ;; Set default font size values
-  (defvar default-font-size 140)
-  (defvar default-variable-font-size 140)
+    ;; Set default font size values
+    (defvar default-font-size 140)
+    (defvar default-variable-font-size 140)
 
-  ;; Set default transparency values
-  (defvar frame-transparency '(100 . 100))
+    ;; Set default transparency values
+    (defvar frame-transparency '(100 . 100))
 
-  ;; Default to utf-8
-  (setq default-buffer-file-coding-system 'utf-8-unix
-        buffer-file-coding-system 'utf-8-unix)
+    ;; Default to utf-8
+    (setq default-buffer-file-coding-system 'utf-8-unix
+          buffer-file-coding-system 'utf-8-unix)
 
-  (push "node_modules/" completion-ignored-extensions)
-  (push "__pycache__/" completion-ignored-extensions)
+    (push "node_modules/" completion-ignored-extensions)
+    (push "__pycache__/" completion-ignored-extensions)
 
-  ;; Syntax highlight for all buffers
-  (global-font-lock-mode t)
+    ;; Syntax highlight for all buffers
+    (global-font-lock-mode t)
 
-  ;; Dont save duplicate variables in kill ring
-  (setq kill-do-not-save-duplicates t)
+    ;; Dont save duplicate variables in kill ring
+    (setq kill-do-not-save-duplicates t)
 
-  ;; When using gui confirm before closing
-  (when (window-system)
-    (setq confirm-kill-emacs 'yes-or-no-p))
+    ;; When using gui confirm before closing
+    (when (window-system)
+      (setq confirm-kill-emacs 'yes-or-no-p))
 
-  ;; Weird
-  (setq system-uses-terminfo nil)
+    ;; Weird
+    (setq system-uses-terminfo nil)
 
-  ;; Set exec paths for npm packages on nix
-  (add-to-list 'exec-path "/root/.npm/bin")
+    ;; Set exec paths for npm packages on nix
+    (add-to-list 'exec-path "/root/.npm/bin")
 
-  (setq
-   ;; Dont show these file types in recent files
-   recentf-exclude (list (rx
-                          "COMMIT_EDITMSG"
-                          (and (or "/TAGS"
-                                   "/GTAGS"
-                                   "/GRAGS"
-                                   "/GPATH"
-                                   ".mkv"
-                                   ".avi"
-                                   (and ".mp" (any "3" "4"))
-                                   (and ".doc" (? "x"))
-                                   ".sub"
-                                   ".srt"
-                                   ".ass"
-                                   ".elc"
-                                   (and "tmp." (+ (not (any "/" "\\")))))
-                               eol))))
+    (setq
+     ;; Dont show these file types in recent files
+     recentf-exclude (list (rx
+                            "COMMIT_EDITMSG"
+                            (and (or "/TAGS"
+                                     "/GTAGS"
+                                     "/GRAGS"
+                                     "/GPATH"
+                                     ".mkv"
+                                     ".avi"
+                                     (and ".mp" (any "3" "4"))
+                                     (and ".doc" (? "x"))
+                                     ".sub"
+                                     ".srt"
+                                     ".ass"
+                                     ".elc"
+                                     (and "tmp." (+ (not (any "/" "\\")))))
+                                 eol))))
 
-  ;; General Defaults
-  (setq delete-old-versions t
-        delete-by-moving-to-trash t
-        enable-recursive-minibuffers t)
+    ;; General Defaults
+    (setq delete-old-versions t
+          delete-by-moving-to-trash t
+          enable-recursive-minibuffers t)
 
-  (blink-cursor-mode -1)
+    (blink-cursor-mode -1)
 
-  ;; Remove startup message
-  (advice-add 'display-startup-echo-area-message :override #'ignore)
+    ;; Remove startup message
+    (advice-add 'display-startup-echo-area-message :override #'ignore)
 
 #+end_src
 
@@ -867,7 +867,6 @@ Keep folders clean when you are using emacs
               ("jj" "Journal" entry
                (file+olp+datetree "~/.config/emacs/org/Journal.org")
                "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-               ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
                :clock-in :clock-resume
                :empty-lines 1)
               ("jm" "Meeting" entry
@@ -990,113 +989,101 @@ Elisp Shell, really clean to use
 
 #+begin_src emacs-lisp
 
-    (defun dw/map-line-to-status-char (line)
-      (cond ((string-match "^?\\? " line) "?")))
+  (defun my/map-line-to-status-char (line)
+    (cond ((string-match "^?\\? " line) "?")))
 
-    (defun dw/get-git-status-prompt ()
-      (let ((status-lines (cdr (process-lines "git" "status" "--porcelain" "-b"))))
-        (seq-uniq (seq-filter 'identity (mapcar 'dw/map-line-to-status-char status-lines)))))
+  (defun my/get-prompt-path ()
+    (let* ((current-path (eshell/pwd))
+           (git-output (shell-command-to-string "git rev-parse --show-toplevel"))
+           (has-path (not (string-match "^fatal" git-output))))
+      (if (not has-path)
+          (abbreviate-file-name current-path)
+        (string-remove-prefix (file-name-directory git-output) current-path))))
 
-    (defun dw/get-prompt-path ()
-      (let* ((current-path (eshell/pwd))
-             (git-output (shell-command-to-string "git rev-parse --show-toplevel"))
-             (has-path (not (string-match "^fatal" git-output))))
-        (if (not has-path)
-            (abbreviate-file-name current-path)
-          (string-remove-prefix (file-name-directory git-output) current-path))))
+  (defun my/pwd-shorten-dirs (pwd)
+    (let ((p-lst (split-string pwd "/")))
+      (if (> (length p-lst) 2)
+          (concat
+           (mapconcat (lambda (elm) (if (zerop (length elm)) ""
+                                      (substring elm 0 0)))
+                      (butlast p-lst 2)
+                      "/")
+           "/"
+           (mapconcat (lambda (elm) elm)
+                      (last p-lst 2)
+                      "/"))
+        pwd)))
 
-    (defun dw/eshell-prompt ()
-      (let ((current-branch (magit-get-current-branch)))
-        (concat
-         "\n"
-         (propertize (user-login-name) 'face `(:foreground "red2"))
-         (propertize " @ " 'face `(:foreground "yellow1"))
-         (propertize (dw/get-prompt-path) 'face `(:foreground "green3"))
-         (when current-branch
-           (concat
-            (propertize " • " 'face `(:foreground "white"))
-            (propertize (concat " @ " current-branch) 'face `(:foreground "orange2"))))
-         (propertize " >>" 'face `(:foreground "purple3"))
-         (propertize " " 'face `(:foreground "white")))))
+  (defun my/eshell-prompt ()
+    (concat
+     "\n"
+     (propertize (user-login-name) 'face `(:foreground "light green"))
+     (propertize " ⟣─ " 'face `(:foreground "dark orange"))
+     (propertize (my/pwd-shorten-dirs (my/get-prompt-path)) 'face `(:foreground "yellow3"))
+     (propertize " λ" 'face `(:foreground "pink2"))
+     (propertize "\n" 'face `(:foreground "white"))))
 
-    ;; (if (= (user-uid) 0)
-    ;;     (propertize "\n#" 'face `(:foreground "red2"))
-    ;;   (propertize "\nλ" 'face `(:foreground "#aece4a")))
-    ;; (propertize " " 'face `(:foreground "white")))))
+  (defun eshell-configure ()
+    (use-package xterm-color
+      :straight t)
 
+    (push 'eshell-tramp eshell-modules-list)
+    (push 'xterm-color-filter eshell-preoutput-filter-functions)
+    (delq 'eshell-handle-ansi-color eshell-output-filter-functions)
 
-    (defun eshell-configure ()
-      (use-package xterm-color
-        :straight t)
+    ;; Save command history when commands are entered
+    (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
 
-      (push 'eshell-tramp eshell-modules-list)
-      (push 'xterm-color-filter eshell-preoutput-filter-functions)
-      (delq 'eshell-handle-ansi-color eshell-output-filter-functions)
+    (add-hook 'eshell-before-prompt-hook
+              (lambda ()
+                (setq xterm-color-preserve-properties t)))
 
-      ;; Save command history when commands are entered
-      (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+    ;; Truncate buffer for performance
+    (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
-      (add-hook 'eshell-before-prompt-hook
-                (lambda ()
-                  (setq xterm-color-preserve-properties t)))
+    (add-hook 'eshell-pre-command-hook
+              (lambda () (setenv "TERM" "xterm-256color")))
+    (add-hook 'eshell-post-command-hook
+              (lambda () (setenv "TERM" "dumb")))
 
-      ;; Truncate buffer for performance
-      (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+    (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+    (eshell-hist-initialize)
+    (setenv "PAGER" "cat")
 
-      ;; We want to use xterm-256color when running interactive commands
-      ;; in eshell but not during other times when we might be launching
-      ;; a shell command to gather its output.
-      (add-hook 'eshell-pre-command-hook
-                (lambda () (setenv "TERM" "xterm-256color")))
-      (add-hook 'eshell-post-command-hook
-                (lambda () (setenv "TERM" "dumb")))
+    ;; Disable company in eshell
+    (company-mode -1)
+    (setq eshell-prompt-function      'my/eshell-prompt
+          eshell-prompt-regexp        "^λ "
+          eshell-history-size         10000
+          eshell-buffer-maximum-lines 10000
+          eshell-hist-ignoredups t
+          eshell-highlight-prompt t
+          eshell-scroll-to-bottom-on-input t
+          eshell-prefer-lisp-functions nil
+          comint-prompt-read-only t))
 
-      ;; Use completion-at-point to provide completions in eshell
-      (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+  (use-package eshell
+    :straight t
+    :hook (eshell-first-time-mode . eshell-configure)
+    :config
 
-      ;; Initialize the shell history
-      (eshell-hist-initialize)
+    (with-eval-after-load 'esh-opt
+      (setq eshell-destroy-buffer-when-process-dies t)
+      (setq eshell-visual-commands '("htop" "zsh" "vim"))))
 
-      (setenv "PAGER" "cat")
+  (add-hook 'eshell-mode-hook (lambda ()
+                                (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1)))
+                                (define-key eshell-mode-map (kbd "C-c o l") #'my/eshell-copy-last-output)))
 
-      (setq eshell-prompt-function      'dw/eshell-prompt
-            eshell-prompt-regexp        "^λ "
-            eshell-history-size         10000
-            eshell-buffer-maximum-lines 10000
-            eshell-hist-ignoredups t
-            eshell-highlight-prompt t
-            eshell-scroll-to-bottom-on-input t
-            eshell-prefer-lisp-functions nil))
+  (defun my/eshell-copy-last-output ()
+    (interactive)
+    (eshell-mark-output)
+    (avi-kill-line-save)
+    (eshell-interrupt-process))
 
-
-
-    ;; (defun configure-eshell ()
-    ;;   ;; Save command history when commands are entered
-    ;;   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
-
-    ;;   ;; Truncate buffer for performance
-    ;;   (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
-
-    ;;   (setq eshell-history-size         10000
-    ;;         eshell-buffer-maximum-lines 10000
-    ;;         eshell-prompt-regexp        "^λ "
-    ;;         eshell-hist-ignoredups t
-    ;;         eshell-highlight-prompt t
-    ;;         eshell-scroll-to-bottom-on-input t))
-
-    (use-package eshell
-      :straight t
-      :hook (eshell-first-time-mode . eshell-configure)
-      :config
-
-      (with-eval-after-load 'esh-opt
-        (setq eshell-destroy-buffer-when-process-dies t)
-        (setq eshell-visual-commands '("htop" "zsh" "vim"))))
-
-
-    (use-package eshell-syntax-highlighting
-      :straight t
-      :hook (eshell-mode . eshell-syntax-highlighting-mode))
+  (use-package eshell-syntax-highlighting
+    :straight t
+    :hook (eshell-mode . eshell-syntax-highlighting-mode))
 
 #+end_src
 
