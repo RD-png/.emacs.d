@@ -27,86 +27,86 @@ Run (byte-recompile-directory package-user-dir nil 'force) on fresh install
 
 #+begin_src emacs-lisp
 
-    ;; native comp
-    (setq comp-deferred-compilation t)
-    (setq comp-speed 3)
-    (setq comp-async-report-warnings-errors nil)
-    (setq warning-minimum-level :error)
-    (setq package-native-compile 1)
+  ;; native comp
+  (setq comp-deferred-compilation t)
+  (setq comp-speed 3)
+  (setq comp-async-report-warnings-errors nil)
+  (setq warning-minimum-level :error)
+  (setq package-native-compile 1)
 
-    ;; Stop the native comp warnings
-    (defvar grep-find-ignored-directories nil)
-    (defvar grep-find-ignored-files nil)
-    (defvar ido-context-switch-command nil)
-    (defvar ido-cur-item nil)
-    (defvar ido-cur-list nil)
-    (defvar ido-default-item nil)
-    (defvar inherit-input-method nil)
-    (defvar oauth--token-data nil)
-    (defvar tls-checktrust nil)
-    (defvar tls-program nil)
-    (defvar url-callback-arguments nil)
-    (defvar url-callback-function nil)
-    (defvar url-http-extra-headers nil)
+  ;; Stop the native comp warnings
+  (defvar grep-find-ignored-directories nil)
+  (defvar grep-find-ignored-files nil)
+  (defvar ido-context-switch-command nil)
+  (defvar ido-cur-item nil)
+  (defvar ido-cur-list nil)
+  (defvar ido-default-item nil)
+  (defvar inherit-input-method nil)
+  (defvar oauth--token-data nil)
+  (defvar tls-checktrust nil)
+  (defvar tls-program nil)
+  (defvar url-callback-arguments nil)
+  (defvar url-callback-function nil)
+  (defvar url-http-extra-headers nil)
 
-    ;; Set default font size values
-    (defvar default-font-size 140)
-    (defvar default-variable-font-size 140)
+  ;; Set default font size values
+  (defvar default-font-size 140)
+  (defvar default-variable-font-size 140)
 
-    ;; Set default transparency values
-    (defvar frame-transparency '(100 . 100))
+  ;; Set default transparency values
+  (defvar frame-transparency '(100 . 100))
 
-    ;; Default to utf-8
-    (setq default-buffer-file-coding-system 'utf-8-unix
-          buffer-file-coding-system 'utf-8-unix)
+  ;; Default to utf-8
+  (setq default-buffer-file-coding-system 'utf-8-unix
+        buffer-file-coding-system 'utf-8-unix)
 
-    (push "node_modules/" completion-ignored-extensions)
-    (push "__pycache__/" completion-ignored-extensions)
+  (push "node_modules/" completion-ignored-extensions)
+  (push "__pycache__/" completion-ignored-extensions)
 
-    ;; Syntax highlight for all buffers
-    (global-font-lock-mode t)
+  ;; Syntax highlight for all buffers
+  (global-font-lock-mode t)
 
-    ;; Dont save duplicate variables in kill ring
-    (setq kill-do-not-save-duplicates t)
+  ;; Dont save duplicate variables in kill ring
+  (setq kill-do-not-save-duplicates t)
 
-    ;; When using gui confirm before closing
-    (when (window-system)
-      (setq confirm-kill-emacs 'yes-or-no-p))
+  ;; When using gui confirm before closing
+  (when (window-system)
+    (setq confirm-kill-emacs 'yes-or-no-p))
 
-    ;; Weird
-    (setq system-uses-terminfo nil)
+  ;; Weird
+  (setq system-uses-terminfo nil)
 
-    ;; Set exec paths for npm packages on nix
-    (add-to-list 'exec-path "/root/.npm/bin")
+  ;; Set exec paths for npm packages on nix
+  (add-to-list 'exec-path "/root/.npm/bin")
 
-    (setq
-     ;; Dont show these file types in recent files
-     recentf-exclude (list (rx
-                            "COMMIT_EDITMSG"
-                            (and (or "/TAGS"
-                                     "/GTAGS"
-                                     "/GRAGS"
-                                     "/GPATH"
-                                     ".mkv"
-                                     ".avi"
-                                     (and ".mp" (any "3" "4"))
-                                     (and ".doc" (? "x"))
-                                     ".sub"
-                                     ".srt"
-                                     ".ass"
-                                     ".elc"
-                                     (and "tmp." (+ (not (any "/" "\\")))))
-                                 eol))))
+  (setq
+   ;; Dont show these file types in recent files
+   recentf-exclude (list (rx
+                          "COMMIT_EDITMSG"
+                          (and (or "/TAGS"
+                                   "/GTAGS"
+                                   "/GRAGS"
+                                   "/GPATH"
+                                   ".mkv"
+                                   ".avi"
+                                   (and ".mp" (any "3" "4"))
+                                   (and ".doc" (? "x"))
+                                   ".sub"
+                                   ".srt"
+                                   ".ass"
+                                   ".elc"
+                                   (and "tmp." (+ (not (any "/" "\\")))))
+                               eol))))
 
-    ;; General Defaults
-    (setq delete-old-versions t
-          delete-by-moving-to-trash t
-          enable-recursive-minibuffers t)
+  ;; General Defaults
+  (setq delete-old-versions t
+        delete-by-moving-to-trash t
+        enable-recursive-minibuffers t)
 
-    (blink-cursor-mode -1)
+  (blink-cursor-mode -1)
 
-    ;; Remove startup message
-    (advice-add 'display-startup-echo-area-message :override #'ignore)
+  ;; Remove startup message
+  (advice-add 'display-startup-echo-area-message :override #'ignore)
 
 #+end_src
 
@@ -754,135 +754,135 @@ Keep folders clean when you are using emacs
 
 #+begin_src emacs-lisp
 
-    (defun org-mode-setup ()
-      (org-indent-mode)
-      (variable-pitch-mode 1)
-      (visual-line-mode 1))
+  (defun org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (visual-line-mode 1))
 
-    (use-package org
-      :straight t
-      :pin org
-      :commands (org-capture org-agenda)
-      :preface
-      (defun my/project-task-file ()
-        (interactive)
-        (find-file (concat "~/.config/emacs/org/Projects/" (projectile-project-name) ".org")))
+  (use-package org
+    :straight t
+    :pin org
+    :commands (org-capture org-agenda)
+    :preface
+    (defun my/project-task-file ()
+      (interactive)
+      (find-file (concat "~/.config/emacs/org/Projects/" (projectile-project-name) ".org")))
 
-      :hook (org-mode . org-mode-setup)
-      :bind (("M-o a" . org-agenda)
-             ("M-o p t" . my/project-task-file)
-             ([remap org-return-and-maybe-indent] . avy-goto-char-2))
-      :config
-      (setq org-ellipsis " ▾")
+    :hook (org-mode . org-mode-setup)
+    :bind (("M-o a" . org-agenda)
+           ("M-o p t" . my/project-task-file)
+           ([remap org-return-and-maybe-indent] . avy-goto-char-2))
+    :config
+    (setq org-ellipsis " ▾")
 
-      (setq org-agenda-start-with-log-mode t)
-      (setq org-log-done 'time)
-      (setq org-log-into-drawer t)
+    (setq org-agenda-start-with-log-mode t)
+    (setq org-log-done 'time)
+    (setq org-log-into-drawer t)
 
-      (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
+    (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
 
-      (require 'org-habit)
-      (add-to-list 'org-modules 'org-habit)
-      (setq org-habit-graph-column 60)
+    (require 'org-habit)
+    (add-to-list 'org-modules 'org-habit)
+    (setq org-habit-graph-column 60)
 
-      (setq org-todo-keywords
-            '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-              (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+    (setq org-todo-keywords
+          '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+            (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
-      (setq org-refile-targets
-            '(("Archive.org" :maxlevel . 1)
-              ("Tasks.org" :maxlevel . 1)))
+    (setq org-refile-targets
+          '(("Archive.org" :maxlevel . 1)
+            ("Tasks.org" :maxlevel . 1)))
 
-      ;; Save Org buffers after refiling!
-      (advice-add 'org-refile :after 'org-save-all-org-buffers)
+    ;; Save Org buffers after refiling!
+    (advice-add 'org-refile :after 'org-save-all-org-buffers)
 
-      (setq org-tag-alist
-            '((:startgroup)
-                                            ; Put mutually exclusive tags here
-              (:endgroup)
-              ("@errand" . ?E)
-              ("@home" . ?H)
-              ("@work" . ?W)
-              ("agenda" . ?a)
-              ("planning" . ?p)
-              ("publish" . ?P)
-              ("batch" . ?b)
-              ("note" . ?n)
-              ("idea" . ?i)))
+    (setq org-tag-alist
+          '((:startgroup)
+                                          ; Put mutually exclusive tags here
+            (:endgroup)
+            ("@errand" . ?E)
+            ("@home" . ?H)
+            ("@work" . ?W)
+            ("agenda" . ?a)
+            ("planning" . ?p)
+            ("publish" . ?P)
+            ("batch" . ?b)
+            ("note" . ?n)
+            ("idea" . ?i)))
 
-      ;; Configure custom agenda views
-      (setq org-agenda-custom-commands
-            '(("d" "Dashboard"
-               ((agenda "" ((org-deadline-warning-days 7)))
-                (todo "NEXT"
-                      ((org-agenda-overriding-header "Next Tasks")))
-                (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+    ;; Configure custom agenda views
+    (setq org-agenda-custom-commands
+          '(("d" "Dashboard"
+             ((agenda "" ((org-deadline-warning-days 7)))
+              (todo "NEXT"
+                    ((org-agenda-overriding-header "Next Tasks")))
+              (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-              ("n" "Next Tasks"
-               ((todo "NEXT"
-                      ((org-agenda-overriding-header "Next Tasks")))))
+            ("n" "Next Tasks"
+             ((todo "NEXT"
+                    ((org-agenda-overriding-header "Next Tasks")))))
 
-              ("W" "Work Tasks" tags-todo "+work-email")
+            ("W" "Work Tasks" tags-todo "+work-email")
 
-              ;; Low-effort next actions
-              ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-               ((org-agenda-overriding-header "Low Effort Tasks")
-                (org-agenda-max-todos 20)
-                (org-agenda-files org-agenda-files)))
+            ;; Low-effort next actions
+            ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+             ((org-agenda-overriding-header "Low Effort Tasks")
+              (org-agenda-max-todos 20)
+              (org-agenda-files org-agenda-files)))
 
-              ("w" "Workflow Status"
-               ((todo "WAIT"
-                      ((org-agenda-overriding-header "Waiting on External")
-                       (org-agenda-files org-agenda-files)))
-                (todo "REVIEW"
-                      ((org-agenda-overriding-header "In Review")
-                       (org-agenda-files org-agenda-files)))
-                (todo "PLAN"
-                      ((org-agenda-overriding-header "In Planning")
-                       (org-agenda-todo-list-sublevels nil)
-                       (org-agenda-files org-agenda-files)))
-                (todo "BACKLOG"
-                      ((org-agenda-overriding-header "Project Backlog")
-                       (org-agenda-todo-list-sublevels nil)
-                       (org-agenda-files org-agenda-files)))
-                (todo "READY"
-                      ((org-agenda-overriding-header "Ready for Work")
-                       (org-agenda-files org-agenda-files)))
-                (todo "ACTIVE"
-                      ((org-agenda-overriding-header "Active Projects")
-                       (org-agenda-files org-agenda-files)))
-                (todo "COMPLETED"
-                      ((org-agenda-overriding-header "Completed Projects")
-                       (org-agenda-files org-agenda-files)))
-                (todo "CANC"
-                      ((org-agenda-overriding-header "Cancelled Projects")
-                       (org-agenda-files org-agenda-files)))))))
+            ("w" "Workflow Status"
+             ((todo "WAIT"
+                    ((org-agenda-overriding-header "Waiting on External")
+                     (org-agenda-files org-agenda-files)))
+              (todo "REVIEW"
+                    ((org-agenda-overriding-header "In Review")
+                     (org-agenda-files org-agenda-files)))
+              (todo "PLAN"
+                    ((org-agenda-overriding-header "In Planning")
+                     (org-agenda-todo-list-sublevels nil)
+                     (org-agenda-files org-agenda-files)))
+              (todo "BACKLOG"
+                    ((org-agenda-overriding-header "Project Backlog")
+                     (org-agenda-todo-list-sublevels nil)
+                     (org-agenda-files org-agenda-files)))
+              (todo "READY"
+                    ((org-agenda-overriding-header "Ready for Work")
+                     (org-agenda-files org-agenda-files)))
+              (todo "ACTIVE"
+                    ((org-agenda-overriding-header "Active Projects")
+                     (org-agenda-files org-agenda-files)))
+              (todo "COMPLETED"
+                    ((org-agenda-overriding-header "Completed Projects")
+                     (org-agenda-files org-agenda-files)))
+              (todo "CANC"
+                    ((org-agenda-overriding-header "Cancelled Projects")
+                     (org-agenda-files org-agenda-files)))))))
 
-      (setq org-capture-templates
-            `(("t" "Tasks / Projects")
-              ("tt" "Task" entry (file+olp "~/.config/emacs/OrgFiles/Tasks.org" "Inbox")
-               "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+    (setq org-capture-templates
+          `(("t" "Tasks / Projects")
+            ("tt" "Task" entry (file+olp "~/.config/emacs/OrgFiles/Tasks.org" "Inbox")
+             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
-              ("j" "Journal Entries")
-              ("jj" "Journal" entry
-               (file+olp+datetree "~/.config/emacs/org/Journal.org")
-               "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-               :clock-in :clock-resume
-               :empty-lines 1)
-              ("jm" "Meeting" entry
-               (file+olp+datetree "~/.config/emacs/org/Journal.org")
-               "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-               :clock-in :clock-resume
-               :empty-lines 1)
+            ("j" "Journal Entries")
+            ("jj" "Journal" entry
+             (file+olp+datetree "~/.config/emacs/org/Journal.org")
+             "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+             :clock-in :clock-resume
+             :empty-lines 1)
+            ("jm" "Meeting" entry
+             (file+olp+datetree "~/.config/emacs/org/Journal.org")
+             "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+             :clock-in :clock-resume
+             :empty-lines 1)
 
-              ("w" "Workflows")
-              ("we" "Checking Email" entry (file+olp+datetree "~/.config/emacs/org/Journal.org")
-               "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
+            ("w" "Workflows")
+            ("we" "Checking Email" entry (file+olp+datetree "~/.config/emacs/org/Journal.org")
+             "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
 
-      (define-key global-map (kbd "C-c j")
-        (lambda () (interactive) (org-capture nil "jj")))
+    (define-key global-map (kbd "C-c j")
+      (lambda () (interactive) (org-capture nil "jj")))
 
-      (org-font-setup))
+    (org-font-setup))
 
 #+end_src
 
