@@ -648,16 +648,20 @@ Perspective gives workspaces with unique buffers
 
 #+begin_src emacs-lisp
 
-  (use-package perspective
-    :straight t
-    :bind (("C-c C-'" . persp-next)
-           ("C-x M-b" . persp-switch)
-           ("C-x M-k" . persp-kill))
-    :custom
-    (persp-initial-frame-name "Main")
-    :config
-    (unless (equal persp-mode t)
-      (persp-mode)))
+    (use-package perspective
+      :straight t
+      :bind (("C-c C-'" . persp-next)
+             ("C-x M-b" . persp-switch)
+             ("C-x M-k" . persp-kill)
+             ("C-x C-S-B" . persp-switch-to-buffer))
+      :custom
+      (persp-initial-frame-name "Ext")
+      :config
+      (unless (equal persp-mode t)
+        (persp-mode)))
+
+    (add-hook 'persp-mode-hook
+              (persp-switch "Main"))
 
 #+end_src
 
@@ -983,101 +987,103 @@ Elisp Shell, really clean to use
 
 #+begin_src emacs-lisp
 
-  (defun my/map-line-to-status-char (line)
-    (cond ((string-match "^?\\? " line) "?")))
+      (defun my/map-line-to-status-char (line)
+        (cond ((string-match "^?\\? " line) "?")))
 
-  (defun my/get-prompt-path ()
-    (let* ((current-path (eshell/pwd))
-           (git-output (shell-command-to-string "git rev-parse --show-toplevel"))
-           (has-path (not (string-match "^fatal" git-output))))
-      (if (not has-path)
-          (abbreviate-file-name current-path)
-        (string-remove-prefix (file-name-directory git-output) current-path))))
+      (defun my/get-prompt-path ()
+        (let* ((current-path (eshell/pwd))
+               (git-output (shell-command-to-string "git rev-parse --show-toplevel"))
+               (has-path (not (string-match "^fatal" git-output))))
+          (if (not has-path)
+              (abbreviate-file-name current-path)
+            (string-remove-prefix (file-name-directory git-output) current-path))))
 
-  (defun my/pwd-shorten-dirs (pwd)
-    (let ((p-lst (split-string pwd "/")))
-      (if (> (length p-lst) 2)
-          (concat
-           (mapconcat (lambda (elm) (if (zerop (length elm)) ""
-                                      (substring elm 0 0)))
-                      (butlast p-lst 2)
-                      "/")
-           "/"
-           (mapconcat (lambda (elm) elm)
-                      (last p-lst 2)
-                      "/"))
-        pwd)))
+      (defun my/pwd-shorten-dirs (pwd)
+        (let ((p-lst (split-string pwd "/")))
+          (if (> (length p-lst) 2)
+              (concat
+               (mapconcat (lambda (elm) (if (zerop (length elm)) ""
+                                          (substring elm 0 0)))
+                          (butlast p-lst 2)
+                          "/")
+               "/"
+               (mapconcat (lambda (elm) elm)
+                          (last p-lst 2)
+                          "/"))
+            pwd)))
 
-  (defun my/eshell-prompt ()
-    (concat
-     "\n"
-     (propertize (user-login-name) 'face `(:foreground "light green"))
-     (propertize " ⟣─ " 'face `(:foreground "dark orange"))
-     (propertize (my/pwd-shorten-dirs (my/get-prompt-path)) 'face `(:foreground "yellow3"))
-     (propertize " λ" 'face `(:foreground "pink2"))
-     (propertize "\n" 'face `(:foreground "white"))))
+      (defun my/eshell-prompt ()
+        (concat
+         "\n"
+         (propertize (user-login-name) 'face `(:foreground "light green"))
+         (propertize " ⟣─ " 'face `(:foreground "dark orange"))
+         (propertize (my/pwd-shorten-dirs (my/get-prompt-path)) 'face `(:foreground "yellow3"))
+         (propertize " λ" 'face `(:foreground "pink2"))
+         (propertize "\n" 'face `(:foreground "white"))))
 
-  (defun eshell-configure ()
-    (use-package xterm-color
-      :straight t)
+      (defun eshell-configure ()
+        (use-package xterm-color
+          :straight t)
 
-    (push 'eshell-tramp eshell-modules-list)
-    (push 'xterm-color-filter eshell-preoutput-filter-functions)
-    (delq 'eshell-handle-ansi-color eshell-output-filter-functions)
+        (push 'eshell-tramp eshell-modules-list)
+        (push 'xterm-color-filter eshell-preoutput-filter-functions)
+        (delq 'eshell-handle-ansi-color eshell-output-filter-functions)
 
-    ;; Save command history when commands are entered
-    (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+        ;; Save command history when commands are entered
+        (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
 
-    (add-hook 'eshell-before-prompt-hook
-              (lambda ()
-                (setq xterm-color-preserve-properties t)))
+        (add-hook 'eshell-before-prompt-hook
+                  (lambda ()
+                    (setq xterm-color-preserve-properties t)))
 
-    ;; Truncate buffer for performance
-    (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+        ;; Truncate buffer for performance
+        (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
-    (add-hook 'eshell-pre-command-hook
-              (lambda () (setenv "TERM" "xterm-256color")))
-    (add-hook 'eshell-post-command-hook
-              (lambda () (setenv "TERM" "dumb")))
+        (add-hook 'eshell-pre-command-hook
+                  (lambda () (setenv "TERM" "xterm-256color")))
+        (add-hook 'eshell-post-command-hook
+                  (lambda () (setenv "TERM" "dumb")))
 
-    (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
-    (eshell-hist-initialize)
-    (setenv "PAGER" "cat")
+        (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+        (eshell-hist-initialize)
+        (setenv "PAGER" "cat")
 
-    ;; Disable company in eshell
-    (company-mode -1)
-    (setq eshell-prompt-function      'my/eshell-prompt
-          eshell-prompt-regexp        "^λ "
-          eshell-history-size         10000
-          eshell-buffer-maximum-lines 10000
-          eshell-hist-ignoredups t
-          eshell-highlight-prompt t
-          eshell-scroll-to-bottom-on-input t
-          eshell-prefer-lisp-functions nil
-          comint-prompt-read-only t))
+        ;; Disable company in eshell
+        (company-mode -1)
+        (setq eshell-prompt-function      'my/eshell-prompt
+              eshell-prompt-regexp        "^λ "
+              eshell-history-size         10000
+              eshell-buffer-maximum-lines 10000
+              eshell-hist-ignoredups t
+              eshell-highlight-prompt t
+              eshell-scroll-to-bottom-on-input t
+              eshell-prefer-lisp-functions nil
+              comint-prompt-read-only t)
+        (setq eshell-buffer-name (concat (persp-current-name) " *eshell*"))
+        (generate-new-buffer eshell-buffer-name))
 
-  (use-package eshell
-    :straight t
-    :hook (eshell-first-time-mode . eshell-configure)
-    :config
+      (use-package eshell
+        :straight t
+        :hook (eshell-first-time-mode . eshell-configure)
+        :config
 
-    (with-eval-after-load 'esh-opt
-      (setq eshell-destroy-buffer-when-process-dies t)
-      (setq eshell-visual-commands '("htop" "zsh" "vim"))))
+        (with-eval-after-load 'esh-opt
+          (setq eshell-destroy-buffer-when-process-dies t)
+          (setq eshell-visual-commands '("htop" "zsh" "vim"))))
 
-  (add-hook 'eshell-mode-hook (lambda ()
-                                (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1)))
-                                (define-key eshell-mode-map (kbd "C-c o l") #'my/eshell-copy-last-output)))
+      (add-hook 'eshell-mode-hook (lambda ()
+                                    (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1)))
+                                    (define-key eshell-mode-map (kbd "C-c o l") #'my/eshell-copy-last-output)))
 
-  (defun my/eshell-copy-last-output ()
-    (interactive)
-    (eshell-mark-output)
-    (avi-kill-line-save)
-    (eshell-interrupt-process))
+      (defun my/eshell-copy-last-output ()
+        (interactive)
+        (eshell-mark-output)
+        (avi-kill-line-save)
+        (eshell-interrupt-process))
 
-  (use-package eshell-syntax-highlighting
-    :straight t
-    :hook (eshell-mode . eshell-syntax-highlighting-mode))
+      (use-package eshell-syntax-highlighting
+        :straight t
+        :hook (eshell-mode . eshell-syntax-highlighting-mode))
 
 #+end_src
 

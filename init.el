@@ -468,12 +468,16 @@
   :straight t
   :bind (("C-c C-'" . persp-next)
          ("C-x M-b" . persp-switch)
-         ("C-x M-k" . persp-kill))
+         ("C-x M-k" . persp-kill)
+         ("C-x C-S-B" . persp-switch-to-buffer))
   :custom
-  (persp-initial-frame-name "Main")
+  (persp-initial-frame-name "Ext")
   :config
   (unless (equal persp-mode t)
     (persp-mode)))
+
+(add-hook 'persp-mode-hook
+          (persp-switch "Main"))
 
 (use-package avy
   :straight t
@@ -789,7 +793,9 @@
         eshell-highlight-prompt t
         eshell-scroll-to-bottom-on-input t
         eshell-prefer-lisp-functions nil
-        comint-prompt-read-only t))
+        comint-prompt-read-only t)
+  (setq eshell-buffer-name (concat (persp-current-name) " *eshell*"))
+  (generate-new-buffer eshell-buffer-name))
 
 (use-package eshell
   :straight t
