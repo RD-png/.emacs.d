@@ -676,7 +676,7 @@ Allows quick movement in files
   (use-package avy
     :straight t
     :bind (("M-s" . avy-goto-char)
-           ("C-:" . avy-goto-char-2)
+           ("C-j" . avy-goto-char-2)
            ("M-m" . avy-goto-word-0))
     :custom
     (avy-single-candidate-jump nil))
@@ -754,135 +754,136 @@ Keep folders clean when you are using emacs
 
 #+begin_src emacs-lisp
 
-  (defun org-mode-setup ()
-    (org-indent-mode)
-    (variable-pitch-mode 1)
-    (visual-line-mode 1))
+    (defun org-mode-setup ()
+      (org-indent-mode)
+      (variable-pitch-mode 1)
+      (visual-line-mode 1))
 
-  (use-package org
-    :straight t
-    :pin org
-    :commands (org-capture org-agenda)
-    :preface
-    (defun my/project-task-file ()
-      (interactive)
-      (find-file (concat "~/.config/emacs/org/Projects/" (projectile-project-name) ".org")))
+    (use-package org
+      :straight t
+      :pin org
+      :commands (org-capture org-agenda)
+      :preface
+      (defun my/project-task-file ()
+        (interactive)
+        (find-file (concat "~/.config/emacs/org/Projects/" (projectile-project-name) ".org")))
 
-    :hook (org-mode . org-mode-setup)
-    :bind (("M-o a" . org-agenda)
-           ("M-o p t" . my/project-task-file))
-    :config
-    (setq org-ellipsis " ▾")
+      :hook (org-mode . org-mode-setup)
+      :bind (("M-o a" . org-agenda)
+             ("M-o p t" . my/project-task-file)
+             ([remap org-return-and-maybe-indent] . avy-goto-char-2))
+      :config
+      (setq org-ellipsis " ▾")
 
-    (setq org-agenda-start-with-log-mode t)
-    (setq org-log-done 'time)
-    (setq org-log-into-drawer t)
+      (setq org-agenda-start-with-log-mode t)
+      (setq org-log-done 'time)
+      (setq org-log-into-drawer t)
 
-    (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
+      (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
 
-    (require 'org-habit)
-    (add-to-list 'org-modules 'org-habit)
-    (setq org-habit-graph-column 60)
+      (require 'org-habit)
+      (add-to-list 'org-modules 'org-habit)
+      (setq org-habit-graph-column 60)
 
-    (setq org-todo-keywords
-          '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-            (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+      (setq org-todo-keywords
+            '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+              (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
-    (setq org-refile-targets
-          '(("Archive.org" :maxlevel . 1)
-            ("Tasks.org" :maxlevel . 1)))
+      (setq org-refile-targets
+            '(("Archive.org" :maxlevel . 1)
+              ("Tasks.org" :maxlevel . 1)))
 
-    ;; Save Org buffers after refiling!
-    (advice-add 'org-refile :after 'org-save-all-org-buffers)
+      ;; Save Org buffers after refiling!
+      (advice-add 'org-refile :after 'org-save-all-org-buffers)
 
-    (setq org-tag-alist
-          '((:startgroup)
-                                          ; Put mutually exclusive tags here
-            (:endgroup)
-            ("@errand" . ?E)
-            ("@home" . ?H)
-            ("@work" . ?W)
-            ("agenda" . ?a)
-            ("planning" . ?p)
-            ("publish" . ?P)
-            ("batch" . ?b)
-            ("note" . ?n)
-            ("idea" . ?i)))
+      (setq org-tag-alist
+            '((:startgroup)
+                                            ; Put mutually exclusive tags here
+              (:endgroup)
+              ("@errand" . ?E)
+              ("@home" . ?H)
+              ("@work" . ?W)
+              ("agenda" . ?a)
+              ("planning" . ?p)
+              ("publish" . ?P)
+              ("batch" . ?b)
+              ("note" . ?n)
+              ("idea" . ?i)))
 
-    ;; Configure custom agenda views
-    (setq org-agenda-custom-commands
-          '(("d" "Dashboard"
-             ((agenda "" ((org-deadline-warning-days 7)))
-              (todo "NEXT"
-                    ((org-agenda-overriding-header "Next Tasks")))
-              (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+      ;; Configure custom agenda views
+      (setq org-agenda-custom-commands
+            '(("d" "Dashboard"
+               ((agenda "" ((org-deadline-warning-days 7)))
+                (todo "NEXT"
+                      ((org-agenda-overriding-header "Next Tasks")))
+                (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-            ("n" "Next Tasks"
-             ((todo "NEXT"
-                    ((org-agenda-overriding-header "Next Tasks")))))
+              ("n" "Next Tasks"
+               ((todo "NEXT"
+                      ((org-agenda-overriding-header "Next Tasks")))))
 
-            ("W" "Work Tasks" tags-todo "+work-email")
+              ("W" "Work Tasks" tags-todo "+work-email")
 
-            ;; Low-effort next actions
-            ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-             ((org-agenda-overriding-header "Low Effort Tasks")
-              (org-agenda-max-todos 20)
-              (org-agenda-files org-agenda-files)))
+              ;; Low-effort next actions
+              ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+               ((org-agenda-overriding-header "Low Effort Tasks")
+                (org-agenda-max-todos 20)
+                (org-agenda-files org-agenda-files)))
 
-            ("w" "Workflow Status"
-             ((todo "WAIT"
-                    ((org-agenda-overriding-header "Waiting on External")
-                     (org-agenda-files org-agenda-files)))
-              (todo "REVIEW"
-                    ((org-agenda-overriding-header "In Review")
-                     (org-agenda-files org-agenda-files)))
-              (todo "PLAN"
-                    ((org-agenda-overriding-header "In Planning")
-                     (org-agenda-todo-list-sublevels nil)
-                     (org-agenda-files org-agenda-files)))
-              (todo "BACKLOG"
-                    ((org-agenda-overriding-header "Project Backlog")
-                     (org-agenda-todo-list-sublevels nil)
-                     (org-agenda-files org-agenda-files)))
-              (todo "READY"
-                    ((org-agenda-overriding-header "Ready for Work")
-                     (org-agenda-files org-agenda-files)))
-              (todo "ACTIVE"
-                    ((org-agenda-overriding-header "Active Projects")
-                     (org-agenda-files org-agenda-files)))
-              (todo "COMPLETED"
-                    ((org-agenda-overriding-header "Completed Projects")
-                     (org-agenda-files org-agenda-files)))
-              (todo "CANC"
-                    ((org-agenda-overriding-header "Cancelled Projects")
-                     (org-agenda-files org-agenda-files)))))))
+              ("w" "Workflow Status"
+               ((todo "WAIT"
+                      ((org-agenda-overriding-header "Waiting on External")
+                       (org-agenda-files org-agenda-files)))
+                (todo "REVIEW"
+                      ((org-agenda-overriding-header "In Review")
+                       (org-agenda-files org-agenda-files)))
+                (todo "PLAN"
+                      ((org-agenda-overriding-header "In Planning")
+                       (org-agenda-todo-list-sublevels nil)
+                       (org-agenda-files org-agenda-files)))
+                (todo "BACKLOG"
+                      ((org-agenda-overriding-header "Project Backlog")
+                       (org-agenda-todo-list-sublevels nil)
+                       (org-agenda-files org-agenda-files)))
+                (todo "READY"
+                      ((org-agenda-overriding-header "Ready for Work")
+                       (org-agenda-files org-agenda-files)))
+                (todo "ACTIVE"
+                      ((org-agenda-overriding-header "Active Projects")
+                       (org-agenda-files org-agenda-files)))
+                (todo "COMPLETED"
+                      ((org-agenda-overriding-header "Completed Projects")
+                       (org-agenda-files org-agenda-files)))
+                (todo "CANC"
+                      ((org-agenda-overriding-header "Cancelled Projects")
+                       (org-agenda-files org-agenda-files)))))))
 
-    (setq org-capture-templates
-          `(("t" "Tasks / Projects")
-            ("tt" "Task" entry (file+olp "~/.config/emacs/OrgFiles/Tasks.org" "Inbox")
-             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+      (setq org-capture-templates
+            `(("t" "Tasks / Projects")
+              ("tt" "Task" entry (file+olp "~/.config/emacs/OrgFiles/Tasks.org" "Inbox")
+               "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
-            ("j" "Journal Entries")
-            ("jj" "Journal" entry
-             (file+olp+datetree "~/.config/emacs/org/Journal.org")
-             "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-             ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-             :clock-in :clock-resume
-             :empty-lines 1)
-            ("jm" "Meeting" entry
-             (file+olp+datetree "~/.config/emacs/org/Journal.org")
-             "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-             :clock-in :clock-resume
-             :empty-lines 1)
+              ("j" "Journal Entries")
+              ("jj" "Journal" entry
+               (file+olp+datetree "~/.config/emacs/org/Journal.org")
+               "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+               ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+               :clock-in :clock-resume
+               :empty-lines 1)
+              ("jm" "Meeting" entry
+               (file+olp+datetree "~/.config/emacs/org/Journal.org")
+               "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+               :clock-in :clock-resume
+               :empty-lines 1)
 
-            ("w" "Workflows")
-            ("we" "Checking Email" entry (file+olp+datetree "~/.config/emacs/org/Journal.org")
-             "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
+              ("w" "Workflows")
+              ("we" "Checking Email" entry (file+olp+datetree "~/.config/emacs/org/Journal.org")
+               "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
 
-    (define-key global-map (kbd "C-c j")
-      (lambda () (interactive) (org-capture nil "jj")))
+      (define-key global-map (kbd "C-c j")
+        (lambda () (interactive) (org-capture nil "jj")))
 
-    (org-font-setup))
+      (org-font-setup))
 
 #+end_src
 
@@ -989,32 +990,113 @@ Elisp Shell, really clean to use
 
 #+begin_src emacs-lisp
 
-  (defun configure-eshell ()
-    ;; Save command history when commands are entered
-    (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+    (defun dw/map-line-to-status-char (line)
+      (cond ((string-match "^?\\? " line) "?")))
 
-    ;; Truncate buffer for performance
-    (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+    (defun dw/get-git-status-prompt ()
+      (let ((status-lines (cdr (process-lines "git" "status" "--porcelain" "-b"))))
+        (seq-uniq (seq-filter 'identity (mapcar 'dw/map-line-to-status-char status-lines)))))
 
-    (setq eshell-history-size         10000
-          eshell-buffer-maximum-lines 10000
-          eshell-hist-ignoredups t
-          eshell-scroll-to-bottom-on-input t))
+    (defun dw/get-prompt-path ()
+      (let* ((current-path (eshell/pwd))
+             (git-output (shell-command-to-string "git rev-parse --show-toplevel"))
+             (has-path (not (string-match "^fatal" git-output))))
+        (if (not has-path)
+            (abbreviate-file-name current-path)
+          (string-remove-prefix (file-name-directory git-output) current-path))))
 
-  (use-package eshell-git-prompt
-    :straight t
-    :after eshell)
+    (defun dw/eshell-prompt ()
+      (let ((current-branch (magit-get-current-branch)))
+        (concat
+         "\n"
+         (propertize (user-login-name) 'face `(:foreground "red2"))
+         (propertize " @ " 'face `(:foreground "yellow1"))
+         (propertize (dw/get-prompt-path) 'face `(:foreground "green3"))
+         (when current-branch
+           (concat
+            (propertize " • " 'face `(:foreground "white"))
+            (propertize (concat " @ " current-branch) 'face `(:foreground "orange2"))))
+         (propertize " >>" 'face `(:foreground "purple3"))
+         (propertize " " 'face `(:foreground "white")))))
 
-  (use-package eshell
-    :straight t
-    :hook (eshell-first-time-mode . configure-eshell)
-    :config
+    ;; (if (= (user-uid) 0)
+    ;;     (propertize "\n#" 'face `(:foreground "red2"))
+    ;;   (propertize "\nλ" 'face `(:foreground "#aece4a")))
+    ;; (propertize " " 'face `(:foreground "white")))))
 
-    (with-eval-after-load 'esh-opt
-      (setq eshell-destroy-buffer-when-process-dies t)
-      (setq eshell-visual-commands '("htop" "zsh" "vim")))
 
-    (eshell-git-prompt-use-theme 'powerline))
+    (defun eshell-configure ()
+      (use-package xterm-color
+        :straight t)
+
+      (push 'eshell-tramp eshell-modules-list)
+      (push 'xterm-color-filter eshell-preoutput-filter-functions)
+      (delq 'eshell-handle-ansi-color eshell-output-filter-functions)
+
+      ;; Save command history when commands are entered
+      (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+
+      (add-hook 'eshell-before-prompt-hook
+                (lambda ()
+                  (setq xterm-color-preserve-properties t)))
+
+      ;; Truncate buffer for performance
+      (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+
+      ;; We want to use xterm-256color when running interactive commands
+      ;; in eshell but not during other times when we might be launching
+      ;; a shell command to gather its output.
+      (add-hook 'eshell-pre-command-hook
+                (lambda () (setenv "TERM" "xterm-256color")))
+      (add-hook 'eshell-post-command-hook
+                (lambda () (setenv "TERM" "dumb")))
+
+      ;; Use completion-at-point to provide completions in eshell
+      (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+
+      ;; Initialize the shell history
+      (eshell-hist-initialize)
+
+      (setenv "PAGER" "cat")
+
+      (setq eshell-prompt-function      'dw/eshell-prompt
+            eshell-prompt-regexp        "^λ "
+            eshell-history-size         10000
+            eshell-buffer-maximum-lines 10000
+            eshell-hist-ignoredups t
+            eshell-highlight-prompt t
+            eshell-scroll-to-bottom-on-input t
+            eshell-prefer-lisp-functions nil))
+
+
+
+    ;; (defun configure-eshell ()
+    ;;   ;; Save command history when commands are entered
+    ;;   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+
+    ;;   ;; Truncate buffer for performance
+    ;;   (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+
+    ;;   (setq eshell-history-size         10000
+    ;;         eshell-buffer-maximum-lines 10000
+    ;;         eshell-prompt-regexp        "^λ "
+    ;;         eshell-hist-ignoredups t
+    ;;         eshell-highlight-prompt t
+    ;;         eshell-scroll-to-bottom-on-input t))
+
+    (use-package eshell
+      :straight t
+      :hook (eshell-first-time-mode . eshell-configure)
+      :config
+
+      (with-eval-after-load 'esh-opt
+        (setq eshell-destroy-buffer-when-process-dies t)
+        (setq eshell-visual-commands '("htop" "zsh" "vim"))))
+
+
+    (use-package eshell-syntax-highlighting
+      :straight t
+      :hook (eshell-mode . eshell-syntax-highlighting-mode))
 
 #+end_src
 
@@ -1063,7 +1145,8 @@ Basically handles anything popup related
 
   (defvar my/company-backend-alist
     '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-      (prog-mode (:separate company-capf company-yasnippet))
+      ;; (prog-mode (:separate company-capf company-yasnippet))
+      (prog-mode (:separate company-yasnippet company-capf))
       (conf-mode company-capf company-dabbrev-code company-yasnippet))
     "An alist matching modes to company backends. The backends for any mode is
       built from this.")
@@ -1102,6 +1185,15 @@ Basically handles anything popup related
               "Set `company-backends' for the current buffer."
               (setq-local company-backends (my/company-backends))))
 
+  ;; This removes the duplicate company-capf entry that lsp adds
+  ;; (add-hook 'prog-mode-hook
+  ;;           (defun my/prog-mode-hook ()
+  ;;             (if (member 'company-capf company-backends)
+  ;;                 (progn
+  ;;                   (setq-local company-backends (remove 'company-capf company-backends))
+  ;;                   (message "REMOVED DUPE"))
+  ;;                 )))
+
   ;; (use-package company-prescient
   ;;   :straight t
   ;;   :after (prescient company)
@@ -1123,9 +1215,6 @@ Lsp-mode, languge protocol that has support for a lot of languages
     (setq lsp-completion-provider :none)
 
     ;; Fix lsp overriding snippets ??
-    ;; (add-hook 'lsp-after-open-hook
-    ;;           (setq-local company-backends (remove 'company-capf company-backends)))
-
     :custom
     (lsp-modeline-diagnostics-enable nil)
     (lsp-signature-render-documentation nil)
@@ -1139,6 +1228,9 @@ Lsp-mode, languge protocol that has support for a lot of languages
     ("C-c o d" . lsp-describe-thing-at-point)
     ("C-c o f" . lsp-format-buffer)
     ("C-c o a" . lsp-execute-code-action))
+
+  ;; (add-hook 'lsp-after-open-hook
+  ;;             ))
 
 #+end_src
 
@@ -1326,6 +1418,14 @@ Will be used with .vue files
 
 #+end_src
 
+*** Elisp
+
+#+begin_src emacs-lisp
+
+
+
+#+end_src
+
 ** Projectile
 
 Project management packages, not really using it that much, could remove it in the future
@@ -1364,7 +1464,7 @@ Best package emacs has
 
   (use-package magit
     :straight t
-    :commands magit-status
+    :commands (magit-status magit-get-current-branch)
     :bind ("C-c g" . magit-status)
     :custom
     (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))

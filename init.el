@@ -484,7 +484,7 @@
 (use-package avy
   :straight t
   :bind (("M-s" . avy-goto-char)
-         ("C-:" . avy-goto-char-2)
+         ("C-j" . avy-goto-char-2)
          ("M-m" . avy-goto-word-0))
   :custom
   (avy-single-candidate-jump nil))
@@ -549,7 +549,8 @@
 
   :hook (org-mode . org-mode-setup)
   :bind (("M-o a" . org-agenda)
-         ("M-o p t" . my/project-task-file))
+         ("M-o p t" . my/project-task-file)
+         ([remap org-return-and-maybe-indent] . avy-goto-char-2))
   :config
   (setq org-ellipsis " ▾")
 
@@ -724,32 +725,113 @@
   (require 'org-roam-dailies) ;; Ensure the keymap is available
   (org-roam-db-autosync-mode))
 
-(defun configure-eshell ()
+(defun dw/map-line-to-status-char (line)
+  (cond ((string-match "^?\\? " line) "?")))
+
+(defun dw/get-git-status-prompt ()
+  (let ((status-lines (cdr (process-lines "git" "status" "--porcelain" "-b"))))
+    (seq-uniq (seq-filter 'identity (mapcar 'dw/map-line-to-status-char status-lines)))))
+
+(defun dw/get-prompt-path ()
+  (let* ((current-path (eshell/pwd))
+         (git-output (shell-command-to-string "git rev-parse --show-toplevel"))
+         (has-path (not (string-match "^fatal" git-output))))
+    (if (not has-path)
+        (abbreviate-file-name current-path)
+      (string-remove-prefix (file-name-directory git-output) current-path))))
+
+(defun dw/eshell-prompt ()
+  (let ((current-branch (magit-get-current-branch)))
+    (concat
+     "\n"
+     (propertize (user-login-name) 'face `(:foreground "red2"))
+     (propertize " @ " 'face `(:foreground "yellow1"))
+     (propertize (dw/get-prompt-path) 'face `(:foreground "green3"))
+     (when current-branch
+       (concat
+        (propertize " • " 'face `(:foreground "white"))
+        (propertize (concat " @ " current-branch) 'face `(:foreground "orange2"))))
+     (propertize " >>" 'face `(:foreground "purple3"))
+     (propertize " " 'face `(:foreground "white")))))
+
+;; (if (= (user-uid) 0)
+;;     (propertize "\n#" 'face `(:foreground "red2"))
+;;   (propertize "\nλ" 'face `(:foreground "#aece4a")))
+;; (propertize " " 'face `(:foreground "white")))))
+
+
+(defun eshell-configure ()
+  (use-package xterm-color
+    :straight t)
+
+  (push 'eshell-tramp eshell-modules-list)
+  (push 'xterm-color-filter eshell-preoutput-filter-functions)
+  (delq 'eshell-handle-ansi-color eshell-output-filter-functions)
+
   ;; Save command history when commands are entered
   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+
+  (add-hook 'eshell-before-prompt-hook
+            (lambda ()
+              (setq xterm-color-preserve-properties t)))
 
   ;; Truncate buffer for performance
   (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
-  (setq eshell-history-size         10000
+  ;; We want to use xterm-256color when running interactive commands
+  ;; in eshell but not during other times when we might be launching
+  ;; a shell command to gather its output.
+  (add-hook 'eshell-pre-command-hook
+            (lambda () (setenv "TERM" "xterm-256color")))
+  (add-hook 'eshell-post-command-hook
+            (lambda () (setenv "TERM" "dumb")))
+
+  ;; Use completion-at-point to provide completions in eshell
+  (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+
+  ;; Initialize the shell history
+  (eshell-hist-initialize)
+
+  (setenv "PAGER" "cat")
+
+  (setq eshell-prompt-function      'dw/eshell-prompt
+        eshell-prompt-regexp        "^λ "
+        eshell-history-size         10000
         eshell-buffer-maximum-lines 10000
         eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t))
+        eshell-highlight-prompt t
+        eshell-scroll-to-bottom-on-input t
+        eshell-prefer-lisp-functions nil))
 
-(use-package eshell-git-prompt
-  :straight t
-  :after eshell)
+
+
+;; (defun configure-eshell ()
+;;   ;; Save command history when commands are entered
+;;   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+
+;;   ;; Truncate buffer for performance
+;;   (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+
+;;   (setq eshell-history-size         10000
+;;         eshell-buffer-maximum-lines 10000
+;;         eshell-prompt-regexp        "^λ "
+;;         eshell-hist-ignoredups t
+;;         eshell-highlight-prompt t
+;;         eshell-scroll-to-bottom-on-input t))
 
 (use-package eshell
   :straight t
-  :hook (eshell-first-time-mode . configure-eshell)
+  :hook (eshell-first-time-mode . eshell-configure)
   :config
 
   (with-eval-after-load 'esh-opt
     (setq eshell-destroy-buffer-when-process-dies t)
-    (setq eshell-visual-commands '("htop" "zsh" "vim")))
+    (setq eshell-visual-commands '("htop" "zsh" "vim"))))
 
-  (eshell-git-prompt-use-theme 'powerline))
+
+(use-package eshell-syntax-highlighting
+  :straight t
+  :hook (eshell-mode . eshell-syntax-highlighting-mode))
 
 (use-package tramp
   :defer 5
@@ -783,7 +865,8 @@
 
 (defvar my/company-backend-alist
   '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-    (prog-mode (:separate company-capf company-yasnippet))
+    ;; (prog-mode (:separate company-capf company-yasnippet))
+    (prog-mode (:separate company-yasnippet company-capf))
     (conf-mode company-capf company-dabbrev-code company-yasnippet))
   "An alist matching modes to company backends. The backends for any mode is
     built from this.")
@@ -822,6 +905,15 @@
             "Set `company-backends' for the current buffer."
             (setq-local company-backends (my/company-backends))))
 
+;; This removes the duplicate company-capf entry that lsp adds
+;; (add-hook 'prog-mode-hook
+;;           (defun my/prog-mode-hook ()
+;;             (if (member 'company-capf company-backends)
+;;                 (progn
+;;                   (setq-local company-backends (remove 'company-capf company-backends))
+;;                   (message "REMOVED DUPE"))
+;;                 )))
+
 ;; (use-package company-prescient
 ;;   :straight t
 ;;   :after (prescient company)
@@ -834,9 +926,6 @@
   (setq lsp-completion-provider :none)
 
   ;; Fix lsp overriding snippets ??
-  ;; (add-hook 'lsp-after-open-hook
-  ;;           (setq-local company-backends (remove 'company-capf company-backends)))
-
   :custom
   (lsp-modeline-diagnostics-enable nil)
   (lsp-signature-render-documentation nil)
@@ -850,6 +939,9 @@
   ("C-c o d" . lsp-describe-thing-at-point)
   ("C-c o f" . lsp-format-buffer)
   ("C-c o a" . lsp-execute-code-action))
+
+;; (add-hook 'lsp-after-open-hook
+;;             ))
 
 (use-package lsp-ui
   :straight t
@@ -956,6 +1048,8 @@
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
+
+
 (use-package projectile
   :straight t
   :defer 10
@@ -974,7 +1068,7 @@
 
 (use-package magit
   :straight t
-  :commands magit-status
+  :commands (magit-status magit-get-current-branch)
   :bind ("C-c g" . magit-status)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
