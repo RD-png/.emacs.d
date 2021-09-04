@@ -225,7 +225,11 @@
 (custom-set-faces
  `(match ((t (:foreground "#72a4ff"))))
  `(persp-selected-face ((t (:foreground "light green"))))
- `(doom-modeline-buffer-major-mode ((t (:foreground "light blue")))))
+ `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
+ `(doom-modeline-info ((t (:foreground "pink"))))
+ `(doom-modeline-unread-number ((t (:foreground "red"))))
+ `(mode-line ((t (:foreground "#c5c8c6"))))
+ )
 
 
 ;; For the default theme
@@ -237,8 +241,7 @@
  '(company-tooltip
    ((t (:background "#1d1f21" :foreground "white"))))
  '(company-tooltip-selection
-   ((t (:background "steelblue" :foreground "white"))))
- )
+   ((t (:background "steelblue" :foreground "white")))))
 
 (setq display-buffer-base-action
       '(display-buffer-reuse-mode-window
