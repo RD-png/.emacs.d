@@ -229,7 +229,7 @@
  `(doom-modeline-info ((t (:foreground "pink"))))
  `(doom-modeline-unread-number ((t (:foreground "red"))))
  `(mode-line ((t (:foreground "#c5c8c6"))))
- )
+ `(show-paren-match ((t (:background "olivedrab" :foreground "khaki")))))
 
 
 ;; For the default theme
@@ -397,7 +397,8 @@
                   (projectile-find-dir . project-file)
                   (projectile-switch-project . project-file)
                   (projectile-recentf . project-file)
-                  (projectile-switch-to-buffer . buffer))
+                  (projectile-switch-to-buffer . buffer)
+                  (persp-switch-to-buffer . buffer))
                 marginalia-command-categories)))
 
 (use-package wgrep
