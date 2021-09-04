@@ -644,26 +644,20 @@ Cursor will jump to a new split
 
 ** Workspaces
 
-Eyebrowse provides simple workspace management
+Perspective gives workspaces with unique buffers
 
 #+begin_src emacs-lisp
 
-  (use-package eyebrowse
+  (use-package perspective
     :straight t
-    :init
-    (progn
-      (defun my/create-eyebrowse-setup ()
-        (interactive)
-        "Create a default window config, if none is present"
-        (when (not (eyebrowse--window-config-present-p 2))
-          (eyebrowse-switch-to-window-config-2)
-          (eyebrowse-switch-to-window-config-1)))
-      (setq eyebrowse-wrap-around t
-            eyebrowse-new-workspace t)
-      (eyebrowse-mode 1)
-      (global-set-key (kbd "C-c C-'") 'eyebrowse-next-window-config)
-      (global-set-key (kbd "C-c C-w C-k") 'eyebrowse-close-window-config)
-      (add-hook 'after-init-hook #'my/create-eyebrowse-setup)))
+    :bind (("C-c C-'" . persp-next)
+           ("C-x M-b" . persp-switch)
+           ("C-x M-k" . persp-kill))
+    :custom
+    (persp-initial-frame-name "Main")
+    :config
+    (unless (equal persp-mode t)
+      (persp-mode)))
 
 #+end_src
 

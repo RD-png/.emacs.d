@@ -6,13 +6,20 @@ CLOSED: [2021-08-30 Mon 14:20]
 - State "DONE"       from "TODO"       [2021-08-30 Mon 14:20]
 :END:
 
-*** TODO [#A] Add vterm
+*** CANC [#A] Add vterm
+CLOSED: [2021-09-04 Sat 21:18]
 :LOGBOOK:
+- State "CANC"       from "TODO"       [2021-09-04 Sat 21:18] \\
+  Use eshell instead
 - Note taken on [2021-08-30 Mon 14:20] \\
   If eshell causes problems we can revist it
 :END:
 
-*** TODO Fix npm / vue on nix
+*** DONE Fix npm / vue on nix
+CLOSED: [2021-09-04 Sat 21:18]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-04 Sat 21:18]
+:END:
 
 *** TODO direnv / nix-direnv for python / haskell
 SCHEDULED: <2021-08-30 Sat>
