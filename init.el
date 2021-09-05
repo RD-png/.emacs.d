@@ -858,8 +858,8 @@
 
 (defvar my/company-backend-alist
   '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-    ;; (prog-mode (:separate company-capf company-yasnippet))
-    (prog-mode (:separate company-yasnippet company-capf company-dabbrev company-dabbrev-code))
+    ;; (prog-mode (company-capf :with company-yasnippet))
+    (prog-mode (:separate company-yasnippet company-capf company-dabbrev-code))
     (conf-mode company-capf company-dabbrev-code company-yasnippet))
   "An alist matching modes to company backends. The backends for any mode is
         built from this.")
@@ -898,50 +898,62 @@
             "Set `company-backends' for the current buffer."
             (setq-local company-backends (my/company-backends))))
 
+
+;; annoying when used with fuzzy searching
 ;; (use-package company-prescient
 ;;   :straight t
 ;;   :after (prescient company)
 ;;   :hook (company-mode . company-prescient-mode))
 
+;; (defvar lsp-company-backends
+;;   '(:separate company-yasnippet company-capf))
+
 (use-package lsp-mode
   :straight t
   :hook (lsp)
+  :bind (:map lsp-mode-map
+              ("C-c o d" . lsp-describe-thing-at-point)
+              ("C-c o f" . lsp-format-buffer)
+              ("C-c o a" . lsp-execute-code-action)
+              ("C-c o r" . lsp-find-references)
+              ("C-c o g" . lsp-find-definition))
   :config
   (setq lsp-completion-provider :none)
-
-  ;; Fix lsp overriding snippets ??
+  ;; (add-hook 'lsp-completion-mode-hook
+  ;;   (defun +lsp-init-company-backends-h ()
+  ;;     (when lsp-completion-mode
+  ;;       (set (make-local-variable 'company-backends)
+  ;;            (cons lsp-company-backends
+  ;;                  (remove lsp-company-backends
+  ;;                          (remq 'company-capf company-backends)))))))
   :custom
   (lsp-modeline-diagnostics-enable nil)
+  (lsp-enable-folding nil)
+  (lsp-enable-text-document-color nil)
+  (lsp-enable-on-type-formatting nil)
   (lsp-signature-render-documentation nil)
+  (lsp-completion-show-detail nil)
   (lsp-eldoc-render-all nil)
   (lsp-enable-snippet t)
+  (lsp-eldoc-enable-hover nil)
   (lsp-document-sync-method nil)
+  (lsp-signature-auto-activate nil)
   (lsp-print-performance t)
   (lsp-before-save-edits nil)
-  (lsp-signature-render-documentation t)
-  :bind
-  ("C-c o d" . lsp-describe-thing-at-point)
-  ("C-c o f" . lsp-format-buffer)
-  ("C-c o a" . lsp-execute-code-action))
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-signature-render-documentation t))
 
-;; (add-hook 'lsp-after-open-hook
-;;             ))
-
-(use-package lsp-ui
-  :straight t
-  :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-sideline-enable nil)
-  (setq lsp-ui-sideline-ignore-duplicate t)
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  (setq lsp-ui-doc-enable nil)
-  (setq lsp-eldoc-enable-hover nil)
-  (setq lsp-ui-doc-show-with-cursor nil)
-  (setq lsp-signature-auto-activate nil)
-  (setq lsp-ui-doc-show-with-mouse nil)
-  (setq lsp-headerline-breadcrumb-enable nil)
-  (setq lsp-ui-sideline-show-code-actions nil)
-  (setq lsp-completion-show-detail nil))
+;; (use-package lsp-ui
+;;   :straight t
+;;   :hook (lsp-mode . lsp-ui-mode)
+;;   :config
+;;   (setq lsp-ui-sideline-enable nil)
+;;   (setq lsp-ui-sideline-ignore-duplicate t)
+;;   (setq lsp-ui-doc-enable nil)
+;;   (setq lsp-ui-doc-show-with-cursor nil)
+;;   (setq lsp-ui-doc-show-with-mouse nil)
+;;   (setq lsp-ui-sideline-show-code-actions nil)
+;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 (use-package direnv
   :straight t
@@ -967,6 +979,42 @@
       (direnv-update-environment default-directory)))
   (add-hook 'post-command-hook #'update-on-buffer-change))
 
+;; (use-package eglot
+;;   :straight t
+;;   :after project
+;;   :hook (eglot-connect . eglot-signal-didChangeConfiguration)
+;;   :commands (eglot
+;;              eglot-ensure
+;;              my/eglot-mode-server
+;;              my/eglot-mode-server-all)
+;;   :config
+;;   (add-to-list 'eglot-server-programs '(php-mode . ("intelephense" "--stdio")))
+;;   (add-to-list 'eglot-server-programs '(web-mode "vls"))
+;;   :init
+;;   (setq eglot-sync-connect 1
+;;         eglot-connect-timeout 10
+;;         eglot-confirm-server-initiated-edits nil
+;;         eglot-autoreconnect nil
+;;         eglot-autoshutdown t
+;;         eglot-send-changes-idle-time 0.5
+;;         eglot-auto-display-help-buffer nil
+;;         eglot-stay-out-of '(company)
+;;         eglot-ignored-server-capabilites '(:documentHighlightProvider))
+;;   (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend)
+;;   :bind
+;;   ("C-c o d" . eldoc-doc-buffer)
+;;   ("C-c o f" . eglot-format-buffer)
+;;   ("C-c o a" . eglot-code-actions)
+;;   ("C-c o r" . xref-find-references))
+
+(use-package eldoc
+  :straight (eldoc :type built-in)
+  :custom
+  (eldoc-idle-delay 0)
+  (eldoc-echo-area-prefer-doc-buffer t)
+  (eldoc-echo-area-use-multiline-p nil)
+  (eldoc-echo-area-display-truncation-message nil))
+
 (use-package php-mode
   :straight t
   :mode "\\.php\\'"
@@ -983,7 +1031,7 @@
   :straight t
   :mode
   ("\\.ts\\'"
-   "\\.js\\'")
+   "\\.Js\\'")
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
@@ -996,7 +1044,8 @@
 
 (use-package nix-mode
   :straight t
-  :mode "\\.nix\\'")
+  :mode "\\.nix\\'"
+  :hook (nix-mode . lsp-deferred))
 
 (use-package web-mode
   :straight t
@@ -1110,7 +1159,8 @@
   (with-eval-after-load 'flymake-proc
     (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake))
   :config
-  (setq flymake-start-on-flymake-mode t)
+  (setq flymake-start-on-flymake-mode t
+        flymake-start-on-save-buffer t)
 
   (defun my/flymake-first-error ()
     (interactive)
