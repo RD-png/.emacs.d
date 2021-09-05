@@ -215,13 +215,12 @@
 (set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height default-variable-font-size :weight 'regular)
 
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-
 (load-theme 'desert2 t)
 
 (set-foreground-color "#c5c8c6")
 (set-background-color "#1d1f21")
 
-;; Grep Highlight
+;; Custom faces
 (custom-set-faces
  `(match ((t (:foreground "#72a4ff"))))
  `(persp-selected-face ((t (:foreground "light green"))))
@@ -229,7 +228,7 @@
  `(doom-modeline-info ((t (:foreground "pink"))))
  `(doom-modeline-unread-number ((t (:foreground "red"))))
  `(mode-line ((t (:foreground "#c5c8c6"))))
- `(show-paren-match ((t (:background "olivedrab" :foreground "khaki")))))
+ `(show-paren-match ((t (:background "khaki" :foreground "olivedrab")))))
 
 
 ;; For the default theme
@@ -993,9 +992,7 @@
   :straight t
   :hook (python-mode . lsp-deferred)
   :config
-  (setq python-shell-interpreter "python3")
-  (setq flycheck-python-pylint-executable (executable-find "pylint"))
-  (setq flycheck-pylintrc (substitute-in-file-name "$HOME/.pylintrc")))
+  (setq python-shell-interpreter "python3"))
 
 (use-package nix-mode
   :straight t
@@ -1103,10 +1100,40 @@
   :straight t
   :bind ("M-y" . popup-kill-ring))
 
-(use-package flycheck
-  :straight t
-  :defer t
-  :hook(lsp-mode . flycheck-mode))
+(use-package flymake
+  :straight (flymake :type built-in)
+  :diminish flymake-mode
+  :commands (my/flymake-first-error
+             my/flymake-last-error)
+  :init
+  (setq-default flymake-diagnostic-functions nil)
+  (with-eval-after-load 'flymake-proc
+    (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake))
+  :config
+  (setq flymake-start-on-flymake-mode t)
+
+  (defun my/flymake-first-error ()
+    (interactive)
+    (let* ((ovs (flymake--overlays :compare #'< :key #'overlay-start))
+           (ov (car ovs)))
+      (cond
+       (ov (goto-char (overlay-start ov)))
+       (t (user-error "No flymake errors in the current buffer")))))
+
+  (defun my/flymake-last-error ()
+    (interactive)
+    (let* ((ovs (flymake--overlays :compare #'< :key #'overlay-start))
+           (ov (car (last ovs))))
+      (cond
+       (ov (goto-char (overlay-start ov)))
+       (t (user-error "No flymake errors in the current buffer")))))
+  :bind
+  (:map flymake-mode-map
+        ("C-c f b" . flymake-show-diagnostics-buffer)
+        ("C-c f f" . my/flymake-first-error)
+        ("C-c f l" . my/flymake-last-error)
+        ("C-c f n" . flymake-goto-next-error)
+        ("C-c f p" . flymake-goto-prev-error)))
 
 (use-package smartparens
   :straight t
