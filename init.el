@@ -228,7 +228,9 @@
  `(doom-modeline-info ((t (:foreground "pink"))))
  `(doom-modeline-unread-number ((t (:foreground "red"))))
  `(mode-line ((t (:foreground "#c5c8c6"))))
- `(show-paren-match ((t (:background "khaki" :foreground "olivedrab")))))
+ `(show-paren-match ((t (:background "khaki" :foreground "olivedrab"))))
+ `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
+ `(web-mode-html-tag-face ((t (:foreground "#78add2")))))
 
 
 ;; For the default theme
@@ -1139,7 +1141,6 @@
 (use-package yasnippet
   :straight t
   :diminish yas-minor-mode
-  :hook (prog-mode . yas-minor-mode)
   :init
   (yas-global-mode 1)
   :config
