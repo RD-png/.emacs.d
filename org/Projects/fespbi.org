@@ -19,11 +19,43 @@ CLOSED: [2021-08-18 Wed 16:16]
 
 *** TODO Build a method for the custom values, e.g total atts for skus from order table
 
-*** TODO Add export to sales export
+*** TODO Add additional part to script which checks the database for empty / null values for numeric fields and sees if it can calculate them now if new info has been added
 
-*** TODO Add loading message while page loads new filters on sales exports
+*** TODO Fix paths for fespbi so it can update from the server
 
-*** TODO Update the sales exports page to use the sku_atts_ext so that we are able to connect to the product related tables on sales exports
+*** TODO Run the script to copy all the old records from the old powerbi database
+
+*** TODO Setup schedule on server to run the update script every 24 hours
+
+*** DONE Write script to update the sku_atts_ext table when powerbi runs
+CLOSED: [2021-09-06 Mon 15:27]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-06 Mon 15:27]
+:END:
+
+*** DONE Add loading message while page loads new filters on sales exports
+CLOSED: [2021-09-06 Mon 10:15]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-06 Mon 10:15]
+:END:
+
+*** DONE Force decimal places in powerbi script for numeric fields
+CLOSED: [2021-09-06 Mon 15:27]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-06 Mon 15:27]
+:END:
+
+*** DONE Update the sales exports page to use the sku_atts_ext so that we are able to connect to the product related tables on sales exports
+CLOSED: [2021-09-06 Mon 09:59]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-06 Mon 09:59]
+:END
+
+*** DONE Add export to sales export
+CLOSED: [2021-09-06 Mon 09:59]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-06 Mon 09:59]
+:END:
 
 *** DONE Format dates for users
 CLOSED: [2021-09-03 Fri 15:50]

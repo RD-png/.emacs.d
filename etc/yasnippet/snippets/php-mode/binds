@@ -3,8 +3,6 @@
 # key: binds
 # --
 $sql = "PRAGMA table_info('${1:table}')";
-$${2:columns} = $${3:database}->query($sql);
+$${2:binds} = $${3:database}->query($sql);
 $$2 = $$2->fetchAll(PDO::FETCH_ASSOC);
-$$2 = array_column($$2, 'name');
-$${4:binds}   = ":" . implode(",:", $$2);
-$$2 = implode(",", $$2);
+$$2 = ":" . implode(",:", array_column($$2, 'name'));

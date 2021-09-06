@@ -230,7 +230,8 @@
  `(mode-line ((t (:foreground "#c5c8c6"))))
  `(show-paren-match ((t (:background "khaki" :foreground "olivedrab"))))
  `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
- `(web-mode-html-tag-face ((t (:foreground "#78add2")))))
+ `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
+ `(web-mode-html-attr-name-face ((t (:foreground "MediumPurple3")))))
 
 
 ;; For the default theme
