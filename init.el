@@ -84,6 +84,10 @@
       enable-recursive-minibuffers t)
 
 (blink-cursor-mode -1)
+(setq uniquify-buffer-name-style 'forward)
+
+(setq ediff-split-window-function 'split-window-horizontally)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;; Remove startup message
 (advice-add 'display-startup-echo-area-message :override #'ignore)
@@ -165,6 +169,7 @@
   (setq dashboard-set-file-icons t))
 
 (setq inhibit-startup-message t)
+(setq initial-scratch-message "")
 
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
@@ -228,7 +233,7 @@
  `(doom-modeline-info ((t (:foreground "pink"))))
  `(doom-modeline-unread-number ((t (:foreground "red"))))
  `(mode-line ((t (:foreground "#c5c8c6"))))
- `(show-paren-match ((t (:background "khaki" :foreground "olivedrab"))))
+ `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
  `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
  `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
  `(web-mode-html-attr-name-face ((t (:foreground "MediumPurple3")))))
@@ -488,6 +493,8 @@
 (add-hook 'persp-mode-hook
           (persp-switch "Main"))
 
+(advice-add 'imalison:avy :around 'imalison:disable-keychord-around)
+
 (use-package avy
   :straight t
   :bind (("M-s" . avy-goto-char)
@@ -507,6 +514,7 @@
 
 ;; Disable auto saving and backups and symbolic link files
 (setq make-backup-files nil)
+(setq backup-inhibited t)
 (setq auto-save-default nil)
 (setq create-lockfiles nil)
 
@@ -1082,8 +1090,6 @@
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
-
-
 (use-package projectile
   :straight t
   :defer 10
@@ -1215,8 +1221,7 @@
   :config
   (setq dired-recursive-copies 'always
         dired-recursive-deletes 'always
-        delete-by-moving-to-trash t)
-  )
+        delete-by-moving-to-trash t))
 
 (use-package all-the-icons-dired
   :straight t
@@ -1367,7 +1372,10 @@ text before point to the beginning of the current line."
 (global-set-key (kbd "C-a") #'smart-beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
+(global-set-key (kbd "M-n") 'forward-paragraph)
+(global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
+(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-<return>") #'eshell)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/Emacs.org")))
