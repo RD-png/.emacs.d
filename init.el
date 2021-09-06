@@ -1388,8 +1388,8 @@ text before point to the beginning of the current line."
 
 
 ;; unbind annoying keybinds
-(unbind-key "C-x C-n") ;; useless command
-(unbind-key "M-`")
+(global-unset-key  (kbd "C-x C-n"))
+(global-unset-key  (kbd "M-`"))
 
 ;; Remove whitespace from buffer on save
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
