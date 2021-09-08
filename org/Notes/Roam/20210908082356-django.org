@@ -1,0 +1,42 @@
+:PROPERTIES:
+:ID:       5ddc01a0-c8ea-4dd4-8664-1d42ab11b226
+:END:
+#+title: Django
+
+* Outer root directory
+e.g Documents/testDjango
+Is just the containing folder the name of it doesnt matter, apps will be built within this folder
+
+* manage.py
+This is used via the command line to interact with django
+
+* Inner root directory
+e.g Documents/testDjango/testDjango
+Is the actual python package, which is used in import statements, this contains the server based config files
+
+* Documents/testDjango/testDjango/__init__.py
+By default this file will be empty, it is the main init file for the project
+
+* Documents/testDjango/testDjango/settings.py
+Configuration details for the django project
+
+* Documents/testDjango/testDjango/urls.py
+Url declaration for the project
+
+* Documents/testDjango/testDjango/asgi.py
+Entry point for ASGI web server, which will server the project
+
+* Documents/testDjango/testDjango/wsgi.py
+Entry point for WSGI web server, which will server the project
+
+* Documents/testDjango/polls
+Polls is just an example, this a project within the server folder, you can create mutliple of these, for example in fesp we could have products and skus and seperate the functionality between
+
+* Models
+This is a way of representing the database structure using django
+
+* How To Setup A Project
+
+Build a django project and setup api urls we can call from vue to return database responses
+
+The vue project can be build completely seperate from the django project, we can still make use of the admin utils etc.

@@ -1404,61 +1404,30 @@ Again use lsp server for python for completions and error checking, use the the 
 
 #+begin_src emacs-lisp
 
-  ;; (use-package python
-  ;;   :straight (python :type built-in)
-  ;;   :mode ("[./]flake8\\'" . conf-mode)
-  ;;   :mode ("/Pipfile\\'" . conf-mode)
-  ;;   :hook (python-mode . lsp-deferred)
-  ;;   :init
-  ;;   (setq python-environment-directory doom-cache-dir
-  ;;         python-indent-guess-indent-offset-verbose nil)
-  ;;   :custom
-  ;;   (python-indent-guess-indent-offset-verbose nil)
-  ;;   :config
-  ;;   (when (and (executable-find "python3")
-  ;;              (string= python-shell-interpreter "python"))
-  ;;     (setq python-shell-interpreter "python3"))
-  ;;   )
-
-  (use-package python
-    :straight (python :type built-in)
-    :mode ("\\.py\\'")
-    :hook (python-mode . lsp-deferred)
-    :init
-    (setq python-shell-interpreter "python3")
-    :config
-    (use-package elpy
-      :straight t
-      :custom
-      (setq elpy-rpc-virtualenv-path 'current)
-      (setq elpy-modules '(elpy-module-sane-defaults elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-django))
-      :init
-      (add-to-list 'auto-mode-alist '("\\.py$" . python-mode)))
-    (elpy-enable))
+  (use-package elpy
+  :straight t
+  :init
+  (elpy-enable)
+  (setq elpy-modules '(elpy-module-sane-defaults elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-django))
+  (setq python-shell-interpreter "python3")
+  (setq elpy-rpc-virtualenv-path 'current)
+  :config
+  (pyvenv-mode 1))
 
   (use-package pip-requirements
     :straight t
     :config
     (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
 
+  (use-package python-mode
+    :straight t
+    :hook (python-mode . lsp-deferred)
+    :config
+    (setq python-shell-interpreter "python3"))
 
-  ;; (use-package pyenv-mode
-  ;;   :if
-  ;;   (executable-find "pyenv")
-  ;;   :init
-  ;;   (add-to-list 'exec-path "~/.pyenv/shims")
-  ;;   (setenv "WORKON_HOME" "~/.pyenv/versions/")
-  ;;   :config
-  ;;   (pyenv-mode)
-  ;;   :bind
-  ;;   ("C-x p e" . pyenv-activate-current-project))
-
-  ;; (use-package python-mode
-  ;;   :straight t
-  ;;   :hook (python-mode . lsp-deferred)
-  ;;   :config
-  ;;   (setq python-shell-interpreter "python3"))
-
+  (use-package python-black
+      :straight t
+      :after python)
 
 #+end_src
 
