@@ -21,11 +21,25 @@ CLOSED: [2021-08-18 Wed 16:16]
 
 *** TODO Add additional part to script which checks the database for empty / null values for numeric fields and sees if it can calculate them now if new info has been added
 
-*** TODO Fix paths for fespbi so it can update from the server
+*** TODO Change the cache link for the update script after tomorrow
+
+*** DONE Fix paths for fespbi so it can update from the server
+CLOSED: [2021-09-07 Tue 10:34]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-07 Tue 10:34]
+:END:
 
 *** TODO Run the script to copy all the old records from the old powerbi database
 
-*** TODO Setup schedule on server to run the update script every 24 hours
+*** DONE Setup schedule on server to run the update script every 24 hours
+CLOSED: [2021-09-07 Tue 10:34]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-07 Tue 10:34]
+:END:
+
+*** TODO Sales export page, close select drop downs if use opens another
+
+*** TODO Remove hard coded date ranges tomorrow after scripts have run
 
 *** DONE Write script to update the sku_atts_ext table when powerbi runs
 CLOSED: [2021-09-06 Mon 15:27]
