@@ -1054,7 +1054,8 @@
 (elpy-enable)
 (setq elpy-modules '(elpy-module-sane-defaults elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-django))
 (setq python-shell-interpreter "python3")
-(setq elpy-rpc-virtualenv-path 'current)
+(setq elpy-rpc-python-command "python3")
+;; (setq elpy-rpc-virtualenv-path 'current)
 :config
 (pyvenv-mode 1))
 
@@ -1065,9 +1066,7 @@
 
 (use-package python-mode
   :straight t
-  :hook (python-mode . lsp-deferred)
-  :config
-  (setq python-shell-interpreter "python3"))
+  :hook (python-mode . lsp-deferred))
 
 (use-package python-black
     :straight t
