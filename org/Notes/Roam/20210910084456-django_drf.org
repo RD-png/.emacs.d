@@ -1,0 +1,70 @@
+:PROPERTIES:
+:ID:       9af6dacb-ca89-4a26-a122-75eeeb3dba4f
+:END:
+#+title: Django DRF
+* Venv
+Create a virtual enviroment in the root of the project directory
+- python3 -m venv venv
+
+Start the virtual enviroment
+- source venv/bin/activate
+
+Install the project dependencies
+- pip3 install requirements.txt
+
+* Creating a project
+If you want to create a test project you can follow these steps
+
+mkdir WHAT_EVER_NAME
+cd WHAT_EVER_NAME
+
+Follow the venv steps above, however you won't have the requirements.txt, so you need to install django using, pip3 install django while inside the virtual enviroment
+
+Once installed create a project core:
+django-admin startproject core .
+
+To install apps:
+django-admin startapp NAME_OF_APP
+
+See https://github.com/elixirgardens1/ecs for an example
+
+
+* Create admin user
+When creating a new project, its useful to create an admin account so you can access the django provided url to test api requests / responses.
+
+Type the following to create an admin user and follow the steps
+- python3 manage.py createsuperuser
+
+* Django REST Framework
+
+** Structure
+
+Django projects follow a project -> app structure, Use the https://github.com/elixirgardens1/ecs
+as a reference.
+
+*** Root folder
+The root of ecs is referred to as the project, which contains all the apps (in ecs the apps are order, source, courier, etc...), this can be confusing as some people will use the same name for the root folder as the folder that contains the projects configuration. I have used the name core for the folder that contains project wide configuration, however some people will name them the same resulting in ecs/ecs to get to the project configuration.
+
+*** App folders
+These are modules of a project, they are defined in the projects settings file located in code/settings.py under INSTALLED_APPS. This allows for them to be reused in the future in other projects.
+
+** Documentation
+
+The Documentation on https://www.djangoproject.com/ focuses on full stack projects that utilize the front end libraries built into django, since we are using vue for the front end, I wouldn't invest too much time into this, as the aims of the Django REST Framework are to produce JSON backends which is more suited to our needs.
+
+- The best introduction to the framework would be to follow this tutorial
+  (https://www.django-rest-framework.org/tutorial/quickstart/)
+
+  It has 6 parts and explains all the REST api related functionality and the various options and where / why you would choose to use them. You can then read the documentation where it further explains them.
+
+
+** Notes
+*** Class based views api
+This is one of the 3 main options for producing views, it seems to be the most popular option and is more explicit in defining database interactions.
+
+This offers tooling for django for users focused on producing an api backend, over a full stock project. The REST framework includes an API which provides types of APIViews (a list can be found at https://www.django-rest-framework.org/api-guide/generic-views/#concrete-view-classes).
+
+These views provide generic requests so that you don't have to write methods to retrieve perform requests. If these request are too simple they can be overwritter by re-defining the method e.g def get(): in the views.py file.
+
+*** Model View Set
+Similar idea to the Class based views, however handles even more of the boiler plate code but makes can be harder to follow the functionality of the apps within the project.
