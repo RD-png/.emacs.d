@@ -251,6 +251,24 @@
  '(company-tooltip-selection
    ((t (:background "steelblue" :foreground "white")))))
 
+(use-package popper
+  :straight t
+  :after projectile
+  :bind (("C-c C-." . popper-toggle-latest)
+         ("C-c M-." . popper-kill-latest-popup)
+         ("C-c C-/" . popper-cycle)
+         ("C-c C-;" . popper-toggle-type))
+  :init
+  (setq popper-mode-line nil)
+  (setq popper-group-function #'popper-group-by-projectile)
+  (setq popper-reference-buffers
+        '("\\*Messages\\*"
+          "Output\\*$"
+          "\\*Async Shell Command\\*"
+          help-mode
+          compilation-mode))
+  (popper-mode +1))
+
 (setq display-buffer-base-action
       '(display-buffer-reuse-mode-window
         display-buffer-reuse-window
@@ -907,6 +925,7 @@
 
 (add-hook 'after-change-major-mode-hook
           (defun my/company-setup-backends ()
+            (interactive)
             "Set `company-backends' for the current buffer."
             (setq-local company-backends (my/company-backends))))
 
@@ -1048,6 +1067,11 @@
   :config
   (setq typescript-indent-level 2))
 
+(use-package pip-requirements
+  :straight t
+  :config
+  (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
+
 (use-package elpy
 :straight t
 :init
@@ -1055,18 +1079,20 @@
 (setq elpy-modules '(elpy-module-sane-defaults elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-django))
 (setq python-shell-interpreter "python3")
 (setq elpy-rpc-python-command "python3")
-;; (setq elpy-rpc-virtualenv-path 'current)
 :config
 (pyvenv-mode 1))
 
-(use-package pip-requirements
-  :straight t
-  :config
-  (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
-
 (use-package python-mode
   :straight t
-  :hook (python-mode . lsp-deferred))
+  :hook (python-mode . lsp-deferred)
+  :bind (:map python-mode-map
+              ([remap lsp-format-buffer] . elpy-autopep8-fix-code)
+              ([remap lsp-describe-thing-at-point] . elpy-doc)))
+
+;; Elpy rebinds delete for some reason
+(add-hook 'python-mode-hook
+        (lambda()
+          (local-unset-key (kbd "DEL"))))
 
 (use-package python-black
     :straight t

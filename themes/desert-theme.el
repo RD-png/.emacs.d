@@ -3,7 +3,7 @@
 ;; Copyright (C) Sergei Lebedev
 ;; Copyright (C) 2013 by Syohei YOSHIDA
 
-;; Author: Syohei YOSHIDA <syohex@gmail.com>
+;; Author: Syohei YOSHIDA &lt;syohex@gmail.com&gt;
 ;; URL: https://github.com/emacs-jp/replace-colorthemes
 ;; Version: 0.01
 
@@ -18,7 +18,7 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;; along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
 ;;; Commentary:
 ;;
@@ -32,7 +32,7 @@
 (custom-theme-set-faces
  'desert
 
- '(default ((t (:background "#1d1f21" :foreground "#c5c8c6"))))
+ '(default ((t (:background "gray20" :foreground "ghost white"))))
 
  '(ac-candidate-face ((t (:background "gray15" :foreground "ghost white"))))
  '(ac-completion-face ((t (:background "olivedrab" :foreground "khaki"))))
@@ -71,8 +71,8 @@
  '(file-name-shadow ((t (:foreground "grey70"))))
 
  '(font-lock-builtin-face ((t (:foreground "MediumPurple3"))))
- '(font-lock-comment-delimiter-face ((t (:foreground "grey35"))))
- '(font-lock-comment-face ((t (:foreground "grey35"))))
+ '(font-lock-comment-delimiter-face ((t (:foreground "LightSkyBlue3"))))
+ '(font-lock-comment-face ((t (:foreground "LightSkyBlue3"))))
  '(font-lock-constant-face ((t (:foreground "#ffa0a0"))))
  '(font-lock-doc-face ((t (:foreground "IndianRed3"))))
  '(font-lock-function-name-face ((t (:bold t :foreground "PaleGreen3" :weight bold))))
@@ -86,7 +86,7 @@
  '(font-lock-variable-name-face ((t (:foreground "ghost white"))))
  '(font-lock-warning-face ((t (:bold t :foreground "goldenrod" :weight bold))))
 
- '(fringe ((t (:background "#1d1f21"))))
+ '(fringe ((t (:background "gray20"))))
  '(glyphless-char ((t (:height 0.6))))
  '(header-line ((t (:background "gray15" :box (:color "gray20" :line-width 2)))))
  '(help-argument-name ((t (nil))))
@@ -163,10 +163,7 @@
  '(widget-documentation ((t (:foreground "lime green"))))
  '(widget-field ((t (:background "dim gray"))))
  '(widget-inactive ((t (:foreground "grey70"))))
- '(widget-single-line-field ((t (:background "dim gray"))))
- ;; PHP SPECIFIC
- '(php-function-call ((t (:foreground "LightSkyBlue2"))))
- )
+ '(widget-single-line-field ((t (:background "dim gray")))) )
 
 ;;;###autoload
 (when load-file-name
