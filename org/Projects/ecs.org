@@ -1,0 +1,7 @@
+* TODO Build out an interface to create the various order types
+
+* TODO Expand on filtering functionality as needed, we have some basic search / filtering functionality currently, depends on what the users want
+
+* TODO Add pagination functionality to the return types of each order, do 25 records a page and make table that will call for the next page when the user clicks the arrow key / next button
+
+* TODO Create user groups to restrict non admin users from being able to create source / couriers etc, they should only be able to create orders
