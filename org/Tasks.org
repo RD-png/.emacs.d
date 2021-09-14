@@ -21,8 +21,11 @@ CLOSED: [2021-09-04 Sat 21:18]
 - State "DONE"       from "TODO"       [2021-09-04 Sat 21:18]
 :END:
 
-*** TODO direnv / nix-direnv for python / haskell
-SCHEDULED: <2021-08-30 Sat>
+*** DONE direnv / nix-direnv for python / haskell
+CLOSED: [2021-09-14 Tue 18:25] SCHEDULED: <2021-08-30 Sat>
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-14 Tue 18:25]
+:END:
 
 *** DONE Fix projectile-switch-buffer
 SCHEDULED: [2021-08-30 Mon 13:10]

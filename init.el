@@ -407,6 +407,12 @@
   (setq register-preview-delay 0
         register-preview-function #'consult-register-format))
 
+(use-package consult-dir
+  :straight t
+  :bind (("C-x C-d" . consult-dir)
+         :map minibuffer-local-map
+         ("C-x j" . consult-dir-jump-file)))
+
 ;; Similar to ivy rich but better
 (use-package marginalia
   :straight t
@@ -888,7 +894,7 @@
 
 (defvar my/company-backend-alist
   '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-    ;; (prog-mode (company-capf :with company-yasnippet))
+    ;;(prog-mode (company-capf company-yasnippet :with)
     (prog-mode (:separate company-yasnippet company-capf company-dabbrev-code))
     (conf-mode company-capf company-dabbrev-code company-yasnippet))
   "An alist matching modes to company backends. The backends for any mode is
@@ -988,27 +994,8 @@
 
 (use-package direnv
   :straight t
-  :demand t
-  :preface
-  (defun patch-direnv-environment (&rest _args)
-    (setenv "PATH" (concat emacs-binary-path ":" (getenv "PATH")))
-    (setq exec-path (cons (file-name-as-directory emacs-binary-path)
-                          exec-path)))
-  :init
-  (defconst emacs-binary-path (directory-file-name
-                               (file-name-directory
-                                (executable-find "emacsclient"))))
   :config
-  (advice-add 'direnv-update-directory-environment
-              :after #'patch-direnv-environment)
-  (add-hook 'git-commit-mode-hook #'patch-direnv-environment)
-  (add-hook 'magit-status-mode-hook #'patch-direnv-environment)
-  (defvar my-direnv-last-buffer nil)
-  (defun update-on-buffer-change ()
-    (unless (eq (current-buffer) my-direnv-last-buffer)
-      (setq my-direnv-last-buffer (current-buffer))
-      (direnv-update-environment default-directory)))
-  (add-hook 'post-command-hook #'update-on-buffer-change))
+  (direnv-mode))
 
 ;; (use-package eglot
 ;;   :straight t
