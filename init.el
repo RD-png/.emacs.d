@@ -1072,15 +1072,15 @@
   :config
   (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
 
-(use-package elpy
-:straight t
-:init
-(elpy-enable)
-(setq elpy-modules '(elpy-module-sane-defaults elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-django))
-(setq python-shell-interpreter "python3")
-(setq elpy-rpc-python-command "python3")
-:config
-(pyvenv-mode 1))
+;; (use-package elpy
+;; :straight t
+;; :init
+;; (elpy-enable)
+;; (setq elpy-modules '(elpy-module-sane-defaults elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-django))
+;; (setq python-shell-interpreter "python3")
+;; (setq elpy-rpc-python-command "python3")
+;; :config
+;; (pyvenv-mode 1))
 
 (use-package python-mode
   :straight t
@@ -1091,12 +1091,21 @@
 
 ;; Elpy rebinds delete for some reason
 (add-hook 'python-mode-hook
-        (lambda()
-          (local-unset-key (kbd "DEL"))))
+          (lambda()
+            (local-unset-key (kbd "DEL"))))
+
+(use-package pyimport
+  :straight t
+  :after python-mode)
+
+
+(use-package pyvenv
+  :straight t
+  :after python)
 
 (use-package python-black
-    :straight t
-    :after python)
+  :straight t
+  :after python)
 
 (use-package nix-mode
   :straight t
