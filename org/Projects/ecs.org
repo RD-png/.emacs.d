@@ -2,7 +2,11 @@
 
 * TODO Expand on filtering functionality as needed, we have some basic search / filtering functionality currently, depends on what the users want
 
-* TODO Add pagination functionality to the return types of each order, do 25 records a page and make table that will call for the next page when the user clicks the arrow key / next button
+* DONE Add pagination functionality to the return types of each order, do 25 records a page and make table that will call for the next page when the user clicks the arrow key / next button
+CLOSED: [2021-09-16 Thu 16:22]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-16 Thu 16:22]
+:END:
 
 * TODO Create user groups to restrict non admin users from being able to create source / couriers etc, they should only be able to create orders
 
@@ -15,3 +19,7 @@ CLOSED: [2021-09-14 Tue 15:54]
 :END:
 
 * TODO Finish the script to pull the old records into the new database, we need to sort a fixed list of sources, couriers, reasons, channels etc before we can insert this data, we can use test ones for one
+
+* TODO Build a argument builder than can be used across the app
+
+* TODO Extend the basic functionality of the views for the order app, serializers seem to be confliciting when trying to return one field

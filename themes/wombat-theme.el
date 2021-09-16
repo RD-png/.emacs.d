@@ -31,9 +31,9 @@ are included.")
   (custom-theme-set-faces
    'wombat
    `(default ((,class (:background "#242424" :foreground "#f6f3e8"))))
-   `(cursor ((,class (:background "#656565"))))
+   `(cursor ((,class (:background "IndianRed3"))))
    ;; Highlighting faces
-   `(fringe ((,class (:background "#303030"))))
+   `(fringe ((,class (:background "#1d1f21"))))
    `(highlight ((,class (:background "#454545" :foreground "#ffffff"
 			 :underline t))))
    `(region ((,class (:background "#444444" :foreground "#f6f3e8"))))

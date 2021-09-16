@@ -47,7 +47,7 @@
  '(completions-common-part ((t (:foreground "ghost white" :background "gray20"))))
  '(completions-first-difference ((t (:bold t :weight bold))))
 
- '(cursor ((t (:background "khaki"))))
+ '(cursor ((t (:background "IndianRed3"))))
 
  '(dired-directory ((t (:bold t :weight bold :foreground "PaleGreen3"))))
  '(dired-flagged ((t (:bold t :weight bold :foreground "Pink"))))
@@ -86,7 +86,7 @@
  '(font-lock-variable-name-face ((t (:foreground "ghost white"))))
  '(font-lock-warning-face ((t (:bold t :foreground "goldenrod" :weight bold))))
 
- '(fringe ((t (:background "gray20"))))
+ '(fringe ((t (:background "#1d1f21"))))
  '(glyphless-char ((t (:height 0.6))))
  '(header-line ((t (:background "gray15" :box (:color "gray20" :line-width 2)))))
  '(help-argument-name ((t (nil))))
