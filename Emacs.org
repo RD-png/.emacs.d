@@ -316,7 +316,7 @@ Set theme colour theme for emacs
 #+begin_src emacs-lisp
 
   (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-  (load-theme 'desert2 t)
+  (load-theme 'wombat t)
 
   (set-foreground-color "#c5c8c6")
   (set-background-color "#1d1f21")
@@ -333,7 +333,8 @@ Set theme colour theme for emacs
    `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
    `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
    `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
-   `(web-mode-html-attr-name-face ((t (:foreground "MediumPurple3")))))
+   `(web-mode-html-attr-name-face ((t (:foreground "MediumPurple2"))))
+   )
 
 
   ;; For the default theme
@@ -346,6 +347,23 @@ Set theme colour theme for emacs
      ((t (:background "#1d1f21" :foreground "white"))))
    '(company-tooltip-selection
      ((t (:background "steelblue" :foreground "white")))))
+
+#+end_src
+
+** Tree sitter highlighting
+
+#+begin_src emacs-lisp
+
+  (use-package tree-sitter-langs
+    :straight t)
+
+  (use-package tree-sitter
+    :straight t
+    :config
+    (require 'tree-sitter-langs)
+    (require 'tree-sitter-debug)
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 #+end_src
 
@@ -1236,6 +1254,7 @@ Lsp-mode, languge protocol that has support for a lot of languages
 
   (use-package lsp-mode
     :straight t
+    :after direnv
     :hook (lsp)
     :bind (:map lsp-mode-map
                 ("C-c o d" . lsp-describe-thing-at-point)
@@ -1295,13 +1314,14 @@ Really intrusive, would rather use keybinds than have the popups
 
 *** Direnv
 
-Uses enviroment relevant to current path
+Uses enviroment relevant to current path, Need to make it so the lsp server is loaded to, without it being a dependency in the shell.nix file
 
 #+begin_src emacs-lisp
 
   (use-package direnv
     :straight t
     :config
+    (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
     (direnv-mode))
 
 #+end_src

@@ -30,13 +30,13 @@ are included.")
 (let ((class '((class color) (min-colors 89))))
   (custom-theme-set-faces
    'wombat
-   `(default ((,class (:background "#242424" :foreground "#f6f3e8"))))
+   `(default ((,class (:background "#1d1f21" :foreground "#c5c8c6"))))
    `(cursor ((,class (:background "IndianRed3"))))
    ;; Highlighting faces
    `(fringe ((,class (:background "#1d1f21"))))
    `(highlight ((,class (:background "#454545" :foreground "#ffffff"
 			 :underline t))))
-   `(region ((,class (:background "#444444" :foreground "#f6f3e8"))))
+   `(region ((,class (:background "olivedrab" :foreground "#f6f3e8"))))
    `(secondary-selection ((,class (:background "#333366" :foreground "#f6f3e8"))))
    `(isearch ((,class (:background "#343434" :foreground "#857b6f"))))
    `(lazy-highlight ((,class (:background "#384048" :foreground "#a0a8b0"))))
@@ -45,17 +45,17 @@ are included.")
    `(mode-line-inactive ((,class (:background "#444444" :foreground "#857b6f"))))
    ;; Escape and prompt faces
    `(minibuffer-prompt ((,class (:foreground "#e5786d"))))
-   `(escape-glyph ((,class (:foreground "#ddaa6f" :weight bold))))
-   `(homoglyph ((,class (:foreground "#ddaa6f" :weight bold))))
+   `(escape-glyph ((,class (:foreground "#ddaa6f"))))
+   `(homoglyph ((,class (:foreground "#ddaa6f"))))
    ;; Font lock faces
    `(font-lock-builtin-face ((,class (:foreground "#e5786d"))))
-   `(font-lock-comment-face ((,class (:foreground "#99968b"))))
+   `(font-lock-comment-face ((,class (:foreground "grey35"))))
    `(font-lock-constant-face ((,class (:foreground "#e5786d"))))
    `(font-lock-function-name-face ((,class (:foreground "#cae682"))))
-   `(font-lock-keyword-face ((,class (:foreground "#8ac6f2" :weight bold))))
-   `(font-lock-string-face ((,class (:foreground "#95e454"))))
-   `(font-lock-type-face ((,class (:foreground "#92a65e" :weight bold))))
-   `(font-lock-variable-name-face ((,class (:foreground "#cae682"))))
+   `(font-lock-keyword-face ((,class (:foreground "#8ac6f2"))))
+   `(font-lock-string-face ((,class (:foreground "#CA729E"))))
+   `(font-lock-type-face ((,class (:foreground "#a4c460"))))
+   `(font-lock-variable-name-face ((,class (:foreground "ghost white"))))
    `(font-lock-warning-face ((,class (:foreground "#ccaa8f"))))
    ;; Button and link faces
    `(link ((,class (:foreground "#8ac6f2" :underline t))))
@@ -98,7 +98,7 @@ are included.")
 (custom-theme-set-variables
  'wombat
  '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682"
-			    "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"]))
+			    "#8ac6f2" "#333366" "#ccaa8f" "#c5c8c6"]))
 
 (provide-theme 'wombat)
 

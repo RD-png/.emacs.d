@@ -1,0 +1,44 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /root/.config/emacs/org/Projects/Stock.org
+
+
+* DONE When adding rolling it introduced a small diff with how
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-16 Thu 19:27
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/Stock.org
+:ARCHIVE_CATEGORY: Stock
+:ARCHIVE_TODO: DONE
+:END:
+predictions on product info and stock predictions because of rounding, change so they match on both pages
+CLOSED: [2021-07-08 Thu 15:58]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-08 Thu 15:58]
+:END:
+
+* DONE Add a rolling 12 months to predicitions
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-16 Thu 19:27
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/Stock.org
+:ARCHIVE_CATEGORY: Stock
+:ARCHIVE_TODO: DONE
+:END:
+
+CLOSED: [2021-07-08 Thu 15:44]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-08 Thu 15:44]
+:END:
+
+* DONE Keep track if date when item cost is changed
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-16 Thu 19:27
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/Stock.org
+:ARCHIVE_CATEGORY: Stock
+:ARCHIVE_TODO: DONE
+:END:
+
+CLOSED: [2021-07-07 Wed 12:37]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-07-07 Wed 12:37]
+:END:

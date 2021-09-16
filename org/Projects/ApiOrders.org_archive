@@ -1,0 +1,29 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /root/.config/emacs/org/Projects/ApiOrders.org
+
+
+* DONE Add another ebay account to EbayRequest.php, add into fesp anywhere that has exceptions for source
+CLOSED: [2021-08-31 Tue 08:08]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-16 Thu 19:27
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ApiOrders.org
+:ARCHIVE_CATEGORY: ApiOrders
+:ARCHIVE_TODO: DONE
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-08-31 Tue 08:08]
+:END:
+
+* DONE Add lookup to add green / black to sku title for netting skus
+CLOSED: [2021-08-16 Mon 07:58]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-16 Thu 19:27
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ApiOrders.org
+:ARCHIVE_CATEGORY: ApiOrders
+:ARCHIVE_TODO: DONE
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-08-16 Mon 07:58]
+:END:

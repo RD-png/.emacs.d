@@ -1,18 +1,6 @@
-** TODO Changes the previous 90 days of orders for ebay and change the buyer name to the username, we will need to pull this from ebay via a csv of some sort.
+* TODO Changes the previous 90 days of orders for ebay and change the buyer name to the username, we will need to pull this from ebay via a csv of some sort.
 
-** DONE Add another ebay account to EbayRequest.php, add into fesp anywhere that has exceptions for source
-CLOSED: [2021-08-31 Tue 08:08]
-:LOGBOOK:
-- State "DONE"       from "TODO"       [2021-08-31 Tue 08:08]
-:END:
+* TODO Add method that pulls in the last 24 hours of orders and ensure that none have been missed
 
-** TODO Add method that pulls in the last 24 hours of orders and ensure that none have been missed
-
-** DONE Add lookup to add green / black to sku title for netting skus
-CLOSED: [2021-08-16 Mon 07:58]
-:LOGBOOK:
-- State "DONE"       from "TODO"       [2021-08-16 Mon 07:58]
-:END:
-
-** TODO Script to pull in an orders csv for ebay / amazon and add the
+* TODO Script to pull in an orders csv for ebay / amazon and add the
 missing records to the database

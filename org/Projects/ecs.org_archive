@@ -1,0 +1,29 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /root/.config/emacs/org/Projects/ecs.org
+
+
+* DONE Add pagination functionality to the return types of each order, do 25 records a page and make table that will call for the next page when the user clicks the arrow key / next button
+CLOSED: [2021-09-16 Thu 16:22]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-16 Thu 19:27
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ecs.org
+:ARCHIVE_CATEGORY: ecs
+:ARCHIVE_TODO: DONE
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-16 Thu 16:22]
+:END:
+
+* DONE Change order table to use DateField instead of DateTimeField
+CLOSED: [2021-09-14 Tue 15:54]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-16 Thu 19:27
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ecs.org
+:ARCHIVE_CATEGORY: ecs
+:ARCHIVE_TODO: DONE
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-14 Tue 15:54]
+:END:

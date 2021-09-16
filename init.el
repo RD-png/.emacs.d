@@ -220,7 +220,7 @@
 (set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height default-variable-font-size :weight 'regular)
 
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-(load-theme 'desert2 t)
+(load-theme 'wombat t)
 
 (set-foreground-color "#c5c8c6")
 (set-background-color "#1d1f21")
@@ -237,7 +237,8 @@
  `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
  `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
  `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
- `(web-mode-html-attr-name-face ((t (:foreground "MediumPurple3")))))
+ `(web-mode-html-attr-name-face ((t (:foreground "MediumPurple2"))))
+ )
 
 
 ;; For the default theme
@@ -250,6 +251,17 @@
    ((t (:background "#1d1f21" :foreground "white"))))
  '(company-tooltip-selection
    ((t (:background "steelblue" :foreground "white")))))
+
+(use-package tree-sitter-langs
+         :straight t)
+
+(use-package tree-sitter
+  :straight t
+  :config
+  (require 'tree-sitter-langs)
+  (require 'tree-sitter-debug)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (use-package popper
   :straight t
@@ -572,6 +584,16 @@
   (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
   (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
   (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+
+(defun org-archive-done-tasks ()
+(interactive)
+(org-map-entries
+ (lambda ()
+   (org-archive-subtree)
+   (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+ "/DONE" 'tree))
+
+(add-hook 'org-mode-hook (add-hook 'after-save-hook #'org-archive-done-tasks))
 
 (defun org-mode-setup ()
   (org-indent-mode)
@@ -947,6 +969,7 @@
 
 (use-package lsp-mode
   :straight t
+  :after direnv
   :hook (lsp)
   :bind (:map lsp-mode-map
               ("C-c o d" . lsp-describe-thing-at-point)
@@ -995,6 +1018,7 @@
 (use-package direnv
   :straight t
   :config
+  (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
   (direnv-mode))
 
 ;; (use-package eglot
