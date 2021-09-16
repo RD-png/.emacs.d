@@ -253,7 +253,7 @@
    ((t (:background "steelblue" :foreground "white")))))
 
 (use-package tree-sitter-langs
-         :straight t)
+  :straight t)
 
 (use-package tree-sitter
   :straight t
@@ -584,16 +584,6 @@
   (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
   (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
   (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
-
-(defun org-archive-done-tasks ()
-(interactive)
-(org-map-entries
- (lambda ()
-   (org-archive-subtree)
-   (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
- "/DONE" 'tree))
-
-(add-hook 'org-mode-hook (add-hook 'after-save-hook #'org-archive-done-tasks))
 
 (defun org-mode-setup ()
   (org-indent-mode)
