@@ -1088,7 +1088,9 @@
   :hook (python-mode . lsp-deferred)
   :bind (:map python-mode-map
               ([remap lsp-format-buffer] . elpy-autopep8-fix-code)
-              ([remap lsp-describe-thing-at-point] . elpy-doc)))
+              ([remap lsp-describe-thing-at-point] . elpy-doc))
+  :config
+  (setq python-shell-interpreter "python3"))
 
 ;; Elpy rebinds delete for some reason
 (add-hook 'python-mode-hook
@@ -1286,7 +1288,6 @@
 (use-package dired-rainbow
   :straight t
   :after all-the-icons-dired
-  :defer 2
   :config
   (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
   (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
