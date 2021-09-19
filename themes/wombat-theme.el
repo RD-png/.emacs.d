@@ -52,11 +52,11 @@ are included.")
    `(font-lock-comment-face ((,class (:foreground "grey35"))))
    `(font-lock-constant-face ((,class (:foreground "#e5786d"))))
    `(font-lock-function-name-face ((,class (:foreground "#cae682"))))
-   `(font-lock-keyword-face ((,class (:foreground "#8ac6f2"))))
+   `(font-lock-keyword-face ((,class (:foreground "#9ac6f2"))))
    `(font-lock-string-face ((,class (:foreground "#CA729E"))))
    `(font-lock-type-face ((,class (:foreground "#a4c460"))))
    `(font-lock-variable-name-face ((,class (:foreground "ghost white"))))
-   `(font-lock-warning-face ((,class (:foreground "#ccaa8f"))))
+   `(font-lock-warning-face ((,class (:foreground "#ccaf7f"))))
    ;; Button and link faces
    `(link ((,class (:foreground "#8ac6f2" :underline t))))
    `(link-visited ((,class (:foreground "#e5786d" :underline t))))
@@ -98,7 +98,7 @@ are included.")
 (custom-theme-set-variables
  'wombat
  '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682"
-			    "#8ac6f2" "#333366" "#ccaa8f" "#c5c8c6"]))
+			    "#9ac6f2" "#333366" "#ccaa8f" "#c5c8c6"]))
 
 (provide-theme 'wombat)
 

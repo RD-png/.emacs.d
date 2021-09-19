@@ -227,7 +227,7 @@
 
 ;; Custom faces
 (custom-set-faces
- `(match ((t (:foreground "#72a4ff"))))
+ `(match ((t (:foreground "#9ac6f2"))))
  `(persp-selected-face ((t (:foreground "light green"))))
  `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
  `(doom-modeline-info ((t (:foreground "pink"))))
@@ -237,11 +237,11 @@
  `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
  `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
  `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
- `(web-mode-html-attr-name-face ((t (:foreground "MediumPurple2"))))
+ `(web-mode-html-attr-name-face ((t (:foreground "#e5786d"))))
+ `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
  )
 
-
-;; For the default theme
+;; ;; For the default theme
 (custom-set-faces
  '(company-preview
    ((t (:background "#1d1f21" :foreground "white" :underline t))))
@@ -271,8 +271,6 @@
          ("C-c C-/" . popper-cycle)
          ("C-c C-;" . popper-toggle-type))
   :init
-  (setq popper-mode-line nil)
-  (setq popper-group-function #'popper-group-by-projectile)
   (setq popper-reference-buffers
         '("\\*Messages\\*"
           "Output\\*$"
@@ -374,15 +372,20 @@
 ;; Completion actions
 (use-package embark
   :straight t
-  :bind (:map minibuffer-mode-map
-              ("C-S-a" . embark-act)
-              ("C-c C-o" . embark-export))
   :config
+  (defun embark-kill-candidate ()
+    (interactive)
+    (embark--act #'kill-buffer (car (embark--targets))))
+
   (setq embark-action-indicator
         (lambda (map)
           (which-key--show-keymap "Embark" map nil nil 'no-paging)
           #'which-key--hide-popup-ignore-command)
-        embark-become-indicator embark-action-indicator))
+        embark-become-indicator embark-action-indicator)
+  :bind (:map minibuffer-mode-map
+              ("C-S-a" . embark-act)
+              ("C-c C-o" . embark-export)
+              ("C-k" . embark-kill-candidate)))
 
 ;; Additonal completion actions
 (use-package embark-consult
@@ -1087,7 +1090,7 @@
   :straight t
   :hook (python-mode . lsp-deferred)
   :bind (:map python-mode-map
-              ([remap lsp-format-buffer] . elpy-autopep8-fix-code)
+              ([remap lsp-format-buffer] . python-black-buffer)
               ([remap lsp-describe-thing-at-point] . elpy-doc))
   :config
   (setq python-shell-interpreter "python3"))
@@ -1104,7 +1107,10 @@
 
 (use-package pyvenv
   :straight t
-  :after python)
+  :after python
+  :config
+  (setq pyvenv-menu t)
+  )
 
 (use-package python-black
   :straight t
@@ -1398,7 +1404,7 @@
             (if space-pos
                 (kill-region cp space-pos)
               (backward-kill-word 1))))
-      (kill-region cp (- cp 1)))         ;; word is non-english word
+      (kill-region cp (- cp 1)))
     ))
 
 (defun avi-kill-line-save (&optional arg)
@@ -1421,6 +1427,13 @@ text before point to the beginning of the current line."
     (back-to-indentation)
     (avi-kill-line-save)))
 
+(defun my/kill-thing-at-point (thing)
+  "Get the start and end bounds of a type of thing at point."
+  (let ((bounds (bounds-of-thing-at-point thing)))
+    (if bounds
+        (kill-region (car bounds) (cdr bounds))
+      (error "No %s at point" thing))))
+
 ;; General binds
 (global-set-key (kbd "C-c w") #'copy-word)
 (global-set-key (kbd "C-c l") #'custom-avy-copy-line)
@@ -1430,11 +1443,13 @@ text before point to the beginning of the current line."
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "M-d") (lambda () (interactive) (my/kill-thing-at-point 'word)))
 (global-set-key [C-backspace] #'aborn/backward-kill-word)
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-<return>") #'eshell)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/Emacs.org")))
+(global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
 
 ;; Half the distance of page down and up (does make cursor position change)
 ;; (autoload 'View-scroll-half-page-forward "view")
