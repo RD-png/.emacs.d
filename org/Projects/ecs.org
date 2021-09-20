@@ -8,6 +8,8 @@
 
 * TODO Finish the script to pull the old records into the new database, we need to sort a fixed list of sources, couriers, reasons, channels etc before we can insert this data, we can use test ones for one
 
-* TODO Build a argument builder than can be used across the app
-
 * TODO Extend the basic functionality of the views for the order app, serializers seem to be confliciting when trying to return one field
+
+* TODO On fesp orders page, chage the href url to use the new tripler system, pass the orderid and source in the url, so we know which database to query, rather than looping through them all
+
+* TODO Ensure that the order forms are only acessible from redirect from the fesp orders page.
