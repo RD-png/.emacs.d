@@ -232,6 +232,7 @@
  `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
  `(doom-modeline-info ((t (:foreground "pink"))))
  `(doom-modeline-unread-number ((t (:foreground "red"))))
+ `(doom-modeline-buffer-file ((t (:foreground "light blue"))))
  `(mode-line ((t (:foreground "#c5c8c6"))))
  `(org-level-4 ((t (:foreground "light blue"))))
  `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
@@ -294,8 +295,11 @@
   :straight t
   :init
   (doom-modeline-mode 1)
-  (setq projectile-dynamic-mode-line nil)
-  (setq doom-modeline-bar-width 3
+  (setq projectile-dynamic-mode-line nil
+        doom-modeline-bar-width 1
+        doom-modeline-icon t
+        doom-modeline-major-mode-icon t
+        doom-modeline-bar-width 3
         doom-modeline-minor-modes nil
         doom-modeline-github nil
         doom-modeline-buffer-file-name-style 'relative-from-project)
@@ -557,6 +561,31 @@
 (setq backup-inhibited t)
 (setq auto-save-default nil)
 (setq create-lockfiles nil)
+
+(use-package mu4e
+  :config
+  (setq mu4e-change-filenames-when-moving t
+        mu4e-get-mail-command "mbsync -a"
+        mu4e-view-show-images t
+        mu4e-update-interval (* 10 60)
+        mu4e-maildir "~/Mail")
+  (setq mu4e-contexts
+        `(,(make-mu4e-context
+            :name "elixir"
+            :vars '(
+                    (user-full-name . "Ryan Denby")
+                    (user-mail-address . "ryan@elixirgardens.co.uk")
+                    (mu4e-sent-folder . "/sent/new")
+                    (mu4e-trash-folder . "/trash/new")
+                    (mu4e-drafts-folder . "/drafts/new")
+                    (mu4e-sent-messages-behavior . sent)
+                    ))))
+
+  (setq mail-user-agent 'mu4e-user-agent
+        message-send-mail-function 'smtpmail-send-it
+        smtpmail-smtp-server "smtp.123-reg.co.uk"
+        smtpmail-smtp-service 465
+        smtpmail-stream-type 'starttls))
 
 (defun org-font-setup ()
   ;; Replace list hyphen with dot
@@ -1152,6 +1181,14 @@
   (lsp-haskell-server-path "haskell-language-server"))
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
+(use-package paredit
+  :straight t
+  :diminish
+  :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
+  :config
+  (eldoc-add-command 'paredit-backward-delete
+                     'paredit-close-round))
 
 (use-package projectile
   :straight t
