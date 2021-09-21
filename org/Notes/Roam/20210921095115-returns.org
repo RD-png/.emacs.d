@@ -1,0 +1,32 @@
+:PROPERTIES:
+:ID:       4e0d7232-60ec-491f-90ff-e0e14da1ed37
+:END:
+#+title: Returns
+
+** What fields do we actually need from the current database
+
+We have reason_returned, reason_courier , reason_customer, action_product, action_customer, reason
+
+These are all very similar ?
+
+Merge reason_returned, reason_courier, reason_customer into a shared field across all types of orders which we will store in the Reasons model.
+
+When a user is creating a return, they will select a reason from a drop down and that will then provide them with a list of valid options for the type of reason they have selected
+
+For return orders we need some additional information to be stored, we need to have the action_product and action_customer stored.
+
+These will have no dependency on other tables
+
+Note: need to add these ass new tables, since they are sepperate
+
+the reason field seems redundant and can be grouped with notes
+
+
+Reason_Options:
+
+This way we can query via reason_id to get a list of possible options
+
+| reason_id | option_id |
+|-----------+-----------|
+|         1 |         5 |
+|         1 |         4 |
