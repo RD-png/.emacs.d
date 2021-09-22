@@ -584,7 +584,7 @@
   (setq mail-user-agent 'mu4e-user-agent
         message-send-mail-function 'smtpmail-send-it
         smtpmail-smtp-server "smtp.123-reg.co.uk"
-        smtpmail-smtp-service 465
+        smtpmail-smtp-service 587
         smtpmail-stream-type 'starttls))
 
 (defun org-font-setup ()
