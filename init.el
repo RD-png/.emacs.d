@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;; Function to automatically generate a .el for our .org configuration files
 (defun org-babel-tangle-config ()
   (when (string-equal (file-name-directory (buffer-file-name))
@@ -293,6 +295,7 @@
 
 (use-package doom-modeline
   :straight t
+  :after eshell
   :init
   (doom-modeline-mode 1)
   (setq projectile-dynamic-mode-line nil
@@ -1183,10 +1186,13 @@
 
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
+(use-package emacs-lisp-mode
+  :straight (emacs-lisp-mode :type built-in)
+  :hook ((lisp-mode emacs-lisp-mode) . paredit-mode))
+
 (use-package paredit
   :straight t
   :diminish
-  :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
   :config
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))

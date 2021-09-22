@@ -3,6 +3,15 @@
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
 * Config Init
+
+** Lexical-binding
+
+#+begin_src emacs-lisp
+
+  ;; -*- lexical-binding: t; -*-
+
+#+end_src
+
 ** Auto-tangle Configuration File
 
 When the org file is updated and saved it will update and generate a new init.el file for emacs to read
@@ -411,6 +420,7 @@ Useful modeline to replace the default one
 
   (use-package doom-modeline
     :straight t
+    :after eshell
     :init
     (doom-modeline-mode 1)
     (setq projectile-dynamic-mode-line nil
@@ -1591,10 +1601,13 @@ Packages for elisp development
 
 #+begin_src emacs-lisp
 
+  (use-package emacs-lisp-mode
+    :straight (emacs-lisp-mode :type built-in)
+    :hook ((lisp-mode emacs-lisp-mode) . paredit-mode))
+
   (use-package paredit
     :straight t
     :diminish
-    :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
     :config
     (eldoc-add-command 'paredit-backward-delete
                        'paredit-close-round))
