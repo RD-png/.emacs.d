@@ -540,8 +540,6 @@
 (add-hook 'persp-mode-hook
           (persp-switch "Main"))
 
-(advice-add 'imalison:avy :around 'imalison:disable-keychord-around)
-
 (use-package avy
   :straight t
   :bind (("M-s" . avy-goto-char)
