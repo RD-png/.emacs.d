@@ -875,7 +875,7 @@
   (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
   (define-key eshell-mode-map (kbd "C-r") 'consult-history)
   (define-key eshell-mode-map (kbd "C-a") 'eshell-bol)
-  (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1)))
+  (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1) (eshell-send-input)))
   (define-key eshell-mode-map (kbd "C-c o l") #'my/eshell-copy-last-output)
   (eshell-hist-initialize)
   (setenv "PAGER" "cat")
