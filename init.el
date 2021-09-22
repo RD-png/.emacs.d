@@ -840,7 +840,14 @@
    (propertize " ⟣─ " 'face `(:foreground "dark orange"))
    (propertize (my/pwd-shorten-dirs (my/get-prompt-path)) 'face `(:foreground "yellow3"))
    (propertize " λ" 'face `(:foreground "pink2"))
-   (propertize "\n" 'face `(:foreground "white"))))
+   (propertize " " 'face `(:foreground "white"))
+   ))
+
+(defun my/eshell-copy-last-output ()
+  (interactive)
+  (eshell-mark-output)
+  (avi-kill-line-save)
+  (eshell-interrupt-process))
 
 (defun eshell-configure ()
   (use-package xterm-color
@@ -866,14 +873,18 @@
             (lambda () (setenv "TERM" "dumb")))
 
   (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+  (define-key eshell-mode-map (kbd "C-r") 'consult-history)
+  (define-key eshell-mode-map (kbd "C-a") 'eshell-bol)
+  (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1)))
+  (define-key eshell-mode-map (kbd "C-c o l") #'my/eshell-copy-last-output)
   (eshell-hist-initialize)
   (setenv "PAGER" "cat")
 
   ;; Disable company in eshell
   (company-mode -1)
-  (setq eshell-prompt-function      'my/eshell-prompt
-        eshell-prompt-regexp        "^λ "
-        eshell-history-size         10000
+  (setq eshell-prompt-function 'my/eshell-prompt
+        eshell-prompt-regexp "[a-zA-z]+ ⟣─ [^#$\n]+ λ "
+        eshell-history-size 10000
         eshell-buffer-maximum-lines 10000
         eshell-hist-ignoredups t
         eshell-highlight-prompt t
@@ -891,16 +902,6 @@
   (with-eval-after-load 'esh-opt
     (setq eshell-destroy-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "zsh" "vim"))))
-
-(add-hook 'eshell-mode-hook (lambda ()
-                              (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1)))
-                              (define-key eshell-mode-map (kbd "C-c o l") #'my/eshell-copy-last-output)))
-
-(defun my/eshell-copy-last-output ()
-  (interactive)
-  (eshell-mark-output)
-  (avi-kill-line-save)
-  (eshell-interrupt-process))
 
 (use-package eshell-syntax-highlighting
   :straight t
