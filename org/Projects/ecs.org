@@ -1,10 +1,14 @@
 * TODO Build out an interface to create the various order types
 
-* TODO Expand on filtering functionality as needed, we have some basic search / filtering functionality currently, depends on what the users want
+* DONE Expand on filtering functionality as needed, we have some basic search / filtering functionality currently, depends on what the users want
+CLOSED: [2021-09-24 Fri 16:10]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-24 Fri 16:10]
+:END:
 
 * TODO Create user groups to restrict non admin users from being able to create source / couriers etc, they should only be able to create orders
 
-* TODO Create table for key, barcode pair, with auto increment id, id is reset on empty table, for key types
+* TODO Create table for key, barcode pair, with auto increment id, id is reset on empty table, for key types, can grab the items from cache, avoid having to store any information for items within the ecs database
 
 * TODO Finish the script to pull the old records into the new database, we need to sort a fixed list of sources, couriers, reasons, channels etc before we can insert this data, we can use test ones for one
 
@@ -18,4 +22,14 @@ CLOSED: [2021-09-23 Thu 15:57]
 
 * TODO Ensure that the order forms are only acessible from redirect from the fesp orders page.
 
-* TODO Alias the foreign key relationships for cleaner url arguments ? Might have to declare a custom filterset to handle the foreign notation '__'
+* TODO Finish up the forms for each type of order, the Return is nearly complete, since the others are pretty simple in structure they shouldnt take too long
+
+* DONE Alias the foreign key relationships for cleaner url arguments ? Might have to declare a custom filterset to handle the foreign notation '__', Could also use related_name as people claim this allows you to express relationships between tables without using the foreign key prefix
+CLOSED: [2021-09-24 Fri 13:46]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-24 Fri 13:46]
+:END:
+
+* TODO Write some tests to ensure integrity and there are no missed bugs from my manual testing
+
+* TODO Start Hermes section of ecs after finishing forms
