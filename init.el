@@ -159,6 +159,10 @@
 ;;   (auto-package-update-maybe)
 ;;   (auto-package-update-at-time "09:00"))
 
+(use-package hydra
+  :straight t)
+(use-package use-package-hydra :straight t :demand t)
+
 (use-package dashboard
   :straight t
   :config
@@ -536,9 +540,7 @@
 (use-package perspective
   :straight t
   :bind (("C-c C-'" . persp-next)
-         ("C-x M-b" . persp-switch)
-         ("C-x M-k" . persp-kill)
-         ("C-x C-S-B" . persp-switch-to-buffer))
+         ("C-x M-b" . persp-switch))
   :custom
   (persp-initial-frame-name "Ext")
   :config
@@ -547,6 +549,27 @@
 
 (add-hook 'persp-mode-hook
           (persp-switch "Main"))
+
+(use-package persp-projectile
+  :straight t
+  :after perspective
+  :bind ("C-x w" . persp-hydra/body)
+  :hydra
+  (persp-hydra (:columns 4 :color pink)
+               "Perspective"
+               ("a" persp-add-buffer "Add Buffer")
+               ("i" persp-import "Import")
+               ("c" persp-kill "Close")
+               ("n" persp-next "Next")
+               ("p" persp-prev "Prev")
+               ("k" persp-remove-buffer "Kill Buffer")
+               ("r" persp-rename "Rename")
+               ("A" persp-set-buffer "Set Buffer")
+               ("s" persp-switch "Switch")
+               ("C-x" persp-switch-last "Switch Last")
+               ("b" persp-switch-to-buffer "Switch to Buffer")
+               ("P" projectile-persp-switch-project "Switch Project")
+               ("q" nil :exit t)))
 
 (use-package avy
   :straight t
@@ -1274,6 +1297,7 @@
 
 (use-package flymake
   :straight (flymake :type built-in)
+  :after hydra
   :diminish flymake-mode
   :commands (my/flymake-first-error
              my/flymake-last-error)
@@ -1300,13 +1324,24 @@
       (cond
        (ov (goto-char (overlay-start ov)))
        (t (user-error "No flymake errors in the current buffer")))))
-  :bind
-  (:map flymake-mode-map
-        ("C-c f b" . flymake-show-diagnostics-buffer)
-        ("C-c f f" . my/flymake-first-error)
-        ("C-c f l" . my/flymake-last-error)
-        ("C-c f n" . flymake-goto-next-error)
-        ("C-c f p" . flymake-goto-prev-error)))
+  :preface
+  (defvar flymake-hydra--window nil)
+  :hydra
+  (flymake-hydra
+   (:pre (let ((buffer-window (selected-window)))
+           (setq flymake-hydra--window (flymake-show-diagnostics-buffer))
+           (select-window buffer-window))
+         :post (when (and flymake-hydra--window
+                          (window-live-p flymake-hydra--window))
+                 (quit-window nil flymake-hydra--window))
+         :color pink
+         :hint nil)
+   ("n"  flymake-goto-next-error "Next")
+   ("p"  flymake-goto-prev-error "Previous")
+   ("a" my/flymake-first-error "First")
+   ("e"  my/flymake-last-error "Last")
+   ("q"  nil :exit t))
+  :bind ("C-c f" . flymake-hydra/body))
 
 (use-package smartparens
   :straight t
