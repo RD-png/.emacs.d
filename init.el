@@ -392,7 +392,7 @@
   :bind (:map minibuffer-mode-map
               ("C-S-a" . embark-act)
               ("C-c C-o" . embark-export)
-              ("C-k" . embark-kill-candidate)))
+              ("C-S-k" . embark-kill-candidate)))
 
 ;; Additonal completion actions
 (use-package embark-consult
@@ -499,17 +499,25 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-key] . helpful-key))
 
-(use-package switch-window
+(use-package ace-window
   :straight t
   :config
-  (setq switch-window-input-style 'minibuffer)
-  (setq switch-window-increase 4)
-  (setq switch-window-threshold 2)
-  (setq switch-window-shortcut-style 'qwerty)
-  (setq switch-window-qwerty-shortcuts
-        '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
-  :bind
-  ([remap other-window] . switch-window))
+  (setq aw-dispatch-always t)
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (defun my/ace-window ()
+    (interactive)
+    (if (> (length (mapcar #'window-buffer (window-list))) 2)
+        (ace-select-window)
+      (other-window -1)))
+  (defun my/ace-swap-window ()
+    (interactive)
+    (if (> (length (mapcar #'window-buffer (window-list))) 2)
+        (ace-swap-window)
+      (window-swap-states)))
+  :bind (("C-x o" . my/ace-window)
+         ("C-x 0" . ace-delete-window)
+         ("C-x O" . my/ace-swap-window)
+         ("C-x M-0" . delete-other-windows)))
 
 (defun split-and-follow-horizontally ()
   (interactive)
@@ -587,6 +595,19 @@
         smtpmail-smtp-server "smtp.123-reg.co.uk"
         smtpmail-smtp-service 587
         smtpmail-stream-type 'starttls))
+
+(use-package devdocs
+  :straight t
+  :config
+  (defun my/devdocs-lookup ()
+    (interactive)
+    (devdocs-lookup nil (thing-at-point 'word 'no-properties)))
+  :bind ("C-c o D" . my/devdocs-lookup))
+
+(add-hook 'web-mode-hook
+          (lambda () (setq-local devdocs-current-docs '("vue~3"))))
+(add-hook 'python-mode-hook
+          (lambda () (setq-local devdocs-current-docs '("django_rest_framework" "django~3.2"))))
 
 (defun org-font-setup ()
   ;; Replace list hyphen with dot
@@ -896,7 +917,7 @@
   (generate-new-buffer eshell-buffer-name))
 
 (use-package eshell
-  :straight t
+  :straight (eshell :type built-in)
   :hook (eshell-first-time-mode . eshell-configure)
   :config
 
@@ -988,28 +1009,18 @@
 ;;   :after (prescient company)
 ;;   :hook (company-mode . company-prescient-mode))
 
-;; (defvar lsp-company-backends
-;;   '(:separate company-yasnippet company-capf))
-
 (use-package lsp-mode
   :straight t
   :after direnv
   :hook (lsp)
+  :config
+  (setq lsp-completion-provider :none)
   :bind (:map lsp-mode-map
               ("C-c o d" . lsp-describe-thing-at-point)
               ("C-c o f" . lsp-format-buffer)
               ("C-c o a" . lsp-execute-code-action)
               ("C-c o r" . lsp-find-references)
               ("C-c o g" . lsp-find-definition))
-  :config
-  (setq lsp-completion-provider :none)
-  ;; (add-hook 'lsp-completion-mode-hook
-  ;;   (defun +lsp-init-company-backends-h ()
-  ;;     (when lsp-completion-mode
-  ;;       (set (make-local-variable 'company-backends)
-  ;;            (cons lsp-company-backends
-  ;;                  (remove lsp-company-backends
-  ;;                          (remq 'company-capf company-backends)))))))
   :custom
   (lsp-modeline-diagnostics-enable nil)
   (lsp-enable-folding nil)
@@ -1121,8 +1132,7 @@
   :straight t
   :hook (python-mode . lsp-deferred)
   :bind (:map python-mode-map
-              ([remap lsp-format-buffer] . python-black-buffer)
-              ([remap lsp-describe-thing-at-point] . elpy-doc))
+              ([remap lsp-format-buffer] . python-black-buffer))
   :config
   (setq python-shell-interpreter "python3"))
 
@@ -1451,9 +1461,9 @@
 
 (defun avi-kill-line-save (&optional arg)
   "Copy to the kill ring from point to the end of the current line.
-With a prefix argument, copy that many lines from point. Negative
-arguments copy lines backward. With zero argument, copies the
-text before point to the beginning of the current line."
+  With a prefix argument, copy that many lines from point. Negative
+  arguments copy lines backward. With zero argument, copies the
+  text before point to the beginning of the current line."
   (interactive "p")
   (save-excursion
     (copy-region-as-kill
@@ -1503,6 +1513,8 @@ text before point to the beginning of the current line."
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))
 (global-unset-key  (kbd "M-`"))
+(global-unset-key  (kbd "C-z"))
+(global-unset-key  (kbd "C-x C-z"))
 
 ;; Remove whitespace from buffer on save
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
