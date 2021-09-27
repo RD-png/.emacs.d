@@ -61,25 +61,6 @@
 ;; Set exec paths for npm packages on nix
 (add-to-list 'exec-path "/root/.npm/bin")
 
-(setq
- ;; Dont show these file types in recent files
- recentf-exclude (list (rx
-                        "COMMIT_EDITMSG"
-                        (and (or "/TAGS"
-                                 "/GTAGS"
-                                 "/GRAGS"
-                                 "/GPATH"
-                                 ".mkv"
-                                 ".avi"
-                                 (and ".mp" (any "3" "4"))
-                                 (and ".doc" (? "x"))
-                                 ".sub"
-                                 ".srt"
-                                 ".ass"
-                                 ".elc"
-                                 (and "tmp." (+ (not (any "/" "\\")))))
-                             eol))))
-
 ;; General Defaults
 (setq delete-old-versions t
       delete-by-moving-to-trash t
@@ -541,10 +522,11 @@
          ("C-c C-'" . persp-next)
          ("C-x M-b" . persp-switch))
   :custom
-  (persp-initial-frame-name "Ext")
+  (persp-initial-frame-name "Main")
   :config
   (unless (equal persp-mode t)
     (persp-mode))
+
   :hydra
   (persp-hydra (:columns 4 :color pink)
                "Perspective"
@@ -561,16 +543,6 @@
                ("b" persp-switch-to-buffer "Switch to Buffer")
                ("P" projectile-persp-switch-project "Switch Project")
                ("q" nil :exit t)))
-
-(add-hook 'persp-mode-hook
-          (persp-switch "Main"))
-
-;; (use-package persp-projectile
-;;   :straight t
-;;   :after perspective
-;;   :bind ("C-x w" . persp-hydra/body)
-;;   :hydra
-;;   )
 
 (use-package avy
   :straight t
@@ -678,6 +650,16 @@
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
+(defun my/org-last-task ()
+  (interactive)
+  (end-of-buffer)
+  (org-previous-visible-heading 0))
+
+(defun my/org-first-task ()
+  (interactive)
+  (beginning-of-buffer)
+  (org-next-visible-heading 0))
+
 (use-package org
   :straight t
   :pin org
@@ -697,13 +679,14 @@
                   "TODOS"
                   ("n" org-next-visible-heading "Next")
                   ("p" org-previous-visible-heading "Prev")
-                  ("k" kill-whole-line "Kill")
+                  ("a" my/org-first-task "First")
+                  ("e" my/org-last-task "Last")
+                  ("k" org-cut-subtree "Kill")
                   ("t" org-todo "Status")
                   ("A" org-archive-done-tasks "Archive")
                   ("q" nil :exit t))
   :config
   (setq org-ellipsis " ▾")
-
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -1574,3 +1557,12 @@
 
 ;; Remove whitespace from buffer on save
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+
+;; Open my default persp layouts
+(defun my/persp-setup-hook ()
+  (interactive)
+  (persp-switch "Extr")
+  (persp-switch "Main"))
+
+(add-hook 'persp-mode-hook #'my/persp-setup-hook)
