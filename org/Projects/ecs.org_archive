@@ -28,14 +28,6 @@ CLOSED: [2021-09-14 Tue 15:54]
 - State "DONE"       from "TODO"       [2021-09-14 Tue 15:54]
 :END:
 
-* TODO Extend the basic functionality of the views for the order app, serializers seem to be confliciting when trying to return one field
-:PROPERTIES:
-:ARCHIVE_TIME: 2021-09-20 Mon 12:52
-:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ecs.org
-:ARCHIVE_CATEGORY: ecs
-:ARCHIVE_TODO: TODO
-:END:
-
 * DONE Build a argument builder than can be used across the app
 CLOSED: [2021-09-20 Mon 08:04]
 :PROPERTIES:
@@ -46,4 +38,52 @@ CLOSED: [2021-09-20 Mon 08:04]
 :END:
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2021-09-20 Mon 08:04]
+:END:
+
+* DONE Expand on filtering functionality as needed, we have some basic search / filtering functionality currently, depends on what the users want
+CLOSED: [2021-09-24 Fri 16:10]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-27 Mon 14:10
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ecs.org
+:ARCHIVE_CATEGORY: ecs
+:ARCHIVE_TODO: DONE
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-24 Fri 16:10]
+:END:
+
+* DONE Expand on filtering functionality as needed, we have some basic search / filtering functionality currently, depends on what the users want
+CLOSED: [2021-09-24 Fri 16:10]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-27 Mon 14:10
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ecs.org
+:ARCHIVE_CATEGORY: ecs
+:ARCHIVE_TODO: DONE
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-24 Fri 16:10]
+:END:
+
+* DONE Alias the foreign key relationships for cleaner url arguments ? Might have to declare a custom filterset to handle the foreign notation '__', Could also use related_name as people claim this allows you to express relationships between tables without using the foreign key prefix
+CLOSED: [2021-09-24 Fri 13:46]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-27 Mon 14:10
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ecs.org
+:ARCHIVE_CATEGORY: ecs
+:ARCHIVE_TODO: DONE
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-24 Fri 13:46]
+:END:
+
+* DONE Extend the basic functionality of the views for the order app, serializers seem to be confliciting when trying to return one field
+CLOSED: [2021-09-23 Thu 15:57]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-09-27 Mon 14:10
+:ARCHIVE_FILE: ~/.config/emacs/org/Projects/ecs.org
+:ARCHIVE_CATEGORY: ecs
+:ARCHIVE_TODO: DONE
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-09-23 Thu 15:57]
 :END:

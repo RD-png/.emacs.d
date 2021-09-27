@@ -1,22 +1,10 @@
 * TODO Build out an interface to create the various order types
 
-* DONE Expand on filtering functionality as needed, we have some basic search / filtering functionality currently, depends on what the users want
-CLOSED: [2021-09-24 Fri 16:10]
-:LOGBOOK:
-- State "DONE"       from "TODO"       [2021-09-24 Fri 16:10]
-:END:
-
 * TODO Create user groups to restrict non admin users from being able to create source / couriers etc, they should only be able to create orders
 
 * TODO Create table for key, barcode pair, with auto increment id, id is reset on empty table, for key types, can grab the items from cache, avoid having to store any information for items within the ecs database
 
 * TODO Finish the script to pull the old records into the new database, we need to sort a fixed list of sources, couriers, reasons, channels etc before we can insert this data, we can use test ones for one
-
-* DONE Extend the basic functionality of the views for the order app, serializers seem to be confliciting when trying to return one field
-CLOSED: [2021-09-23 Thu 15:57]
-:LOGBOOK:
-- State "DONE"       from "TODO"       [2021-09-23 Thu 15:57]
-:END:
 
 * TODO On fesp orders page, chage the href url to use the new tripler system, pass the orderid and source in the url, so we know which database to query, rather than looping through them all
 
@@ -24,12 +12,13 @@ CLOSED: [2021-09-23 Thu 15:57]
 
 * TODO Finish up the forms for each type of order, the Return is nearly complete, since the others are pretty simple in structure they shouldnt take too long
 
-* DONE Alias the foreign key relationships for cleaner url arguments ? Might have to declare a custom filterset to handle the foreign notation '__', Could also use related_name as people claim this allows you to express relationships between tables without using the foreign key prefix
-CLOSED: [2021-09-24 Fri 13:46]
-:LOGBOOK:
-- State "DONE"       from "TODO"       [2021-09-24 Fri 13:46]
-:END:
 
 * TODO Write some tests to ensure integrity and there are no missed bugs from my manual testing
 
 * TODO Start Hermes section of ecs after finishing forms
+
+* TODO Add functionality to store images related to an order when creating a type of order, also store DOR's for returns / resends ?
+
+* TODO Create table to store relationship between orders that exist within a table twice. We will create a manual order_id which needs to be linked back to the original so they can track the progress of the order
+
+* TODO When the user is creating Return orders and they choose the Refund option we need to create a refund record for this order, if they select Replacement Sent, we need to check that this order exists within the resends table, if not then we need to notify the user and redirect them to create the record

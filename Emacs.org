@@ -380,8 +380,6 @@ Set theme colour theme for emacs
   (use-package tree-sitter
     :straight t
     :config
-    (require 'tree-sitter-langs)
-    (require 'tree-sitter-debug)
     (global-tree-sitter-mode)
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
@@ -733,21 +731,14 @@ Perspective gives workspaces with unique buffers
 
   (use-package perspective
     :straight t
-    :bind (("C-c C-'" . persp-next)
+    :bind (("C-x w" . persp-hydra/body)
+           ("C-c C-'" . persp-next)
            ("C-x M-b" . persp-switch))
     :custom
     (persp-initial-frame-name "Ext")
     :config
     (unless (equal persp-mode t)
-      (persp-mode)))
-
-  (add-hook 'persp-mode-hook
-            (persp-switch "Main"))
-
-  (use-package persp-projectile
-    :straight t
-    :after perspective
-    :bind ("C-x w" . persp-hydra/body)
+      (persp-mode))
     :hydra
     (persp-hydra (:columns 4 :color pink)
                  "Perspective"
@@ -764,6 +755,16 @@ Perspective gives workspaces with unique buffers
                  ("b" persp-switch-to-buffer "Switch to Buffer")
                  ("P" projectile-persp-switch-project "Switch Project")
                  ("q" nil :exit t)))
+
+  (add-hook 'persp-mode-hook
+            (persp-switch "Main"))
+
+  ;; (use-package persp-projectile
+  ;;   :straight t
+  ;;   :after perspective
+  ;;   :bind ("C-x w" . persp-hydra/body)
+  ;;   :hydra
+  ;;   )
 
 #+end_src
 
@@ -844,8 +845,8 @@ mu init --maildir=~/Mail --my-address=EMAIL
     (setq mail-user-agent 'mu4e-user-agent
           message-send-mail-function 'smtpmail-send-it
           smtpmail-smtp-server "smtp.123-reg.co.uk"
-          smtpmail-smtp-service 587
-          smtpmail-stream-type 'starttls))
+          smtpmail-smtp-service 465
+          smtpmail-stream-type 'ssl))
 
 #+end_src
 
@@ -880,6 +881,16 @@ Pulls documentaiton from dev docs
     (font-lock-add-keywords 'org-mode
                             '(("^ *\\([-]\\) "
                                (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+
+    ;; MAKE HYDRA TO MANAGE ORG TASKS
+    (defun org-archive-done-tasks ()
+      (interactive)
+      (org-map-entries
+       (lambda ()
+         (org-archive-subtree)
+         (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+       "/DONE" 'tree))
 
     ;; Set faces for heading levels
     (dolist (face '((org-level-1 . 1.2)
@@ -928,7 +939,17 @@ Pulls documentaiton from dev docs
     :hook (org-mode . org-mode-setup)
     :bind (("M-o a" . org-agenda)
            ("M-o p t" . my/project-task-file)
+           ("M-o t" . org-todo-hydra/body)
            ([remap org-return-and-maybe-indent] . avy-goto-char-2))
+    :hydra
+    (org-todo-hydra (:columns 4 :color pink)
+                    "TODOS"
+                    ("n" org-next-visible-heading "Next")
+                    ("p" org-previous-visible-heading "Prev")
+                    ("k" kill-whole-line "Kill")
+                    ("t" org-todo "Status")
+                    ("A" org-archive-done-tasks "Archive")
+                    ("q" nil :exit t))
     :config
     (setq org-ellipsis " ▾")
 
