@@ -148,7 +148,7 @@
   :straight t
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner "~/.config/emacs/gnu.png")
+  (setq dashboard-startup-banner 'official)
   (setq dashboard-items '((recents  . 10)
                           (projects . 5)
                           (bookmarks . 5)))
@@ -1350,7 +1350,9 @@
 (use-package smartparens
   :straight t
   :hook (prog-mode . smartparens-mode)
-  (text-mode . smartparens-mode))
+  (text-mode . smartparens-mode)
+  :config
+  (sp-local-pair '(emacs-lisp-mode) "'" "'" :actions nil))
 
 (use-package paren
   :straight t
