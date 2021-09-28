@@ -1296,9 +1296,9 @@ Basically handles anything popup related
 
   (defvar my/company-backend-alist
     '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-      ;;(prog-mode (company-capf company-yasnippet :with)
       (prog-mode (:separate company-yasnippet company-capf company-dabbrev-code))
-      (conf-mode company-capf company-dabbrev-code company-yasnippet))
+      (conf-mode company-capf company-dabbrev-code company-yasnippet)
+      (emacs-lisp-mode company-elisp))
     "An alist matching modes to company backends. The backends for any mode is
           built from this.")
 
