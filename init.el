@@ -1030,11 +1030,25 @@
             (setq-local company-backends (my/company-backends))))
 
 
-;; annoying when used with fuzzy searching
-;; (use-package company-prescient
-;;   :straight t
-;;   :after (prescient company)
-;;   :hook (company-mode . company-prescient-mode))
+annoying when used with fuzzy searching
+(use-package company-prescient
+  :straight t
+  :after (prescient company)
+  :hook (company-mode . company-prescient-mode))
+
+;; (use-package corfu
+;;   :straight (corfu :repo "minad/corfu" :branch "main")
+;;   :bind (:map corfu-map
+;;               ("<tab>" . corfu-insert))
+;;   :config
+;;   (setq corfu-cycle t
+;;         corfu-auto t
+;;         corfu-count 10
+;;         corfu-auto-delay 0.01
+;;         corfu-quit-at-boundary t
+;;         corfu-quit-no-match t)
+;;   :init
+;;   (corfu-global-mode))
 
 (use-package lsp-mode
   :straight t
@@ -1123,13 +1137,6 @@
   :straight t
   :mode "\\.php\\'"
   :hook (php-mode . lsp-deferred))
-
-;; Format current php buffer on save
-;; (defun lsp-php-install-save-hooks ()
-;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
-;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-
-;; (add-hook 'php-mode-hook #'lsp-php-install-save-hooks)
 
 (use-package typescript-mode
   :straight t
@@ -1231,6 +1238,11 @@
   :config
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
+
+(use-package scheme-mode
+  :mode ("\\.sld\\'")
+  :config
+  (setq scheme-program-name "/root/.nix-profile/bin/scheme48"))
 
 (use-package projectile
   :straight t
