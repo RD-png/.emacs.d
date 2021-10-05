@@ -1030,11 +1030,11 @@
             (setq-local company-backends (my/company-backends))))
 
 
-annoying when used with fuzzy searching
-(use-package company-prescient
-  :straight t
-  :after (prescient company)
-  :hook (company-mode . company-prescient-mode))
+;;annoying when used with fuzzy searching
+;; (use-package company-prescient
+;;   :straight t
+;;   :after (prescient company)
+;;   :hook (company-mode . company-prescient-mode))
 
 ;; (use-package corfu
 ;;   :straight (corfu :repo "minad/corfu" :branch "main")
