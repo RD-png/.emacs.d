@@ -2189,6 +2189,6 @@ Custom functions for keybinds and just general functionality I wanted
     (persp-switch "Extr")
     (persp-switch "Main"))
 
-  (add-hook 'persp-mode-hook #'my/persp-setup-hook) ;; Add back
+  ;;(add-hook 'persp-mode-hook #'my/persp-setup-hook)
 
 #+end_src
