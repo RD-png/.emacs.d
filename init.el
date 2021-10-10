@@ -10,11 +10,11 @@
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 ;; native comp
-(setq comp-deferred-compilation t)
-(setq comp-speed 3)
-(setq comp-async-report-warnings-errors nil)
-(setq warning-minimum-level :error)
-(setq package-native-compile 1)
+(setq comp-deferred-compilation t
+      comp-speed 3
+      comp-async-report-warnings-errors nil
+      warning-minimum-level :error
+      package-native-compile 1)
 
 ;; Stop the native comp warnings
 (defvar grep-find-ignored-directories nil)
@@ -47,6 +47,7 @@
 
 ;; Syntax highlight for all buffers
 (global-font-lock-mode t)
+(blink-cursor-mode -1)
 
 ;; Dont save duplicate variables in kill ring
 (setq kill-do-not-save-duplicates t)
@@ -66,11 +67,12 @@
       delete-by-moving-to-trash t
       enable-recursive-minibuffers t)
 
-(blink-cursor-mode -1)
+
 (setq uniquify-buffer-name-style 'forward)
 
-(setq ediff-split-window-function 'split-window-horizontally)
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+;; Ediff layout
+(setq ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;; Remove startup message
 (advice-add 'display-startup-echo-area-message :override #'ignore)
@@ -130,19 +132,12 @@
 ;; Load the helper package for commands like `straight-x-clean-unused-repos'
 (require 'straight-x)
 
-;; (use-package auto-package-update
-;;   :straight t
-;;   :custom
-;;   (auto-package-update-interval 7)
-;;   (auto-package-update-prompt-before-update t)
-;;   (auto-package-update-hide-results t)
-;;   :config
-;;   (auto-package-update-maybe)
-;;   (auto-package-update-at-time "09:00"))
-
 (use-package hydra
   :straight t)
-(use-package use-package-hydra :straight t :demand t)
+
+(use-package use-package-hydra
+  :straight t
+  :demand t)
 
 (use-package dashboard
   :straight t
@@ -158,15 +153,13 @@
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
 (set-fringe-mode 10)
-
-(menu-bar-mode -1)            ; Disable the menu bar
-
+(menu-bar-mode -1)
 (column-number-mode)
-(global-display-line-numbers-mode t) ; Line numbers
+(global-display-line-numbers-mode t)
 
 ;; y or n instead of yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -188,7 +181,6 @@
 (setq scroll-conservatively 100
       scroll-preserve-screen-position t)
 
-;; Kill server if there is one and start fresh
 (require 'server nil t)
 (use-package server
   :straight t
@@ -199,15 +191,11 @@
     (server-start)))
 
 (set-face-attribute 'default nil :font "Source Code Pro" :height default-font-size)
-
-;; Set the fixed pitch face
 (set-face-attribute 'fixed-pitch nil :font "Source Code Pro" :height default-font-size)
-
-;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height default-variable-font-size :weight 'regular)
 
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-(load-theme 'wombat t)
+;; (load-theme 'wombat t)
 
 (set-foreground-color "#c5c8c6")
 (set-background-color "#1d1f21")
@@ -227,6 +215,8 @@
  `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
  `(web-mode-html-attr-name-face ((t (:foreground "#e5786d"))))
  `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
+ `(mode-line ((t (:background "#444444" :foreground "#f6f3e8"))))
+ `(cursor ((t (:background "IndianRed3"))))
  )
 
 ;; ;; For the default theme
@@ -258,11 +248,16 @@
          ("C-c C-;" . popper-toggle-type))
   :init
   (setq popper-reference-buffers
-        '("\\*Messages\\*"
-          "Output\\*$"
-          "\\*Async Shell Command\\*"
-          help-mode
-          compilation-mode))
+        (append
+         '("\\*Messages\\*"
+           "^\\*Warnings\\*$"
+           "Output\\*$"
+           "^\\*Backtrace\\*"
+           "\\*Async Shell Command\\*"
+           "\\*Completions\\*"
+           "[Oo]utput\\*"
+           help-mode
+           compilation-mode)))
   (popper-mode +1))
 
 (setq display-buffer-base-action
@@ -292,7 +287,6 @@
   :custom ((doom-modeline-height 15)
            (doom-modeline-project-detection 'project)))
 
-;; Completion framework
 (use-package vertico
   :straight (vertico :repo "minad/vertico"
                      :branch "main")
@@ -308,7 +302,6 @@
   :init
   (vertico-mode))
 
-;; Completion ordering
 (use-package orderless
   :straight t
   :demand t
@@ -341,27 +334,19 @@
                consult--line-history evil-ex-history
                projectile-project-command-history)))
 
-;; Mainly for recursive minibuffers
 (use-package emacs
   :straight (emacs :type built-in)
   :init
-  ;; Add prompt indicator to `completing-read-multiple'.
-  ;; Alternatively try `consult-completing-read-multiple'.
   (defun crm-indicator (args)
     (cons (concat "[CRM] " (car args)) (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-  ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-  ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
 
-;; Completion actions
 (use-package embark
-  :straight t
+  :straight
   :config
   (defun embark-kill-candidate ()
     (interactive)
@@ -373,11 +358,10 @@
           #'which-key--hide-popup-ignore-command)
         embark-become-indicator embark-action-indicator)
   :bind (:map minibuffer-mode-map
-              ("C-S-a" . embark-act)
+              ("C-'" . embark-act)
               ("C-c C-o" . embark-export)
               ("C-S-k" . embark-kill-candidate)))
 
-;; Additonal completion actions
 (use-package embark-consult
   :straight '(embark-consult :host github
                              :repo "oantolin/embark"
@@ -387,7 +371,6 @@
   :hook
   (embark-collect-mode . embark-consult-preview-minor-mode))
 
-;; Similar to counsel
 (use-package consult
   :straight t
   :demand t
@@ -418,7 +401,6 @@
          :map minibuffer-local-map
          ("C-x j" . consult-dir-jump-file)))
 
-;; Similar to ivy rich but better
 (use-package marginalia
   :straight t
   :after vertico
@@ -452,15 +434,6 @@
   (interactive)
   (wgrep-finish-edit)
   (wgrep-save-all-buffers))
-
-(defun reb-query-replace (to-string)
-  "Replace current RE from point with `query-replace-regexp'."
-  (interactive
-   (progn (barf-if-buffer-read-only)
-          (list (query-replace-read-to (reb-target-binding reb-regexp)
-                                       "Query replace"  t))))
-  (with-current-buffer reb-target-buffer
-    (query-replace-regexp (reb-target-binding reb-regexp) to-string)))
 
 (use-package which-key
   :straight t
@@ -888,9 +861,8 @@
    (propertize (user-login-name) 'face `(:foreground "light green"))
    (propertize " ⟣─ " 'face `(:foreground "dark orange"))
    (propertize (my/pwd-shorten-dirs (my/get-prompt-path)) 'face `(:foreground "yellow3"))
-   (propertize " λ" 'face `(:foreground "pink2"))
-   (propertize " " 'face `(:foreground "white"))
-   ))
+   (propertize " #" 'face `(:foreground "pink2"))
+   (propertize " " 'face `(:foreground "white"))))
 
 (defun my/eshell-copy-last-output ()
   (interactive)
@@ -932,7 +904,7 @@
   ;; Disable company in eshell
   (company-mode -1)
   (setq eshell-prompt-function 'my/eshell-prompt
-        eshell-prompt-regexp "[a-zA-z]+ ⟣─ [^#$\n]+ λ "
+        eshell-prompt-regexp "[a-zA-z]+ ⟣─ [^#$\n]+ # "
         eshell-history-size 10000
         eshell-buffer-maximum-lines 10000
         eshell-hist-ignoredups t
@@ -1017,9 +989,9 @@
           (push backend backends)))
       (delete-dups
        (append (cl-loop for (mode . backends) in my/company-backend-alist
-                        if (or (eq major-mode mode)  ; major modes
+                        if (or (eq major-mode mode)
                                (and (boundp mode)
-                                    (symbol-value mode))) ; minor modes
+                                    (symbol-value mode)))
                         append backends)
                (nreverse backends))))))
 
@@ -1028,13 +1000,6 @@
             (interactive)
             "Set `company-backends' for the current buffer."
             (setq-local company-backends (my/company-backends))))
-
-
-;;annoying when used with fuzzy searching
-;; (use-package company-prescient
-;;   :straight t
-;;   :after (prescient company)
-;;   :hook (company-mode . company-prescient-mode))
 
 ;; (use-package corfu
 ;;   :straight (corfu :repo "minad/corfu" :branch "main")
@@ -1152,16 +1117,6 @@
   :config
   (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
 
-;; (use-package elpy
-;; :straight t
-;; :init
-;; (elpy-enable)
-;; (setq elpy-modules '(elpy-module-sane-defaults elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-django))
-;; (setq python-shell-interpreter "python3")
-;; (setq elpy-rpc-python-command "python3")
-;; :config
-;; (pyvenv-mode 1))
-
 (use-package python-mode
   :straight t
   :hook (python-mode . lsp-deferred)
@@ -1241,7 +1196,7 @@
 
 (use-package scheme-mode
   :mode ("\\.sld\\'")
-  :config
+  :init
   (setq scheme-program-name "/root/.nix-profile/bin/scheme48"))
 
 (use-package projectile
@@ -1256,6 +1211,9 @@
   (setq projectile-switch-project-action #'projectile-dired)
   :init
   (projectile-mode 1))
+
+(use-package project
+  :straight (project :type built-in))
 
 (use-package rg
   :straight t)
@@ -1421,8 +1379,8 @@
   (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
   (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
-(setq-default tab-width 2)
-(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2
+              indent-tabs-mode nil)
 
 (use-package multiple-cursors
   :straight t
@@ -1509,8 +1467,7 @@
             (if space-pos
                 (kill-region cp space-pos)
               (backward-kill-word 1))))
-      (kill-region cp (- cp 1)))
-    ))
+      (kill-region cp (- cp 1)))))
 
 (defun avi-kill-line-save (&optional arg)
   "Copy to the kill ring from point to the end of the current line.
