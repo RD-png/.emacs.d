@@ -289,41 +289,41 @@ Set theme colour theme for emacs
 
 #+begin_src emacs-lisp
 
-   (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-   ;; (load-theme 'wombat t)
+  (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
+  ;; (load-theme 'wombat)
 
-   (set-foreground-color "#c5c8c6")
-   (set-background-color "#1d1f21")
+  (set-foreground-color "#c5c8c6")
+  (set-background-color "#1d1f21")
 
-   ;; Custom faces
-   (custom-set-faces
-    `(match ((t (:foreground "#9ac6f2"))))
-    `(persp-selected-face ((t (:foreground "light green"))))
-    `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
-    `(doom-modeline-info ((t (:foreground "pink"))))
-    `(doom-modeline-unread-number ((t (:foreground "red"))))
-    `(doom-modeline-buffer-file ((t (:foreground "light blue"))))
-    `(mode-line ((t (:foreground "#c5c8c6"))))
-    `(org-level-4 ((t (:foreground "light blue"))))
-    `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
-    `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
-    `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
-    `(web-mode-html-attr-name-face ((t (:foreground "#e5786d"))))
-    `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
-    `(mode-line ((t (:background "#444444" :foreground "#f6f3e8"))))
-    `(cursor ((t (:background "IndianRed3"))))
-    )
+  ;; Custom faces
+  (custom-set-faces
+   `(match ((t (:foreground "#9ac6f2"))))
+   `(persp-selected-face ((t (:foreground "light green"))))
+   `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
+   `(doom-modeline-info ((t (:foreground "pink"))))
+   `(doom-modeline-unread-number ((t (:foreground "red"))))
+   `(doom-modeline-buffer-file ((t (:foreground "light blue"))))
+   `(mode-line ((t (:foreground "#c5c8c6"))))
+   `(org-level-4 ((t (:foreground "light blue"))))
+   `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
+   `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
+   `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
+   `(web-mode-html-attr-name-face ((t (:foreground "#e5786d"))))
+   `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
+   `(mode-line ((t (:background "#444444" :foreground "#f6f3e8"))))
+   `(cursor ((t (:background "IndianRed3"))))
+   )
 
-   ;; ;; For the default theme
-   (custom-set-faces
-    '(company-preview
-      ((t (:background "#1d1f21" :foreground "white" :underline t))))
-    '(company-preview-common
-      ((t (:inherit company-preview))))
-    '(company-tooltip
-      ((t (:background "#1d1f21" :foreground "white"))))
-    '(company-tooltip-selection
-      ((t (:background "steelblue" :foreground "white")))))
+  ;; For the default theme
+  (custom-set-faces
+   '(company-preview
+     ((t (:background "#1d1f21" :foreground "white" :underline t))))
+   '(company-preview-common
+     ((t (:inherit company-preview))))
+   '(company-tooltip
+     ((t (:background "#1d1f21" :foreground "white"))))
+   '(company-tooltip-selection
+     ((t (:background "steelblue" :foreground "white")))))
 
 #+end_src
 
@@ -483,7 +483,7 @@ Useful modeline to replace the default one
             #'which-key--hide-popup-ignore-command)
           embark-become-indicator embark-action-indicator)
     :bind (:map minibuffer-mode-map
-                ("C-'" . embark-act)
+                ("C-S-a" . embark-act)
                 ("C-c C-o" . embark-export)
                 ("C-S-k" . embark-kill-candidate)))
 
@@ -1895,8 +1895,8 @@ General settings for coding
 
 #+begin_src emacs-lisp
 
-    (setq-default tab-width 2
-                  indent-tabs-mode nil)
+  (setq-default tab-width 2
+                indent-tabs-mode nil)
 
 #+end_src
 

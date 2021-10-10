@@ -195,7 +195,7 @@
 (set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height default-variable-font-size :weight 'regular)
 
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-;; (load-theme 'wombat t)
+;; (load-theme 'wombat)
 
 (set-foreground-color "#c5c8c6")
 (set-background-color "#1d1f21")
@@ -219,7 +219,7 @@
  `(cursor ((t (:background "IndianRed3"))))
  )
 
-;; ;; For the default theme
+;; For the default theme
 (custom-set-faces
  '(company-preview
    ((t (:background "#1d1f21" :foreground "white" :underline t))))
@@ -358,7 +358,7 @@
           #'which-key--hide-popup-ignore-command)
         embark-become-indicator embark-action-indicator)
   :bind (:map minibuffer-mode-map
-              ("C-'" . embark-act)
+              ("C-S-a" . embark-act)
               ("C-c C-o" . embark-export)
               ("C-S-k" . embark-kill-candidate)))
 
