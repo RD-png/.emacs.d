@@ -1197,7 +1197,7 @@
 (use-package scheme-mode
   :mode ("\\.sld\\'")
   :init
-  (setq scheme-program-name "/root/.nix-profile/bin/scheme48"))
+  (setq scheme-program-name "/root/.nix-profile/bin/scheme"))
 
 (use-package projectile
   :straight t

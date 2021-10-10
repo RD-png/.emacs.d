@@ -1612,7 +1612,7 @@ Packages for elisp development
   (use-package scheme-mode
     :mode ("\\.sld\\'")
     :init
-    (setq scheme-program-name "/root/.nix-profile/bin/scheme48"))
+    (setq scheme-program-name "/root/.nix-profile/bin/scheme"))
 
 #+end_src
 
