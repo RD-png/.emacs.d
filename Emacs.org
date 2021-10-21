@@ -1,4 +1,4 @@
-s#+title: Emacs
+#+title: Emacs
 #+author: Ryan Denby
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
