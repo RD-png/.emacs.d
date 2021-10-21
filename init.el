@@ -60,7 +60,7 @@
 (setq system-uses-terminfo nil)
 
 ;; Set exec paths for npm packages on nix
-(add-to-list 'exec-path "/root/.npm/bin")
+(add-to-list 'exec-path "~/.npm/bin")
 
 ;; General Defaults
 (setq delete-old-versions t
@@ -634,7 +634,7 @@
   (org-next-visible-heading 0))
 
 (use-package org
-  :straight t
+  :straight (org :type built-in)
   :pin org
   :commands (org-capture org-agenda)
   :preface
@@ -1197,7 +1197,7 @@
 (use-package scheme-mode
   :mode ("\\.sld\\'")
   :init
-  (setq scheme-program-name "/root/.nix-profile/bin/scheme"))
+  (setq scheme-program-name "~/.nix-profile/bin/scheme"))
 
 (use-package projectile
   :straight t

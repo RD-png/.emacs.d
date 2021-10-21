@@ -1,1 +1,0 @@
-("~/.config/emacs/" "/opt/lampp/htdocs/Projects/fespbi/" "/mnt/fesp/fespbi/" "~/" "/mnt/fesp2/fespbi/" "/mnt/fesp2/fespbi2/")

@@ -1,1 +1,0 @@
-("~/.nix-dotfiles/home-manager/modules/config/emacs/")
