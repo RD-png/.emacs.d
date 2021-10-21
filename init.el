@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-;; Function to automatically generate a .el for our .org configuration files
+;; Function to automatically generate a .el for our .org configuration filesn
 (defun org-babel-tangle-config ()
   (when (string-equal (file-name-directory (buffer-file-name))
                       (expand-file-name user-emacs-directory))
@@ -59,7 +59,7 @@
 ;; Weird
 (setq system-uses-terminfo nil)
 
-;; Set exec paths for npm packages on nix
+;; Set eec paths for npm packages on nix
 (add-to-list 'exec-path "~/.npm/bin")
 
 ;; General Defaults
@@ -190,45 +190,46 @@
   (when (not (server-running-p server-name))
     (server-start)))
 
-(set-face-attribute 'default nil :font "Source Code Pro" :height default-font-size)
-(set-face-attribute 'fixed-pitch nil :font "Source Code Pro" :height default-font-size)
-(set-face-attribute 'variable-pitch nil :font "Source Code Pro" :height default-variable-font-size :weight 'regular)
+(set-face-attribute 'default nil :font "Fantasque Sans Mono" :foundry "PfEd" :slant 'normal :weight 'normal :width 'normal :height 140)
+(set-face-attribute 'fixed-pitch nil :font "Fantasque Sans Mono" :height default-font-size)
+(set-face-attribute 'variable-pitch nil :font "Fantasque Sans Mono" :height default-variable-font-size :weight 'regular)
 
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
 ;; (load-theme 'wombat)
 
-(set-foreground-color "#c5c8c6")
-(set-background-color "#1d1f21")
+;; (set-foreground-color "#c5c8c6")
+;; (set-background-color "#1d1f21")
 
 ;; Custom faces
 (custom-set-faces
  `(match ((t (:foreground "#9ac6f2"))))
- `(persp-selected-face ((t (:foreground "light green"))))
+ ;; `(persp-selected-face ((t (:foreground "light green"))))
  `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
  `(doom-modeline-info ((t (:foreground "pink"))))
  `(doom-modeline-unread-number ((t (:foreground "red"))))
  `(doom-modeline-buffer-file ((t (:foreground "light blue"))))
- `(mode-line ((t (:foreground "#c5c8c6"))))
+ ;; `(mode-line ((t (:foreground "#c5c8c6"))))
  `(org-level-4 ((t (:foreground "light blue"))))
  `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
  `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
  `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
  `(web-mode-html-attr-name-face ((t (:foreground "#e5786d"))))
  `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
- `(mode-line ((t (:background "#444444" :foreground "#f6f3e8"))))
+ ;; `(mode-line ((t (:background "#444444" :foreground "#f6f3e8"))))
  `(cursor ((t (:background "IndianRed3"))))
+ `(region ((t (:background "yellow"))))
  )
 
 ;; For the default theme
-(custom-set-faces
- '(company-preview
-   ((t (:background "#1d1f21" :foreground "white" :underline t))))
- '(company-preview-common
-   ((t (:inherit company-preview))))
- '(company-tooltip
-   ((t (:background "#1d1f21" :foreground "white"))))
- '(company-tooltip-selection
-   ((t (:background "steelblue" :foreground "white")))))
+;; (custom-set-faces
+;;  '(company-preview
+;;    ((t (:background "#1d1f21" :foreground "white" :underline t))))
+;;  '(company-preview-common
+;;    ((t (:inherit company-preview))))
+;;  '(company-tooltip
+;;    ((t (:background "#1d1f21" :foreground "white"))))
+;;  '(company-tooltip-selection
+;;    ((t (:background "steelblue" :foreground "white")))))
 
 (use-package tree-sitter-langs
   :straight t)
@@ -271,21 +272,65 @@
 (use-package all-the-icons
   :straight t)
 
-(use-package doom-modeline
+(use-package smart-mode-line
   :straight t
-  :after eshell
+  :after perspective
+  :defines sml/fix-mode-line-a
+  :commands sml/setup
   :init
-  (doom-modeline-mode 1)
-  (setq projectile-dynamic-mode-line nil
-        doom-modeline-bar-width 1
-        doom-modeline-icon t
-        doom-modeline-major-mode-icon t
-        doom-modeline-bar-width 3
-        doom-modeline-minor-modes nil
-        doom-modeline-github nil
-        doom-modeline-buffer-file-name-style 'relative-from-project)
-  :custom ((doom-modeline-height 15)
-           (doom-modeline-project-detection 'project)))
+  (setq sml/no-confirm-load-theme t)
+  (setq sml/theme 'light)
+  (sml/setup))
+
+(defvar mode-line-cleaner-alist
+  `((company-mode . "")
+    (yas-minor-mode . "")
+    (smartparens-mode . "")
+    (tree-sitter-mode . "")
+    (eldoc-mode . "")
+    (abbrev-mode . "")
+    (ivy-mode . "")
+    (counsel-mode . "")
+    (wrap-region-mode . "")
+    (rainbow-mode . "")
+    (which-key-mode . "")
+    (undo-tree-mode . "")
+    (auto-revert-mode . "")
+    (lisp-interaction-mode . "λ")
+    (buffer-face-mode . "")
+    (hi-lock-mode . "")
+    (python-mode . "Py")
+    (emacs-lisp-mode . "Eλ")
+    (dot-mode . " .")
+    (scheme-mode . " SCM")
+    (matlab-mode . "M")
+    (org-mode . "Org")
+    (projectile-mode . "")
+    (valign-mode . "")
+    (eldoc-mode . "")
+    (org-cdlatex-mode . "")
+    (org-indent-mode . "")
+    (org-roam-mode . "")
+    (visual-line-mode . "")
+    (latex-mode . "TeX")
+    (outline-minor-mode . " [o]";; " ֍"
+                        )
+    (strokes-mode . "")
+    (flymake-mode . "")))
+
+(defun clean-mode-line ()
+  (cl-loop for cleaner in mode-line-cleaner-alist
+           do (let* ((mode (car cleaner))
+                     (mode-str (cdr cleaner))
+                     (old-mode-str (cdr (assq mode minor-mode-alist))))
+                (when old-mode-str
+                  (setcar old-mode-str mode-str))
+                ;; major mode
+                (when (eq mode major-mode)
+                  (setq mode-name mode-str)))))
+
+
+(add-hook 'after-change-major-mode-hook 'clean-mode-line)
 
 (use-package vertico
   :straight (vertico :repo "minad/vertico"
@@ -298,7 +343,7 @@
   (setq read-file-name-completion-ignore-case t
         read-buffer-completion-ignore-case t)
   :custom-face
-  (vertico-current ((t (:background "#3a3f5a"))))
+  (vertico-current ((t (:background "light blue"))))
   :init
   (vertico-mode))
 
@@ -351,16 +396,11 @@
   (defun embark-kill-candidate ()
     (interactive)
     (embark--act #'kill-buffer (car (embark--targets))))
-
-  (setq embark-action-indicator
-        (lambda (map)
-          (which-key--show-keymap "Embark" map nil nil 'no-paging)
-          #'which-key--hide-popup-ignore-command)
-        embark-become-indicator embark-action-indicator)
-  :bind (:map minibuffer-mode-map
-              ("C-S-a" . embark-act)
-              ("C-c C-o" . embark-export)
-              ("C-S-k" . embark-kill-candidate)))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :bind (("C-o" . embark-act)
+         ("C-c C-o" . embark-export)
+         ("C-S-k" . embark-kill-candidate)))
 
 (use-package embark-consult
   :straight '(embark-consult :host github
@@ -435,17 +475,6 @@
   (wgrep-finish-edit)
   (wgrep-save-all-buffers))
 
-(use-package which-key
-  :straight t
-  :demand t
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 1))
-
-(use-package diminish
-  :straight t)
-
 (use-package helpful
   :straight t
   :bind
@@ -517,13 +546,67 @@
                ("P" projectile-persp-switch-project "Switch Project")
                ("q" nil :exit t)))
 
+;; Yoinked for karthinks blog
 (use-package avy
   :straight t
   :bind (("M-s" . avy-goto-char)
          ("C-j" . avy-goto-char-2)
          ("M-m" . avy-goto-word-0))
+  :config
+  (setq avy-dispatch-alist '((?k . avy-action-kill-move)
+                             (?K . avy-action-kill-stay)
+                             (?t . avy-action-teleport)
+                             (?m . avy-action-mark)
+                             (?M . avy-action-mark-to-char)
+                             (?w . avy-action-copy)
+                             (?y . avy-action-yank)
+                             (?Y . avy-action-yank-line)
+                             (?i . avy-action-ispell)
+                             (?z . avy-action-zap-to-char)
+                             (?o . avy-action-embark)))
   :custom
   (avy-single-candidate-jump nil))
+
+(defun avy-action-kill-whole-line (pt)
+  (save-excursion
+    (goto-char pt)
+    (kill-whole-line))
+  (select-window
+   (cdr
+    (ring-ref avy-ring 0)))
+  t)
+
+(defun avy-action-copy-whole-line (pt)
+  (save-excursion
+    (goto-char pt)
+    (cl-destructuring-bind (start . end)
+        (bounds-of-thing-at-point 'line)
+      (copy-region-as-kill start end)))
+  (select-window
+   (cdr
+    (ring-ref avy-ring 0)))
+  t)
+
+(defun avy-action-yank-whole-line (pt)
+  (avy-action-copy-whole-line pt)
+  (save-excursion (yank))
+  t)
+
+(defun avy-action-teleport-whole-line (pt)
+  (avy-action-kill-whole-line pt)
+  (save-excursion (yank)) t)
+
+(defun avy-action-mark-to-char (pt)
+  (activate-mark)
+  (goto-char pt))
+
+(defun avy-action-embark (pt)
+  (save-excursion
+    (goto-char pt)
+    (embark-act))
+  (select-window
+   (cdr (ring-ref avy-ring 0)))
+  t)
 
 (use-package expand-region
   :straight t
@@ -603,7 +686,7 @@
                   (org-level-6 . 1.1)
                   (org-level-7 . 1.1)
                   (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Source Code Pro" :weight 'regular :height (cdr face)))
+    (set-face-attribute (car face) nil :font "Fantasque Sans Mono" :weight 'regular :height (cdr face)))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
@@ -941,7 +1024,6 @@
   :straight t
   :defer 1
   :defines company-backends
-  :diminish company-mode
   :bind (:map company-active-map
               ("<tab>" . company-complete-selection))
   :init
@@ -1189,7 +1271,6 @@
 
 (use-package paredit
   :straight t
-  :diminish
   :config
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
@@ -1202,7 +1283,6 @@
 (use-package projectile
   :straight t
   :defer 10
-  :diminish projectile-mode
   :config (projectile-mode)
   :bind (([remap projectile-ripgrep] . consult-ripgrep))
   :bind-keymap
@@ -1259,7 +1339,6 @@
 
 (use-package yasnippet
   :straight t
-  :diminish yas-minor-mode
   :init
   (yas-global-mode 1)
   :config
@@ -1272,7 +1351,6 @@
 (use-package flymake
   :straight (flymake :type built-in)
   :after hydra
-  :diminish flymake-mode
   :commands (my/flymake-first-error
              my/flymake-last-error)
   :init
@@ -1391,7 +1469,6 @@
 
 (use-package undo-tree
   :straight t
-  :diminish
   :bind (("C-/" . #'undo)
          ("C-?" . #'redo))
   :custom
@@ -1512,13 +1589,6 @@
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/Emacs.org")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
-
-;; Half the distance of page down and up (does make cursor position change)
-;; (autoload 'View-scroll-half-page-forward "view")
-;; (autoload 'View-scroll-half-page-backward "view")
-;; (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
-;; (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
-
 
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))
