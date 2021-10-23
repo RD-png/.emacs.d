@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-;; Function to automatically generate a .el for our .org configuration filesn
+;; Function to automatically generate a .el for our .org configuration files
 (defun org-babel-tangle-config ()
   (when (string-equal (file-name-directory (buffer-file-name))
                       (expand-file-name user-emacs-directory))
@@ -31,6 +31,8 @@
 (defvar url-callback-function nil)
 (defvar url-http-extra-headers nil)
 
+
+(setq custom-safe-themes t)
 ;; Set default font size values
 (defvar default-font-size 140)
 (defvar default-variable-font-size 140)
@@ -66,7 +68,6 @@
 (setq delete-old-versions t
       delete-by-moving-to-trash t
       enable-recursive-minibuffers t)
-
 
 (setq uniquify-buffer-name-style 'forward)
 
@@ -274,7 +275,6 @@
 
 (use-package smart-mode-line
   :straight t
-  :after perspective
   :defines sml/fix-mode-line-a
   :commands sml/setup
   :init
@@ -328,7 +328,6 @@
                 ;; major mode
                 (when (eq mode major-mode)
                   (setq mode-name mode-str)))))
-
 
 (add-hook 'after-change-major-mode-hook 'clean-mode-line)
 
@@ -551,11 +550,17 @@
   :straight t
   :bind (("M-s" . avy-goto-char)
          ("C-j" . avy-goto-char-2)
-         ("M-m" . avy-goto-word-0))
+         ("M-m" . avy-goto-char-timer))
   :config
+  (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
+                      ?v ?b ?n ?. ?, ?/ ?u ?p ?e
+                      ?c ?q ?2 ?3 ?'))
   (setq avy-dispatch-alist '((?k . avy-action-kill-move)
                              (?K . avy-action-kill-stay)
+                             (?x . avy-action-copy-whole-line)
+                             (?X . avy-action-kill-whole-line)
                              (?t . avy-action-teleport)
+
                              (?m . avy-action-mark)
                              (?M . avy-action-mark-to-char)
                              (?w . avy-action-copy)
@@ -848,7 +853,7 @@
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
 
   (define-key global-map (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "jj")))
+              (lambda () (interactive) (org-capture nil "jj")))
 
   (org-font-setup))
 
@@ -947,12 +952,6 @@
    (propertize " #" 'face `(:foreground "pink2"))
    (propertize " " 'face `(:foreground "white"))))
 
-(defun my/eshell-copy-last-output ()
-  (interactive)
-  (eshell-mark-output)
-  (avi-kill-line-save)
-  (eshell-interrupt-process))
-
 (defun eshell-configure ()
   (use-package xterm-color
     :straight t)
@@ -980,7 +979,6 @@
   (define-key eshell-mode-map (kbd "C-r") 'consult-history)
   (define-key eshell-mode-map (kbd "C-a") 'eshell-bol)
   (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1) (eshell-send-input)))
-  (define-key eshell-mode-map (kbd "C-c o l") #'my/eshell-copy-last-output)
   (eshell-hist-initialize)
   (setenv "PAGER" "cat")
 
@@ -1332,13 +1330,14 @@
  '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
  '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
  '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "#fef691"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#fdb900"))))
  '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
  '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
  '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
 
 (use-package yasnippet
   :straight t
+  :defer 2
   :init
   (yas-global-mode 1)
   :config
@@ -1514,15 +1513,15 @@
   (interactive "p")
   (shift-text (- count)))
 
-(defun aborn/backward-kill-word ()
-  "Customize/Smart backward-kill-word."
+;; Smarter C-Backspace control
+(defun my/backward-kill-word ()
   (interactive)
   (let* ((cp (point))
          (backword)
          (end)
          (space-pos)
          (backword-char (if (bobp)
-                            ""           ;; cursor in begin of buffer
+                            ""
                           (buffer-substring cp (- cp 1)))))
     (if (equal (length backword-char) (string-width backword-char))
         (progn
@@ -1530,41 +1529,18 @@
             (setq backword (buffer-substring (point) (progn (forward-word -1) (point)))))
           (setq ab/debug backword)
           (save-excursion
-            (when (and backword          ;; when backword contains space
-                       (s-contains? " " backword))
-              (setq space-pos (ignore-errors (search-backward " ")))))
-          (save-excursion
             (let* ((pos (ignore-errors (search-backward-regexp "\n")))
                    (substr (when pos (buffer-substring pos cp))))
               (when (or (and substr (s-blank? (s-trim substr)))
-                        (s-contains? "\n" backword))
+                        (s-contains-p "\n" backword))
                 (setq end pos))))
           (if end
               (kill-region cp end)
             (if space-pos
                 (kill-region cp space-pos)
               (backward-kill-word 1))))
-      (kill-region cp (- cp 1)))))
-
-(defun avi-kill-line-save (&optional arg)
-  "Copy to the kill ring from point to the end of the current line.
-  With a prefix argument, copy that many lines from point. Negative
-  arguments copy lines backward. With zero argument, copies the
-  text before point to the beginning of the current line."
-  (interactive "p")
-  (save-excursion
-    (copy-region-as-kill
-     (point)
-     (progn (if arg (forward-visible-line arg)
-              (end-of-visible-line))
-            (point)))))
-
-(defun custom-avy-copy-line ()
-  (interactive)
-  (save-excursion
-    (avy-goto-line)
-    (back-to-indentation)
-    (avi-kill-line-save)))
+      (kill-region cp (- cp 1)))
+    ))
 
 (defun my/kill-thing-at-point (thing)
   "Get the start and end bounds of a type of thing at point."
@@ -1575,7 +1551,6 @@
 
 ;; General binds
 (global-set-key (kbd "C-c w") #'copy-word)
-(global-set-key (kbd "C-c l") #'custom-avy-copy-line)
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-a") #'smart-beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
@@ -1583,12 +1558,13 @@
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-d") (lambda () (interactive) (my/kill-thing-at-point 'word)))
-(global-set-key [C-backspace] #'aborn/backward-kill-word)
+(global-set-key [C-backspace] #'my/backward-kill-word)
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-<return>") #'eshell)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/Emacs.org")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
+(global-set-key (kbd "C-c o R")  #'delete-trailing-whitespace)
 
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))
@@ -1596,14 +1572,10 @@
 (global-unset-key  (kbd "C-z"))
 (global-unset-key  (kbd "C-x C-z"))
 
-;; Remove whitespace from buffer on save
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-
 ;; Open my default persp layouts
 (defun my/persp-setup-hook ()
   (interactive)
   (persp-switch "Extr")
   (persp-switch "Main"))
 
-(add-hook 'persp-mode-hook #'my/persp-setup-hook)
+(add-hook 'after-init-hook #'my/persp-setup-hook)
