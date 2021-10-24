@@ -10,11 +10,15 @@
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 ;; native comp
-(setq comp-deferred-compilation t
-      comp-speed 3
-      comp-async-report-warnings-errors nil
-      warning-minimum-level :error
-      package-native-compile 1)
+(when (and (fboundp 'native-comp-available-p)
+           (native-comp-available-p))
+  (progn
+    (setq native-comp-async-report-warnings-errors nil)
+    (setq comp-deferred-compilation t)
+    (setq comp-speed 3)
+    (setq warning-minimum-level :error)
+    (setq package-native-compile t)
+    (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))))
 
 ;; Stop the native comp warnings
 (defvar grep-find-ignored-directories nil)
@@ -36,9 +40,6 @@
 ;; Set default font size values
 (defvar default-font-size 140)
 (defvar default-variable-font-size 140)
-
-;; Set default transparency values
-(defvar frame-transparency '(100 . 100))
 
 ;; Default to utf-8
 (setq default-buffer-file-coding-system 'utf-8-unix
@@ -165,9 +166,7 @@
 ;; y or n instead of yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Set frame transparency
-(set-frame-parameter (selected-frame) 'alpha frame-transparency)
-(add-to-list 'default-frame-alist `(alpha . ,frame-transparency))
+;; Fullscreen default
 (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -390,16 +389,12 @@
   (setq enable-recursive-minibuffers t))
 
 (use-package embark
-  :straight
-  :config
-  (defun embark-kill-candidate ()
-    (interactive)
-    (embark--act #'kill-buffer (car (embark--targets))))
+  :straight t
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
   :bind (("C-o" . embark-act)
-         ("C-c C-o" . embark-export)
-         ("C-S-k" . embark-kill-candidate)))
+         :map minibuffer-local-map
+         ("C-c C-o" . embark-export)))
 
 (use-package embark-consult
   :straight '(embark-consult :host github
@@ -463,9 +458,8 @@
   :straight t
   :config
   (setq wgrep-change-readonly-file t)
-  :bind (
-         :map wgrep-mode-map
-         ("C-x C-s" . custom-wgrep-apply-save)))
+  :bind (:map wgrep-mode-map
+              ("C-x C-s" . custom-wgrep-apply-save)))
 
 
 (defun custom-wgrep-apply-save ()
@@ -549,8 +543,8 @@
 (use-package avy
   :straight t
   :bind (("M-s" . avy-goto-char)
-         ("C-j" . avy-goto-char-2)
-         ("M-m" . avy-goto-char-timer))
+         ("C-j" . avy-goto-char-timer)
+         ("M-m" . avy-goto-char-2))
   :config
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
                       ?v ?b ?n ?. ?, ?/ ?u ?p ?e
@@ -1276,7 +1270,8 @@
 (use-package scheme-mode
   :mode ("\\.sld\\'")
   :init
-  (setq scheme-program-name "~/.nix-profile/bin/scheme"))
+  ;; (setq scheme-program-name "~/.nix-profile/bin/scheme")
+  )
 
 (use-package projectile
   :straight t
@@ -1343,10 +1338,6 @@
   :config
   (yas-reload-all))
 
-(use-package popup-kill-ring
-  :straight t
-  :bind ("M-y" . popup-kill-ring))
-
 (use-package flymake
   :straight (flymake :type built-in)
   :after hydra
@@ -1407,17 +1398,12 @@
   (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
   (show-paren-mode 1))
 
-(add-to-list 'load-path "~/.config/emacs/etc/modules/dired+")
-(require 'dired-copy-paste)
 (use-package dired
   :straight (dired :type built-in)
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump)
          :map dired-mode-map
-         ("K" . dired-up-directory)
-         ("C-c f" . dired-copy-paste-do-copy)
-         ("C-c c f" . dired-copy-paste-do-cut)
-         ("C-y" . dired-copy-paste-do-paste))
+         ("K" . dired-up-directory))
   :custom
   ((dired-listing-switches "-agho --group-directories-first")
    (dired-recursive-copies t))
@@ -1526,21 +1512,19 @@
     (if (equal (length backword-char) (string-width backword-char))
         (progn
           (save-excursion
-            (setq backword (buffer-substring (point) (progn (forward-word -1) (point)))))
-          (setq ab/debug backword)
+            (setq backword (buffer-substring (point) (progn (forward-word -1) (point)))))          
           (save-excursion
             (let* ((pos (ignore-errors (search-backward-regexp "\n")))
                    (substr (when pos (buffer-substring pos cp))))
-              (when (or (and substr (s-blank? (s-trim substr)))
-                        (s-contains-p "\n" backword))
+              (when (or (and substr (string-blank-p (string-trim substr)))
+                        (string-match-p "\n" backword))
                 (setq end pos))))
           (if end
               (kill-region cp end)
             (if space-pos
                 (kill-region cp space-pos)
               (backward-kill-word 1))))
-      (kill-region cp (- cp 1)))
-    ))
+      (kill-region cp (- cp 1)))))
 
 (defun my/kill-thing-at-point (thing)
   "Get the start and end bounds of a type of thing at point."
@@ -1562,7 +1546,7 @@
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-<return>") #'eshell)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
-(global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/Emacs.org")))
+(global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
 (global-set-key (kbd "C-c o R")  #'delete-trailing-whitespace)
 
