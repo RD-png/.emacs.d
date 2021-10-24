@@ -8,3 +8,10 @@
 /var/undo-tree-hist/
 /var/auto-save/
 /.Emacs.org.~undo-tree~
+/var/transient/
+/var/savehist.el
+/var/recentf-save.el
+/var/projectile/
+/var/project-list.el
+/var/prescient-save.el
+/var/eshell/
