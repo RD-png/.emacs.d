@@ -1259,17 +1259,17 @@
 
 (use-package emacs-lisp-mode
   :straight (emacs-lisp-mode :type built-in)
-  :hook ((lisp-mode emacs-lisp-mode) . paredit-mode))
+  :hook (lisp-mode . emacs-lisp-mode))
 
-(use-package paredit
-  :straight t
-  :config
-  (eldoc-add-command 'paredit-backward-delete
-                     'paredit-close-round))
+;; (use-package paredit
+;;   :straight t
+;;   :config
+;;   (eldoc-add-command 'paredit-backward-delete
+;;                      'paredit-close-round))
 
 (use-package scheme-mode
   :mode ("\\.sld\\'")
-  :init
+  ;; :init
   ;; (setq scheme-program-name "~/.nix-profile/bin/scheme")
   )
 
@@ -1512,7 +1512,7 @@
     (if (equal (length backword-char) (string-width backword-char))
         (progn
           (save-excursion
-            (setq backword (buffer-substring (point) (progn (forward-word -1) (point)))))          
+            (setq backword (buffer-substring (point) (progn (forward-word -1) (point)))))
           (save-excursion
             (let* ((pos (ignore-errors (search-backward-regexp "\n")))
                    (substr (when pos (buffer-substring pos cp))))
