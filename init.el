@@ -1261,6 +1261,7 @@
   :straight (emacs-lisp-mode :type built-in)
   :hook (lisp-mode . emacs-lisp-mode))
 
+;; removed test
 ;; (use-package paredit
 ;;   :straight t
 ;;   :config
