@@ -1,20 +1,11 @@
 ;; -*- lexical-binding: t; -*-
 
-;; Function to automatically generate a .el for our .org configuration files
-(defun org-babel-tangle-config ()
-  (when (string-equal (file-name-directory (buffer-file-name))
-                      (expand-file-name user-emacs-directory))
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
-
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
-
 ;; native comp
 (when (and (fboundp 'native-comp-available-p)
            (native-comp-available-p))
   (progn
     (setq native-comp-async-report-warnings-errors nil)
-    (setq comp-deferred-compilation t)    
+    (setq comp-deferred-compilation t)
     (setq warning-minimum-level :error)
     (setq package-native-compile t)
     (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))))
@@ -34,7 +25,20 @@
 (defvar url-callback-function nil)
 (defvar url-http-extra-headers nil)
 
+;; Time emacs startup
+(setq gc-cons-threshold most-positive-fixnum)
+(defconst 1mb 1048576)
+(setq read-process-output-max 1mb)
 
+(defun display-startup-time ()
+  (message "Emacs loaded in %s with %d garbage collections."
+           (format "%.2f seconds"
+                   (float-time
+                    (time-subtract after-init-time before-init-time)))
+           gcs-done))
+(add-hook 'emacs-startup-hook #'display-startup-time)
+
+(setq frame-inhibit-implied-resize t)
 (setq custom-safe-themes t)
 ;; Set default font size values
 (defvar default-font-size 140)
@@ -78,18 +82,6 @@
 ;; Remove startup message
 (advice-add 'display-startup-echo-area-message :override #'ignore)
 
-(setq gc-cons-threshold (* 50 1000 1000))
-
-(defun display-startup-time ()
-  (message "Emacs loaded in %s with %d garbage collections."
-           (format "%.2f seconds"
-                   (float-time
-                    (time-subtract after-init-time before-init-time)))
-           gcs-done))
-
-;; Call the function
-(add-hook 'emacs-startup-hook #'display-startup-time)
-
 ;; Initialize package sources
 (require 'package)
 
@@ -109,6 +101,10 @@
 (setq use-package-always-ensure nil
       straight-disable-native-compile nil
       straight-use-package-by-default nil)
+
+(setq straight-check-for-modifications nil
+      autoload-compute-prefixes nil
+      straight-vc-git-default-clone-depth 1)
 
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
@@ -621,30 +617,30 @@
 (setq auto-save-default nil)
 (setq create-lockfiles nil)
 
-(use-package mu4e
-  :config
-  (setq mu4e-change-filenames-when-moving t
-        mu4e-get-mail-command "mbsync -a"
-        mu4e-view-show-images t
-        mu4e-update-interval (* 10 60)
-        mu4e-maildir "~/Mail")
-  (setq mu4e-contexts
-        `(,(make-mu4e-context
-            :name "elixir"
-            :vars '(
-                    (user-full-name . "Ryan Denby")
-                    (user-mail-address . "ryan@elixirgardens.co.uk")
-                    (mu4e-sent-folder . "/sent/new")
-                    (mu4e-trash-folder . "/trash/new")
-                    (mu4e-drafts-folder . "/drafts/new")
-                    (mu4e-sent-messages-behavior . sent)
-                    ))))
+;; (use-package mu4e
+;;   :config
+;;   (setq mu4e-change-filenames-when-moving t
+;;         mu4e-get-mail-command "mbsync -a"
+;;         mu4e-view-show-images t
+;;         mu4e-update-interval (* 10 60)
+;;         mu4e-maildir "~/Mail")
+;;   (setq mu4e-contexts
+;;         `(,(make-mu4e-context
+;;             :name "elixir"
+;;             :vars '(
+;;                     (user-full-name . "Ryan Denby")
+;;                     (user-mail-address . "ryan@elixirgardens.co.uk")
+;;                     (mu4e-sent-folder . "/sent/new")
+;;                     (mu4e-trash-folder . "/trash/new")
+;;                     (mu4e-drafts-folder . "/drafts/new")
+;;                     (mu4e-sent-messages-behavior . sent)
+;;                     ))))
 
-  (setq mail-user-agent 'mu4e-user-agent
-        message-send-mail-function 'smtpmail-send-it
-        smtpmail-smtp-server "smtp.123-reg.co.uk"
-        smtpmail-smtp-service 465
-        smtpmail-stream-type 'ssl))
+;;   (setq mail-user-agent 'mu4e-user-agent
+;;         message-send-mail-function 'smtpmail-send-it
+;;         smtpmail-smtp-server "smtp.123-reg.co.uk"
+;;         smtpmail-smtp-service 465
+;;         smtpmail-stream-type 'ssl))
 
 (use-package devdocs
   :straight t
@@ -1452,16 +1448,6 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c m a" . mc/mark-all-like-this)))
 
-;; (use-package undo-tree
-;;   :straight t
-;;   :bind (("C-/" . #'undo)
-;;          ("C-?" . #'redo))
-;;   :custom
-;;   (undo-tree-auto-save-history t)
-;;   :init
-;;   (global-undo-tree-mode +1))
-;; (defalias 'redo 'undo-tree-redo)
-
 (defun copy-word ()
   (interactive)
   (save-excursion
@@ -1513,6 +1499,11 @@
           (save-excursion
             (setq backword (buffer-substring (point) (progn (forward-word -1) (point)))))
           (save-excursion
+            (message (thing-at-point 'no-properties))
+            (when (and backword
+                       (string-match-p " " backword))
+              (setq space-pos (ignore-errors (search-backward " ")))))
+          (save-excursion
             (let* ((pos (ignore-errors (search-backward-regexp "\n")))
                    (substr (when pos (buffer-substring pos cp))))
               (when (or (and substr (string-blank-p (string-trim substr)))
@@ -1548,6 +1539,7 @@
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
 (global-set-key (kbd "C-c o R")  #'delete-trailing-whitespace)
+(global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))
