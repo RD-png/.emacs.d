@@ -3,5 +3,4 @@
 # key: sel
 # --
 $sql = "SELECT $1 FROM ${2:table}";
-$${3:result} = $${4:database}->query($sql);
-$$3 = $$3->fetchAll(PDO::FETCH_${5:type});
+$${3:result} = $${4:database}->query($sql)->fetchAll(PDO::FETCH_${5:type});

@@ -14,8 +14,7 @@
            (native-comp-available-p))
   (progn
     (setq native-comp-async-report-warnings-errors nil)
-    (setq comp-deferred-compilation t)
-    (setq comp-speed 3)
+    (setq comp-deferred-compilation t)    
     (setq warning-minimum-level :error)
     (setq package-native-compile t)
     (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))))
@@ -1453,16 +1452,15 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c m a" . mc/mark-all-like-this)))
 
-(use-package undo-tree
-  :straight t
-  :bind (("C-/" . #'undo)
-         ("C-?" . #'redo))
-  :custom
-  (undo-tree-auto-save-history t)
-  :init
-  (global-undo-tree-mode +1))
-
-(defalias 'redo 'undo-tree-redo)
+;; (use-package undo-tree
+;;   :straight t
+;;   :bind (("C-/" . #'undo)
+;;          ("C-?" . #'redo))
+;;   :custom
+;;   (undo-tree-auto-save-history t)
+;;   :init
+;;   (global-undo-tree-mode +1))
+;; (defalias 'redo 'undo-tree-redo)
 
 (defun copy-word ()
   (interactive)
