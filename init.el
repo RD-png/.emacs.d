@@ -1,5 +1,24 @@
 ;; -*- lexical-binding: t; -*-
 
+;; GC config
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
+(setq read-process-output-max 1048576)
+
+(defun my/defer-garbage-collection ()
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun my/restore-garbage-collection ()
+  (run-at-time 1 nil (lambda () (setq gc-cons-threshold 16777216))))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold 16777216
+                  gc-cons-percentage 0.1)))
+
+(add-hook 'minibuffer-setup-hook 'my/defer-garbage-collection)
+(add-hook 'minibuffer-exit-hook 'my/restore-garbage-collection)
+
 ;; native comp
 (when (and (fboundp 'native-comp-available-p)
            (native-comp-available-p))
@@ -26,10 +45,6 @@
 (defvar url-http-extra-headers nil)
 
 ;; Time emacs startup
-(setq gc-cons-threshold most-positive-fixnum)
-(defconst 1mb 1048576)
-(setq read-process-output-max 1mb)
-
 (defun display-startup-time ()
   (message "Emacs loaded in %s with %d garbage collections."
            (format "%.2f seconds"
