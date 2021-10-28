@@ -402,9 +402,10 @@
   :straight t
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
-  :bind (("C-o" . embark-act)
-         :map minibuffer-local-map
-         ("C-c C-o" . embark-export)))
+  :bind (:map minibuffer-local-map
+              ("C-c C-o" . embark-export)))
+;; Globally bind emabrk-act
+(bind-key* "C-o" #'embark-act)
 
 (use-package embark-consult
   :straight '(embark-consult :host github
@@ -551,10 +552,7 @@
 
 ;; Yoinked for karthinks blog
 (use-package avy
-  :straight t
-  :bind (("M-s" . avy-goto-char)
-         ("C-j" . avy-goto-char-timer)
-         ("M-m" . avy-goto-char-2))
+  :straight t  
   :config
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
                       ?v ?b ?n ?. ?, ?/ ?u ?p ?e
@@ -575,6 +573,11 @@
                              (?o . avy-action-embark)))
   :custom
   (avy-single-candidate-jump nil))
+
+;; Globally bind keys avy keys, so they dont get overwritten
+(bind-key* "C-j" #'avy-goto-char-timer)
+(bind-key* "M-m" #'avy-goto-word-0)
+(bind-key* "M-s" #'avy-goto-char)
 
 (defun avy-action-kill-whole-line (pt)
   (save-excursion
@@ -737,8 +740,7 @@
   :hook (org-mode . org-mode-setup)
   :bind (("M-o a" . org-agenda)
          ("M-o p t" . my/project-task-file)
-         ("M-o t" . org-todo-hydra/body)
-         ([remap org-return-and-maybe-indent] . avy-goto-char-2))
+         ("M-o t" . org-todo-hydra/body))
   :hydra
   (org-todo-hydra (:columns 4 :color pink)
                   "TODOS"
@@ -1145,6 +1147,10 @@
   :config
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
   (direnv-mode))
+
+(use-package undo-tree
+  :straight t
+  :defer)
 
 ;; (use-package eglot
 ;;   :straight t
