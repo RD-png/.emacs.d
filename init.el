@@ -84,6 +84,7 @@
 (add-to-list 'exec-path "~/.npm/bin")
 
 ;; General Defaults
+(setq undo-limit 1600000)
 (setq delete-old-versions t
       delete-by-moving-to-trash t
       enable-recursive-minibuffers t)
@@ -406,6 +407,7 @@
               ("C-c C-o" . embark-export)))
 ;; Globally bind emabrk-act
 (bind-key* "C-o" #'embark-act)
+(bind-key* "C-h h" #'embark-bindings)
 
 (use-package embark-consult
   :straight '(embark-consult :host github
@@ -435,7 +437,7 @@
   (completion-in-region-function #'consult-completion-in-region)
   (consult-line-start-from-top nil)
   (consult-line-point-placement 'match-end)
-  (fset 'multi-occur #'consult-multi-occur)
+  (fset 'multi-occur #'consult-multi-occur)  
   :init
   (setq register-preview-delay 0
         register-preview-function #'consult-register-format))
@@ -862,6 +864,10 @@
               (lambda () (interactive) (org-capture nil "jj")))
 
   (org-font-setup))
+
+(use-package org-make-toc
+  :straight t
+  :after org)
 
 (use-package org-superstar
   :straight (org-superstar-mode :host github :repo "integral-dw/org-superstar-mode")
