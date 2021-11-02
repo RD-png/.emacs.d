@@ -1566,6 +1566,8 @@
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
 (global-set-key (kbd "C-c o R")  #'delete-trailing-whitespace)
+(global-set-key (kbd "C-/")  #'undo-only)
+(global-set-key (kbd "C-?")  #'redo-only)
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 
 ;; unbind annoying keybinds
