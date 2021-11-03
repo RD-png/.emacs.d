@@ -220,6 +220,7 @@
  `(doom-modeline-unread-number ((t (:foreground "red"))))
  `(doom-modeline-buffer-file ((t (:foreground "light blue"))))
  ;; `(mode-line ((t (:foreground "#c5c8c6"))))
+ `(mode-line ((t (:background "#bac9ef" :underline (:line-width t)))))
  `(org-level-4 ((t (:foreground "light blue"))))
  `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
  `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
@@ -230,6 +231,8 @@
  `(cursor ((t (:background "IndianRed3"))))
  `(region ((t (:background "yellow"))))
  )
+;; mode line underline in right place
+(setq x-underline-at-descent-line t)
 
 ;; For the default theme
 ;; (custom-set-faces
@@ -284,8 +287,7 @@
   :straight t)
 
 (use-package smart-mode-line
-  :straight t
-  :defines sml/fix-mode-line-a
+  :straight t  
   :commands sml/setup
   :init
   (setq sml/no-confirm-load-theme t)
@@ -530,10 +532,13 @@
          ("C-c C-'" . persp-next)
          ("C-x M-b" . persp-switch))
   :custom
-  (persp-initial-frame-name "Main")
+  (persp-initial-frame-name "Main")  
   :config
+  (setq persp-modestring-dividers '("|" "|" "|"))
   (unless (equal persp-mode t)
     (persp-mode))
+
+  persp-modestring-dividers
 
   :hydra
   (persp-hydra (:columns 4 :color pink)
