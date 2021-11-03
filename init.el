@@ -428,7 +428,8 @@
          ("C-M-s" . multi-occur)
          ("C-M-l" . consult-outline)
          ("M-g M-g" . consult-goto-line)
-         ("C-S-c c" . consult-mark)
+         ("C-c h" . consult-mark)
+         ("C-c H" . consult-global-mark)
          ("C-x M-f" . consult-recent-file)
          ([remap popup-kill-ring] . consult-yank-from-kill-ring)
          :map minibuffer-local-map
@@ -1159,9 +1160,9 @@
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
   (direnv-mode))
 
-(use-package undo-tree
-  :straight t
-  :defer)
+;; (use-package undo-tree
+;;   :straight t
+;;   :defer)
 
 ;; (use-package eglot
 ;;   :straight t
@@ -1572,7 +1573,7 @@
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
 (global-set-key (kbd "C-c o R")  #'delete-trailing-whitespace)
 (global-set-key (kbd "C-/")  #'undo-only)
-(global-set-key (kbd "C-?")  #'redo-only)
+(global-set-key (kbd "C-?")  #'undo-redo)
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 
 ;; unbind annoying keybinds
