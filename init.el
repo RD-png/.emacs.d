@@ -229,7 +229,7 @@
  `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
  ;; `(mode-line ((t (:background "#444444" :foreground "#f6f3e8"))))
  `(cursor ((t (:background "IndianRed3"))))
- `(region ((t (:background "yellow"))))
+ `(region ((t (:background "gold"))))
  )
 ;; mode line underline in right place
 (setq x-underline-at-descent-line t)
@@ -1429,12 +1429,14 @@
 
 (use-package dired
   :straight (dired :type built-in)
+  :hook ((dired-mode . hl-line-mode)
+         (dired-mode . toggle-truncate-lines))
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump)
          :map dired-mode-map
          ("K" . dired-up-directory))
   :custom
-  ((dired-listing-switches "-agho --group-directories-first")
+  ((dired-listing-switches "-AGFhlv --group-directories-first")
    (dired-recursive-copies t))
   :config
   (setq dired-recursive-copies 'always
@@ -1443,33 +1445,41 @@
 
 (use-package all-the-icons-dired
   :straight t
-  :after all-the-icons
   :hook (dired-mode . all-the-icons-dired-mode))
 
-(use-package dired-rainbow
+(use-package diredfl
   :straight t
-  :after all-the-icons-dired
-  :config
-  (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
-  (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
-  (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
-  (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
-  (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
-  (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
-  (dired-rainbow-define media "#de751f" ("mp3" "mp4" "mkv" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
-  (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
-  (dired-rainbow-define log "#c17d11" ("log"))
-  (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
-  (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
-  (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
-  (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
-  (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
-  (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
-  (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
-  (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
-  (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
-  (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
-  (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
+  :hook (dired-mode . diredfl-mode)
+  :init
+  (setq diredfl-ignore-compressed-flag nil)
+  (diredfl-global-mode 1)  
+  (custom-set-faces   
+   '(diredfl-compressed-file-name ((t (:foreground "brown" :background nil))))
+   '(diredfl-compressed-file-suffix ((t (:foreground "yellow" :background nil))))
+   '(diredfl-date-time ((t (:foreground "SteelBlue" :background nil))))
+   '(diredfl-deletion ((t (:foreground "yellow" :background nil))))
+   '(diredfl-deletion-file-name ((t (:foreground "red" :background nil))))
+   '(diredfl-dir-heading ((t (:foreground "blue" :background nil))))
+   '(diredfl-dir-name ((t (:foreground "firebrick3" :background nil))))
+   '(diredfl-dir-priv ((t (:foreground "DarkRed" :background nil))))
+   '(diredfl-executable-tag ((t (:foreground "red" :background nil))))
+   '(diredfl-file-name ((t (:foreground "blue4" :background nil))))
+   '(diredfl-file-suffix ((t (:foreground "DarkMagenta" :background nil))))
+   '(diredfl-flag-mark ((t (:foreground "yellow" :background nil))))
+   '(diredfl-ignored-file-name ((t (:foreground "#00006DE06DE0" :background nil))))
+   '(diredfl-link-priv ((t (:foreground "DarkOrange" :background nil))))
+   '(diredfl-number ((t (:foreground "DarkBlue" :background nil))))
+   '(diredfl-rare-priv ((t (:foreground "magenta" :background nil))))
+   '(diredfl-symlink ((t (:foreground "DarkOrange" :background nil))))
+   '(diredfl-no-priv ((t (:foreground "gray" :background nil))))
+   '(diredfl-exec-priv ((t (:foreground "SteelBlue" :background nil))))
+   '(diredfl-read-priv ((t (:foreground "aquamarine4" :background nil))))
+   '(diredfl-other-priv ((t (:foreground "PaleGoldenrod" :background nil))))
+   '(diredfl-write-priv ((t (:foreground "orchid" :background nil))))
+   '(diredfl-autofile-name ((t (:foreground "tan" :background nil))))
+   '(diredfl-flag-mark-line ((t (:foreground "SkyBlue" :background nil))))
+   '(diredfl-tagged-autofile-name ((t (:foreground "#CD73FBEECD73" :background nil))))))
+
 
 (setq-default tab-width 2
               indent-tabs-mode nil)
@@ -1489,12 +1499,10 @@
     (kill-word 1)
     (yank)))
 
-(defun smart-beginning-of-line ()
+(defun my/beginning-of-line ()
   (interactive)
-  (let ((oldpos (point)))
-    (back-to-indentation)
-    (and (= oldpos (point))
-         (beginning-of-line))))
+	(if (= (point) (progn (back-to-indentation) (point)))
+			(beginning-of-line)))
 
 (defun shift-text (distance)
   (if (use-region-p)
@@ -1559,7 +1567,7 @@
 ;; General binds
 (global-set-key (kbd "C-c w") #'copy-word)
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
-(global-set-key (kbd "C-a") #'smart-beginning-of-line)
+(global-set-key (kbd "C-a") #'my/beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key (kbd "M-n") 'forward-paragraph)
