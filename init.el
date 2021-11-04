@@ -207,30 +207,30 @@
 (set-face-attribute 'variable-pitch nil :font "Fantasque Sans Mono" :height default-variable-font-size :weight 'regular)
 
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-;; (load-theme 'wombat)
-
+;; (load-theme 'modus-operandi)
 ;; (set-foreground-color "#c5c8c6")
 ;; (set-background-color "#1d1f21")
 
 ;; Custom faces
 (custom-set-faces
- `(match ((t (:foreground "#9ac6f2"))))
+ ;; `(match ((t (:foreground "#9ac6f2"))))
  ;; `(persp-selected-face ((t (:foreground "light green"))))
- `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
- `(doom-modeline-info ((t (:foreground "pink"))))
- `(doom-modeline-unread-number ((t (:foreground "red"))))
- `(doom-modeline-buffer-file ((t (:foreground "light blue"))))
+ ;; `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
+ ;; `(doom-modeline-info ((t (:foreground "pink"))))
+ ;; `(doom-modeline-unread-number ((t (:foreground "red"))))
+ ;; `(doom-modeline-buffer-file ((t (:foreground "light blue"))))
  ;; `(mode-line ((t (:foreground "#c5c8c6"))))
- `(mode-line ((t (:background "#bac9ef" :underline (:line-width t)))))
- `(org-level-4 ((t (:foreground "light blue"))))
- `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
- `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
- `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
- `(web-mode-html-attr-name-face ((t (:foreground "#e5786d"))))
- `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
+ ;; `(mode-line ((t (:background "#bac9ef" :underline (:line-width 1)))))
+ `(mode-line ((t (:underline (:line-width 1)))))
+ ;; `(org-level-4 ((t (:foreground "light blue"))))
+ ;; `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
+ ;; `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
+ ;; `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
+ ;; `(web-mode-html-attr-name-face ((t (:foreground "#e5786d"))))
+ ;; `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
  ;; `(mode-line ((t (:background "#444444" :foreground "#f6f3e8"))))
  `(cursor ((t (:background "IndianRed3"))))
- `(region ((t (:background "gold"))))
+ ;; `(region ((t (:background "gold"))))
  )
 ;; mode line underline in right place
 (setq x-underline-at-descent-line t)
@@ -325,6 +325,7 @@
     (org-indent-mode . "")
     (org-roam-mode . "")
     (visual-line-mode . "")
+    (all-the-icons-dired-mode . "")
     (latex-mode . "TeX")
     (outline-minor-mode . " [o]";; " ֍"
                         )
@@ -1350,15 +1351,15 @@
          emacs-lisp-mode
          typescript-mode))
 
-(custom-set-faces
- '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "#fdb900"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
- '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
+;; (custom-set-faces
+;;  '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
+;;  '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
+;;  '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
+;;  '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
+;;  '(rainbow-delimiters-depth-5-face ((t (:foreground "#fdb900"))))
+;;  '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
+;;  '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
+;;  '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
 
 (use-package yasnippet
   :straight t
@@ -1453,34 +1454,7 @@
   :hook (dired-mode . diredfl-mode)
   :init
   (setq diredfl-ignore-compressed-flag nil)
-  (diredfl-global-mode 1)  
-  (custom-set-faces   
-   '(diredfl-compressed-file-name ((t (:foreground "brown" :background nil))))
-   '(diredfl-compressed-file-suffix ((t (:foreground "yellow" :background nil))))
-   '(diredfl-date-time ((t (:foreground "SteelBlue" :background nil))))
-   '(diredfl-deletion ((t (:foreground "yellow" :background nil))))
-   '(diredfl-deletion-file-name ((t (:foreground "red" :background nil))))
-   '(diredfl-dir-heading ((t (:foreground "blue" :background nil))))
-   '(diredfl-dir-name ((t (:foreground "firebrick3" :background nil))))
-   '(diredfl-dir-priv ((t (:foreground "DarkRed" :background nil))))
-   '(diredfl-executable-tag ((t (:foreground "red" :background nil))))
-   '(diredfl-file-name ((t (:foreground "blue4" :background nil))))
-   '(diredfl-file-suffix ((t (:foreground "DarkMagenta" :background nil))))
-   '(diredfl-flag-mark ((t (:foreground "yellow" :background nil))))
-   '(diredfl-ignored-file-name ((t (:foreground "#00006DE06DE0" :background nil))))
-   '(diredfl-link-priv ((t (:foreground "DarkOrange" :background nil))))
-   '(diredfl-number ((t (:foreground "DarkBlue" :background nil))))
-   '(diredfl-rare-priv ((t (:foreground "magenta" :background nil))))
-   '(diredfl-symlink ((t (:foreground "DarkOrange" :background nil))))
-   '(diredfl-no-priv ((t (:foreground "gray" :background nil))))
-   '(diredfl-exec-priv ((t (:foreground "SteelBlue" :background nil))))
-   '(diredfl-read-priv ((t (:foreground "aquamarine4" :background nil))))
-   '(diredfl-other-priv ((t (:foreground "PaleGoldenrod" :background nil))))
-   '(diredfl-write-priv ((t (:foreground "orchid" :background nil))))
-   '(diredfl-autofile-name ((t (:foreground "tan" :background nil))))
-   '(diredfl-flag-mark-line ((t (:foreground "SkyBlue" :background nil))))
-   '(diredfl-tagged-autofile-name ((t (:foreground "#CD73FBEECD73" :background nil))))))
-
+  (diredfl-global-mode 1))
 
 (setq-default tab-width 2
               indent-tabs-mode nil)
@@ -1598,3 +1572,41 @@
   (persp-switch "Main"))
 
 (add-hook 'after-init-hook #'my/persp-setup-hook)
+
+;; Load theme
+(use-package modus-themes
+  :straight (modus-themes :type built-in)  
+  :init
+   (setq  modus-themes-intense-hl-line t
+          modus-themes-org-blocks 'grayscale          
+          modus-themes-scale-headings t
+          modus-themes-section-headings nil
+          modus-themes-variable-pitch-headings nil
+          modus-themes-intense-paren-match t
+          modus-themes-bold-constructs t
+          modus-themes-completions 'opinionated
+          modus-themes-diffs 'desaturated ;'fg-only-deuteranopia
+          modus-themes-syntax '(faint alt-syntax green-strings yellow-comments)
+          modus-themes-links '(faint neutral-underline)
+          modus-themes-hl-line '(intense)
+          modus-themes-prompts '(bold background)
+          modus-themes-mode-line '(accented borderless)          
+          modus-themes-subtle-line-numbers t
+          modus-themes-tabs-accented t
+          modus-themes-inhibit-reload t
+          modus-themes-paren-match '(underline)
+          modus-themes-region '(no-extend accented bg-only)
+          modus-themes-org-agenda
+          '((header-block . (variable-pitch scale-title))
+            (header-date . (bold-today grayscale scale))
+            (scheduled . rainbow)
+            (habit . traffic-light-deuteranopia))
+          modus-themes-headings  '((t . (background overline rainbow)))
+          modus-themes-variable-pitch-ui nil
+          modus-themes-scale-headings t
+          modus-themes-scale-1 1.1
+          modus-themes-scale-2 1.15
+          modus-themes-scale-3 1.20
+          modus-themes-scale-4 1.25
+          modus-themes-scale-title 1.30)
+   (load-theme 'modus-operandi))
