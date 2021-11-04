@@ -1194,6 +1194,11 @@
 ;;   ("C-c o a" . eglot-code-actions)
 ;;   ("C-c o r" . xref-find-references))
 
+(use-package dumb-jump
+  :straight t
+  :init
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
 (use-package eldoc
   :straight (eldoc :type built-in)
   :custom
@@ -1555,6 +1560,7 @@
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
 (global-set-key (kbd "C-c o R")  #'delete-trailing-whitespace)
+(global-set-key (kbd "C-c o g")  #'xref-find-definitions)
 (global-set-key (kbd "C-/")  #'undo-only)
 (global-set-key (kbd "C-?")  #'undo-redo)
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
@@ -1586,7 +1592,7 @@
           modus-themes-bold-constructs t
           modus-themes-completions 'opinionated
           modus-themes-diffs 'desaturated ;'fg-only-deuteranopia
-          modus-themes-syntax '(faint alt-syntax green-strings yellow-comments)
+          modus-themes-syntax '(alt-syntax green-strings yellow-comments)
           modus-themes-links '(faint neutral-underline)
           modus-themes-hl-line '(intense)
           modus-themes-prompts '(bold background)
