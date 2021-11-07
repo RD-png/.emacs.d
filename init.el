@@ -407,11 +407,12 @@
   :straight t
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
-  :bind (:map minibuffer-local-map
-              ("C-c C-o" . embark-export)))
-;; Globally bind emabrk-act
-(bind-key* "C-o" #'embark-act)
-(bind-key* "C-h h" #'embark-bindings)
+  :bind  
+  (:map minibuffer-local-map
+        ("C-c C-o" . embark-export))
+  :bind*
+  ("C-o" . embark-act)
+  ("C-h h" . embark-bindings))
 
 (use-package embark-consult
   :straight '(embark-consult :host github
@@ -582,12 +583,11 @@
                              (?z . avy-action-zap-to-char)
                              (?o . avy-action-embark)))
   :custom
-  (avy-single-candidate-jump nil))
-
-;; Globally bind keys avy keys, so they dont get overwritten
-(bind-key* "C-j" #'avy-goto-char-timer)
-(bind-key* "M-m" #'avy-goto-word-0)
-(bind-key* "M-s" #'avy-goto-char)
+  (avy-single-candidate-jump nil)
+  :bind*
+  ("C-j" . avy-goto-char-timer)
+  ("M-m" . avy-goto-word-0)
+  ("M-s" . avy-goto-char))
 
 (defun avy-action-kill-whole-line (pt)
   (save-excursion
