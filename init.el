@@ -288,7 +288,7 @@
   :straight t)
 
 (use-package smart-mode-line
-  :straight t  
+  :straight t
   :commands sml/setup
   :init
   (setq sml/no-confirm-load-theme t)
@@ -443,7 +443,7 @@
   (completion-in-region-function #'consult-completion-in-region)
   (consult-line-start-from-top nil)
   (consult-line-point-placement 'match-end)
-  (fset 'multi-occur #'consult-multi-occur)  
+  (fset 'multi-occur #'consult-multi-occur)
   :init
   (setq register-preview-delay 0
         register-preview-function #'consult-register-format))
@@ -536,7 +536,7 @@
          ("C-c C-'" . persp-next)
          ("C-x M-b" . persp-switch))
   :custom
-  (persp-initial-frame-name "Main")  
+  (persp-initial-frame-name "Main")
   :config
   (setq persp-modestring-dividers '("|" "|" "|"))
   (unless (equal persp-mode t)
@@ -563,7 +563,7 @@
 
 ;; Yoinked for karthinks blog
 (use-package avy
-  :straight t  
+  :straight t
   :config
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
                       ?v ?b ?n ?. ?, ?/ ?u ?p ?e
@@ -1581,22 +1581,21 @@
 
 ;; Load theme
 (use-package modus-themes
-  :straight (modus-themes :type built-in)  
+  :straight (modus-themes :type built-in)
   :init
    (setq  modus-themes-intense-hl-line t
-          modus-themes-org-blocks 'grayscale          
+          modus-themes-org-blocks 'grayscale
           modus-themes-scale-headings t
           modus-themes-section-headings nil
           modus-themes-variable-pitch-headings nil
           modus-themes-intense-paren-match t
-          modus-themes-bold-constructs t
           modus-themes-completions 'opinionated
           modus-themes-diffs 'desaturated ;'fg-only-deuteranopia
           modus-themes-syntax '(alt-syntax green-strings yellow-comments)
           modus-themes-links '(faint neutral-underline)
           modus-themes-hl-line '(intense)
           modus-themes-prompts '(bold background)
-          modus-themes-mode-line '(accented borderless)          
+          modus-themes-mode-line '(accented borderless)
           modus-themes-subtle-line-numbers t
           modus-themes-tabs-accented t
           modus-themes-inhibit-reload t

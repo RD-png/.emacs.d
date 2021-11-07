@@ -12,7 +12,13 @@
 * TODO Start Hermes section of ecs after finishing forms
 
 
-* TODO Create table to store relationship between orders that exist within a table twice. We will create a manual order_id which needs to be linked back to the original so they can track the progress of the order
+* DONE Create table to store relationship between orders that exist within a table twice. We will create a manual order_id which needs to be linked back to the original so they can track the progress of the order
+CLOSED: [2021-11-05 Fri 15:01]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-11-05 Fri 15:01]
+// Dont need to do this since order will have a -n appended n being a number
+:END:
+
 
 * CANC Add dor option to order type creation form
 CLOSED: [2021-09-29 Wed 08:00]
@@ -31,8 +37,12 @@ CLOSED: [2021-09-29 Wed 10:36]
 * TODO Change the arguments for checkDor when i get the proper options from Bob
 
 
-* TODO Returns with the production action Restocked should restock each item back into the stock control
+* TODO Returns with the product action Restocked should restock each item back into the stock control
 
-* TODO When void is true need to void this order on fesp
+* DONE When void is true need to void this order on fesp
+CLOSED: [2021-11-05 Fri 15:03]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-11-05 Fri 15:03]
+:END:
 
 * REVIEW Pull out common functionality for the form types
