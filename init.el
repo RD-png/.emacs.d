@@ -207,31 +207,14 @@
 (set-face-attribute 'variable-pitch nil :font "Fantasque Sans Mono" :height default-variable-font-size :weight 'regular)
 
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-;; (load-theme 'modus-operandi)
 ;; (set-foreground-color "#c5c8c6")
 ;; (set-background-color "#1d1f21")
 
 ;; Custom faces
 (custom-set-faces
- ;; `(match ((t (:foreground "#9ac6f2"))))
- ;; `(persp-selected-face ((t (:foreground "light green"))))
- ;; `(doom-modeline-buffer-major-mode ((t (:foreground "light blue"))))
- ;; `(doom-modeline-info ((t (:foreground "pink"))))
- ;; `(doom-modeline-unread-number ((t (:foreground "red"))))
- ;; `(doom-modeline-buffer-file ((t (:foreground "light blue"))))
- ;; `(mode-line ((t (:foreground "#c5c8c6"))))
- ;; `(mode-line ((t (:background "#bac9ef" :underline (:line-width 1)))))
  `(mode-line ((t (:underline (:line-width 1)))))
- ;; `(org-level-4 ((t (:foreground "light blue"))))
- ;; `(show-paren-match ((t (:background "steelblue" :foreground "light green"))))
- ;; `(web-mode-html-tag-custom-face ((t (:foreground "#a4c460"))))
- ;; `(web-mode-html-tag-face ((t (:foreground "#78add2"))))
- ;; `(web-mode-html-attr-name-face ((t (:foreground "#e5786d"))))
- ;; `(magit-diff-hunk-heading-highlight ((t (:foreground "#9ac6f2"))))
- ;; `(mode-line ((t (:background "#444444" :foreground "#f6f3e8"))))
- `(cursor ((t (:background "IndianRed3"))))
- ;; `(region ((t (:background "gold"))))
- )
+ `(cursor ((t (:background "IndianRed3")))))
+
 ;; mode line underline in right place
 (setq x-underline-at-descent-line t)
 
@@ -339,7 +322,6 @@
                      (old-mode-str (cdr (assq mode minor-mode-alist))))
                 (when old-mode-str
                   (setcar old-mode-str mode-str))
-                ;; major mode
                 (when (eq mode major-mode)
                   (setq mode-name mode-str)))))
 
