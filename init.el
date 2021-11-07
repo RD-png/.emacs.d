@@ -101,9 +101,9 @@
 ;; Initialize package sources
 (require 'package)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+(setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
+			                   ("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -407,7 +407,7 @@
   :straight t
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
-  :bind  
+  :bind
   (:map minibuffer-local-map
         ("C-c C-o" . embark-export))
   :bind*
@@ -995,7 +995,7 @@
   (add-hook 'eshell-post-command-hook
             (lambda () (setenv "TERM" "dumb")))
 
-  (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+  (define-key eshell-mode-map (kbd "<tab>") 'capf-autosuggest-forward-word)
   (define-key eshell-mode-map (kbd "C-r") 'consult-history)
   (define-key eshell-mode-map (kbd "C-a") 'eshell-bol)
   (define-key eshell-mode-map (kbd "C-l") (lambda () (interactive) (eshell/clear 1) (eshell-send-input)))
@@ -1024,6 +1024,10 @@
   (with-eval-after-load 'esh-opt
     (setq eshell-destroy-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "zsh" "vim"))))
+
+(use-package capf-autosuggest
+  :straight (capf-autosuggest :host github :repo "emacs-straight/capf-autosuggest")
+  :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))
 
 (use-package eshell-syntax-highlighting
   :straight t
@@ -1583,35 +1587,34 @@
 (use-package modus-themes
   :straight (modus-themes :type built-in)
   :init
-   (setq  modus-themes-intense-hl-line t
-          modus-themes-org-blocks 'grayscale
-          modus-themes-scale-headings t
-          modus-themes-section-headings nil
-          modus-themes-variable-pitch-headings nil
-          modus-themes-intense-paren-match t
-          modus-themes-completions 'opinionated
-          modus-themes-diffs 'desaturated ;'fg-only-deuteranopia
-          modus-themes-syntax '(alt-syntax green-strings yellow-comments)
-          modus-themes-links '(faint neutral-underline)
-          modus-themes-hl-line '(intense)
-          modus-themes-prompts '(bold background)
-          modus-themes-mode-line '(accented borderless)
-          modus-themes-subtle-line-numbers t
-          modus-themes-tabs-accented t
-          modus-themes-inhibit-reload t
-          modus-themes-paren-match '(underline)
-          modus-themes-region '(no-extend accented bg-only)
-          modus-themes-org-agenda
-          '((header-block . (variable-pitch scale-title))
-            (header-date . (bold-today grayscale scale))
-            (scheduled . rainbow)
-            (habit . traffic-light-deuteranopia))
-          modus-themes-headings  '((t . (background overline rainbow)))
-          modus-themes-variable-pitch-ui nil
-          modus-themes-scale-headings t
-          modus-themes-scale-1 1.1
-          modus-themes-scale-2 1.15
-          modus-themes-scale-3 1.20
-          modus-themes-scale-4 1.25
-          modus-themes-scale-title 1.30)
-   (load-theme 'modus-operandi))
+  (setq  modus-themes-intense-hl-line t
+         modus-themes-org-blocks 'grayscale
+         modus-themes-scale-headings t
+         modus-themes-section-headings nil
+         modus-themes-variable-pitch-headings nil
+         modus-themes-intense-paren-match t
+         modus-themes-diffs 'desaturated
+         modus-themes-syntax '(alt-syntax green-strings yellow-comments)
+         modus-themes-links '(faint neutral-underline)
+         modus-themes-hl-line '(intense)
+         modus-themes-prompts '(bold background)
+         modus-themes-mode-line '(accented borderless)
+         modus-themes-subtle-line-numbers t
+         modus-themes-tabs-accented t
+         modus-themes-inhibit-reload t
+         modus-themes-paren-match '(underline)
+         modus-themes-region '(no-extend accented bg-only)
+         modus-themes-org-agenda
+         '((header-block . (variable-pitch scale-title))
+           (header-date . (bold-today grayscale scale))
+           (scheduled . rainbow)
+           (habit . traffic-light-deuteranopia))
+         modus-themes-headings  '((t . (background overline rainbow)))
+         modus-themes-variable-pitch-ui nil
+         modus-themes-scale-headings t
+         modus-themes-scale-1 1.1
+         modus-themes-scale-2 1.15
+         modus-themes-scale-3 1.20
+         modus-themes-scale-4 1.25
+         modus-themes-scale-title 1.30)
+  (load-theme 'modus-operandi))
