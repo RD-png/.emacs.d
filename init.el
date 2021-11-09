@@ -257,7 +257,8 @@
            "[Oo]utput\\*"
            help-mode
            compilation-mode)))
-  (popper-mode +1))
+  (popper-mode +1)
+  (popper-echo-mode +1))
 
 (setq display-buffer-base-action
       '(display-buffer-reuse-mode-window
@@ -1539,8 +1540,7 @@
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-d") (lambda () (interactive) (my/kill-thing-at-point 'word)))
-(global-set-key [C-backspace] #'my/backward-kill-word)
-(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
+(global-set-key (kbd "C-M-<backspace>") #'backward-kill-sexp)
 (global-set-key (kbd "C-M-<return>") #'eshell)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
@@ -1550,6 +1550,8 @@
 (global-set-key (kbd "C-/")  #'undo-only)
 (global-set-key (kbd "C-?")  #'undo-redo)
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
+
+(bind-key* "C-<backspace>" #'my/backward-kill-word)
 
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))
