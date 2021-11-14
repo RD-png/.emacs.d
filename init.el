@@ -1287,8 +1287,9 @@
   :ensure auctex
   :mode ("\\.tex\\'" . LaTeX-mode))
 
-(use-package cdlatex
+(use-package cdlatex  
   :straight (cdlatex :type built-in)
+  :defer 5
   :after latex    
   :hook (LaTeX-mode . turn-on-cdlatex))
 
