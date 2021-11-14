@@ -743,6 +743,7 @@
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.75))
 
   (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
 
@@ -1276,18 +1277,20 @@
   :straight (emacs-lisp-mode :type built-in)
   :hook (lisp-mode . emacs-lisp-mode))
 
-;; removed test
-;; (use-package paredit
-;;   :straight t
-;;   :config
-;;   (eldoc-add-command 'paredit-backward-delete
-;;                      'paredit-close-round))
-
 (use-package scheme-mode
-  :mode ("\\.sld\\'")
-  ;; :init
-  ;; (setq scheme-program-name "~/.nix-profile/bin/scheme")
-  )
+  :mode ("\\.sld\\'"))
+
+(use-package latex
+  :straight (latex :type built-in)
+  :defer 5
+  :after tex
+  :ensure auctex
+  :mode ("\\.tex\\'" . LaTeX-mode))
+
+(use-package cdlatex
+  :straight (cdlatex :type built-in)
+  :after latex    
+  :hook (LaTeX-mode . turn-on-cdlatex))
 
 (use-package projectile
   :straight t
