@@ -1,6 +1,8 @@
 ;; -*- lexical-binding: t; -*-
 
 ;; GC config
+(setq gc-cons-threshold 16777216
+                  gc-cons-percentage 0.1)
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
 (setq read-process-output-max 1048576)
@@ -10,11 +12,6 @@
 
 (defun my/restore-garbage-collection ()
   (run-at-time 1 nil (lambda () (setq gc-cons-threshold 16777216))))
-
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold 16777216
-                  gc-cons-percentage 0.1)))
 
 (add-hook 'minibuffer-setup-hook 'my/defer-garbage-collection)
 (add-hook 'minibuffer-exit-hook 'my/restore-garbage-collection)
@@ -53,11 +50,10 @@
            gcs-done))
 (add-hook 'emacs-startup-hook #'display-startup-time)
 
-(setq frame-inhibit-implied-resize t)
-(setq custom-safe-themes t)
 ;; Set default font size values
 (defvar default-font-size 140)
 (defvar default-variable-font-size 140)
+(setq custom-safe-themes t)
 
 ;; Default to utf-8
 (setq default-buffer-file-coding-system 'utf-8-unix
@@ -97,10 +93,7 @@
 
 ;; Remove startup message
 (advice-add 'display-startup-echo-area-message :override #'ignore)
-
-;; Initialize package sources
-(require 'package)
-
+(package-activate-all)
 (setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
 			                   ("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")))
@@ -152,7 +145,7 @@
   :straight t
   :demand t)
 
-(use-package dashboard
+(use-package dashboard  
   :straight t
   :config
   (dashboard-setup-startup-hook)
@@ -1413,7 +1406,7 @@
   :hook (prog-mode . smartparens-mode)
   (text-mode . smartparens-mode)
   :config
-  (sp-local-pair '(emacs-lisp-mode) "'" "'" :actions nil))
+  (sp-local-pair '(emacs-lisp-mode scheme-mode) "'" "'" :actions nil))
 
 (use-package paren
   :straight t
