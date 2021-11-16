@@ -211,17 +211,6 @@
 ;; mode line underline in right place
 (setq x-underline-at-descent-line t)
 
-;; For the default theme
-;; (custom-set-faces
-;;  '(company-preview
-;;    ((t (:background "#1d1f21" :foreground "white" :underline t))))
-;;  '(company-preview-common
-;;    ((t (:inherit company-preview))))
-;;  '(company-tooltip
-;;    ((t (:background "#1d1f21" :foreground "white"))))
-;;  '(company-tooltip-selection
-;;    ((t (:background "steelblue" :foreground "white")))))
-
 (use-package tree-sitter-langs
   :straight t)
 
@@ -269,11 +258,11 @@
   :commands sml/setup
   :init
   (setq sml/no-confirm-load-theme t)
-  (setq sml/theme 'light)
+  (setq sml/theme nil)
   (sml/setup))
 
 (defvar mode-line-cleaner-alist
-  `((company-mode . "")
+  `((company-mode . " ⇝")
     (yas-minor-mode . "")
     (smartparens-mode . "")
     (tree-sitter-mode . "")
@@ -387,7 +376,7 @@
   (:map minibuffer-local-map
         ("C-c C-o" . embark-export))
   :bind*
-  ("C-o" . embark-act)
+  ("C-o" . embark-act)  
   ("C-h h" . embark-bindings))
 
 (use-package embark-consult
@@ -409,12 +398,16 @@
          ("M-g M-g" . consult-goto-line)
          ("C-c h" . consult-mark)
          ("C-c H" . consult-global-mark)
+         ("C-c f" . consult-flymake)
          ("C-x M-f" . consult-recent-file)
          ([remap popup-kill-ring] . consult-yank-from-kill-ring)
          :map minibuffer-local-map
          ("C-r" . consult-history))
   :config
-  (setq consult-project-root-function #'projectile-project-root)
+  (setq consult-project-root-function #'projectile-project-root
+        xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  (setq consult-narrow-key "<")
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   (consult-line-start-from-top nil)
@@ -422,7 +415,8 @@
   (fset 'multi-occur #'consult-multi-occur)
   :init
   (setq register-preview-delay 0
-        register-preview-function #'consult-register-format))
+        register-preview-function #'consult-register-format)
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
 
 (use-package consult-dir
   :straight t
@@ -512,7 +506,7 @@
          ("C-c C-'" . persp-next)
          ("C-x M-b" . persp-switch))
   :custom
-  (persp-initial-frame-name "Main")
+  (persp-initial-frame-name "Win1")
   :config
   (setq persp-modestring-dividers '("|" "|" "|"))
   (unless (equal persp-mode t)
@@ -537,7 +531,7 @@
                ("P" projectile-persp-switch-project "Switch Project")
                ("q" nil :exit t)))
 
-;; Yoinked for karthinks blog
+;; Yoinked from karthinks blog
 (use-package avy
   :straight t
   :config
@@ -1283,9 +1277,11 @@
 (use-package latex
   :straight (latex :type built-in)
   :defer 5
-  :after tex
-  :ensure auctex
+  :after tex  
   :mode ("\\.tex\\'" . LaTeX-mode))
+
+;; (use-package auctex
+;;   :straight (auctex :type built-in))
 
 (use-package cdlatex  
   :straight (cdlatex :type built-in)
@@ -1359,51 +1355,14 @@
   (yas-reload-all))
 
 (use-package flymake
-  :straight (flymake :type built-in)
-  :after hydra
-  :commands (my/flymake-first-error
-             my/flymake-last-error)
+  :straight (flymake :type built-in)  
   :init
   (setq-default flymake-diagnostic-functions nil)
   (with-eval-after-load 'flymake-proc
     (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake))
   :config
   (setq flymake-start-on-flymake-mode t
-        flymake-start-on-save-buffer t)
-
-  (defun my/flymake-first-error ()
-    (interactive)
-    (let* ((ovs (flymake--overlays :compare #'< :key #'overlay-start))
-           (ov (car ovs)))
-      (cond
-       (ov (goto-char (overlay-start ov)))
-       (t (user-error "No flymake errors in the current buffer")))))
-
-  (defun my/flymake-last-error ()
-    (interactive)
-    (let* ((ovs (flymake--overlays :compare #'< :key #'overlay-start))
-           (ov (car (last ovs))))
-      (cond
-       (ov (goto-char (overlay-start ov)))
-       (t (user-error "No flymake errors in the current buffer")))))
-  :preface
-  (defvar flymake-hydra--window nil)
-  :hydra
-  (flymake-hydra
-   (:pre (let ((buffer-window (selected-window)))
-           (setq flymake-hydra--window (flymake-show-diagnostics-buffer))
-           (select-window buffer-window))
-         :post (when (and flymake-hydra--window
-                          (window-live-p flymake-hydra--window))
-                 (quit-window nil flymake-hydra--window))
-         :color pink
-         :hint nil)
-   ("n"  flymake-goto-next-error "Next")
-   ("p"  flymake-goto-prev-error "Previous")
-   ("a" my/flymake-first-error "First")
-   ("e"  my/flymake-last-error "Last")
-   ("q"  nil :exit t))
-  :bind ("C-c f" . flymake-hydra/body))
+        flymake-start-on-save-buffer t))
 
 (use-package smartparens
   :straight t
@@ -1559,8 +1518,8 @@
 ;; Open my default persp layouts
 (defun my/persp-setup-hook ()
   (interactive)
-  (persp-switch "Extr")
-  (persp-switch "Main"))
+  (persp-switch "Win2")
+  (persp-switch "Win1"))
 
 (add-hook 'after-init-hook #'my/persp-setup-hook)
 
