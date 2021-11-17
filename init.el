@@ -937,11 +937,13 @@
 (defun my/eshell-prompt ()
   (concat
    "\n"
-   (propertize (user-login-name) 'face `(:foreground "light green"))
-   (propertize " ⟣─ " 'face `(:foreground "dark orange"))
-   (propertize (my/pwd-shorten-dirs (my/get-prompt-path)) 'face `(:foreground "yellow3"))
-   (propertize " #" 'face `(:foreground "pink2"))
+   (propertize (user-login-name) 'face `(:foreground "#8f0075"))
+   (propertize " ⟣─ " 'face `(:foreground "#2544bb"))
+   (propertize (my/pwd-shorten-dirs (my/get-prompt-path)) 'face `(:foreground "#145c33"))
+   (propertize " #" 'face `(:foreground "#70480f"))
    (propertize " " 'face `(:foreground "white"))))
+
+
 
 (defun eshell-configure ()
   (use-package xterm-color
@@ -1536,7 +1538,7 @@
          modus-themes-variable-pitch-headings nil
          modus-themes-intense-paren-match t
          modus-themes-diffs 'desaturated
-         modus-themes-syntax '(alt-syntax green-strings yellow-comments)
+         modus-themes-syntax '(alt-syntax-other green-strings yellow-comments)
          modus-themes-links '(faint neutral-underline)
          modus-themes-hl-line '(intense)
          modus-themes-prompts '(bold background)
