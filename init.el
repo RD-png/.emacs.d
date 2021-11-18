@@ -2,7 +2,7 @@
 
 ;; GC config
 (setq gc-cons-threshold 16777216
-                  gc-cons-percentage 0.1)
+      gc-cons-percentage 0.1)
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
 (setq read-process-output-max 1048576)
@@ -15,6 +15,7 @@
 
 (add-hook 'minibuffer-setup-hook 'my/defer-garbage-collection)
 (add-hook 'minibuffer-exit-hook 'my/restore-garbage-collection)
+(add-hook 'emacs-startup-hook #'emacs-init-time)
 
 ;; native comp
 (when (and (fboundp 'native-comp-available-p)
@@ -40,15 +41,6 @@
 (defvar url-callback-arguments nil)
 (defvar url-callback-function nil)
 (defvar url-http-extra-headers nil)
-
-;; Time emacs startup
-(defun display-startup-time ()
-  (message "Emacs loaded in %s with %d garbage collections."
-           (format "%.2f seconds"
-                   (float-time
-                    (time-subtract after-init-time before-init-time)))
-           gcs-done))
-(add-hook 'emacs-startup-hook #'display-startup-time)
 
 ;; Set default font size values
 (defvar default-font-size 140)
@@ -138,20 +130,12 @@
 ;; Load the helper package for commands like `straight-x-clean-unused-repos'
 (require 'straight-x)
 
-(use-package hydra
-  :straight t)
-
-(use-package use-package-hydra
-  :straight t
-  :demand t)
-
-(use-package dashboard  
+(use-package dashboard
   :straight t
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner 'official)
-  (setq dashboard-items '((recents  . 10)
-                          (projects . 5)
+  (setq dashboard-items '((recents  . 10)                          
                           (bookmarks . 5)))
   (setq dashboard-banner-logo-title "")
   (setq dashboard-set-file-icons t))
@@ -222,7 +206,7 @@
 
 (use-package popper
   :straight t
-  :after projectile
+  :after project
   :bind (("C-c C-." . popper-toggle-latest)
          ("C-c M-." . popper-kill-latest-popup)
          ("C-c C-/" . popper-cycle)
@@ -284,7 +268,7 @@
     (scheme-mode . " SCM")
     (matlab-mode . "M")
     (org-mode . "Org")
-    (projectile-mode . "")
+    ;; (projectile-mode . "")
     (valign-mode . "")
     (eldoc-mode . "")
     (org-cdlatex-mode . "")
@@ -354,8 +338,7 @@
   :custom
   (savehist-additional-variables
    '(kill-ring search-ring regexp-search-ring
-               consult--line-history evil-ex-history
-               projectile-project-command-history)))
+               consult--line-history evil-ex-history)))
 
 (use-package emacs
   :straight (emacs :type built-in)
@@ -376,7 +359,7 @@
   (:map minibuffer-local-map
         ("C-c C-o" . embark-export))
   :bind*
-  ("C-o" . embark-act)  
+  ("C-o" . embark-act)
   ("C-h h" . embark-bindings))
 
 (use-package embark-consult
@@ -391,7 +374,7 @@
 (use-package consult
   :straight t
   :demand t
-  :after projectile
+  :after project
   :bind (("C-s" . consult-line)
          ("C-M-s" . multi-occur)
          ("C-M-l" . consult-outline)
@@ -404,9 +387,10 @@
          :map minibuffer-local-map
          ("C-r" . consult-history))
   :config
-  (setq consult-project-root-function #'projectile-project-root
-        xref-show-xrefs-function #'consult-xref
+  (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
+  (setq consult-project-root-function (lambda () "Return current project root"
+                                        (project-root (project-current))))
   (setq consult-narrow-key "<")
   :custom
   (completion-in-region-function #'consult-completion-in-region)
@@ -431,19 +415,20 @@
   (marginalia-mode)
   :custom
   (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :config
-  (advice-add #'marginalia--project-root :override #'projectile-project-root)
+  :config  
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
   (setq marginalia-command-categories
-        (append '((projectile-find-file . project-file)
-                  (projectile-find-dir . project-file)
-                  (projectile-switch-project . project-file)
-                  (projectile-recentf . project-file)
-                  (projectile-switch-to-buffer . buffer)
+        (append '(
+                  ;; (projectile-find-file . project-file)
+                  ;; (projectile-find-dir . project-file)
+                  ;; (projectile-switch-project . project-file)
+                  ;; (projectile-recentf . project-file)
+                  ;; (projectile-switch-to-buffer . buffer)
                   (persp-switch-to-buffer . buffer))
                 marginalia-command-categories)))
 
 (use-package wgrep
+  :defer 2
   :straight t
   :config
   (setq wgrep-change-readonly-file t)
@@ -502,34 +487,14 @@
 
 (use-package perspective
   :straight t
-  :bind (("C-x w" . persp-hydra/body)
-         ("C-c C-'" . persp-next)
+  :bind (("C-c C-'" . persp-next)
          ("C-x M-b" . persp-switch))
   :custom
   (persp-initial-frame-name "Win1")
   :config
   (setq persp-modestring-dividers '("|" "|" "|"))
   (unless (equal persp-mode t)
-    (persp-mode))
-
-  persp-modestring-dividers
-
-  :hydra
-  (persp-hydra (:columns 4 :color pink)
-               "Perspective"
-               ("a" persp-add-buffer "Add Buffer")
-               ("i" persp-import "Import")
-               ("c" persp-kill "Close")
-               ("n" persp-next "Next")
-               ("p" persp-prev "Prev")
-               ("k" persp-remove-buffer "Kill Buffer")
-               ("r" persp-rename "Rename")
-               ("A" persp-set-buffer "Set Buffer")
-               ("s" persp-switch "Switch")
-               ("C-x" persp-switch-last "Switch Last")
-               ("b" persp-switch-to-buffer "Switch to Buffer")
-               ("P" projectile-persp-switch-project "Switch Project")
-               ("q" nil :exit t)))
+    (persp-mode)))
 
 ;; Yoinked from karthinks blog
 (use-package avy
@@ -602,7 +567,7 @@
 
 (use-package embrace
   :straight t
-  :bind 
+  :bind
   ("M-s a" . embrace-add)
   ("M-s c" . embrace-change)
   ("M-s d" . embrace-delete))
@@ -648,6 +613,7 @@
 ;;         smtpmail-stream-type 'ssl))
 
 (use-package devdocs
+  :defer 2
   :straight t
   :config
   (defun my/devdocs-lookup ()
@@ -666,8 +632,7 @@
                           '(("^ *\\([-]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-
-  ;; MAKE HYDRA TO MANAGE ORG TASKS
+  
   (defun org-archive-done-tasks ()
     (interactive)
     (org-map-entries
@@ -719,26 +684,9 @@
   :straight (org :type built-in)
   :pin org
   :commands (org-capture org-agenda)
-  :preface
-  (defun my/project-task-file ()
-    (interactive)
-    (find-file (concat "~/.config/emacs/org/Projects/" (projectile-project-name) ".org")))
-
   :hook (org-mode . org-mode-setup)
   :bind (("M-o a" . org-agenda)
-         ("M-o p t" . my/project-task-file)
-         ("M-o t" . org-todo-hydra/body))
-  :hydra
-  (org-todo-hydra (:columns 4 :color pink)
-                  "TODOS"
-                  ("n" org-next-visible-heading "Next")
-                  ("p" org-previous-visible-heading "Prev")
-                  ("a" my/org-first-task "First")
-                  ("e" my/org-last-task "Last")
-                  ("k" org-cut-subtree "Kill")
-                  ("t" org-todo "Status")
-                  ("A" org-archive-done-tasks "Archive")
-                  ("q" nil :exit t))
+         ("M-o p t" . my/project-task-file))
   :config
   (setq org-ellipsis " ▾")
   (setq org-agenda-start-with-log-mode t)
@@ -852,6 +800,7 @@
   (org-font-setup))
 
 (use-package org-make-toc
+  :defer 5
   :straight t
   :after org)
 
@@ -892,6 +841,7 @@
   (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
 (use-package org-roam
+  :defer 3
   :straight t
   :init
   (setq org-roam-v2-ack t)
@@ -1141,6 +1091,7 @@
 ;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 (use-package direnv
+  :defer 5
   :straight t
   :config
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
@@ -1284,34 +1235,37 @@
   :mode ("\\.sld\\'"))
 
 (use-package latex
-  :straight (latex :type built-in)
   :defer 5
-  :after tex  
+  :straight (latex :type built-in)  
+  :after tex
   :mode ("\\.tex\\'" . LaTeX-mode))
 
 ;; (use-package auctex
 ;;   :straight (auctex :type built-in))
 
-(use-package cdlatex  
+(use-package cdlatex
   :straight (cdlatex :type built-in)
   :defer 5
-  :after latex    
+  :after latex
   :hook (LaTeX-mode . turn-on-cdlatex))
 
-(use-package projectile
-  :straight t
-  :defer 10
-  :config (projectile-mode)
-  :bind (([remap projectile-ripgrep] . consult-ripgrep))
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
-  :config
-  (setq projectile-switch-project-action #'projectile-dired)
-  :init
-  (projectile-mode 1))
-
 (use-package project
-  :straight (project :type built-in))
+  :straight (project :type built-in)
+  :init
+  (global-set-key (kbd "C-c p") project-prefix-map)
+  (cl-defgeneric project-root (project) (car project))
+  (setq project-switch-commands
+        '((?f "Find file" project-find-file)          
+          (?g "Find regexp" project-find-regexp)
+          (?d "Dired" project-dired)
+          (?b "Buffer" project-switch-to-buffer)
+          (?r "Query replace" project-query-replace-regexp)
+          (?v "VC-Dir" project-vc-dir)
+          (?k "Kill buffers" project-kill-buffers)
+          (?! "Shell command" project-shell-command)
+          (?e "Eshell" consult-recent-file)))
+  :bind*
+  ("C-c p s r" . consult-ripgrep))
 
 (use-package rg
   :straight t)
@@ -1364,7 +1318,7 @@
   (yas-reload-all))
 
 (use-package flymake
-  :straight (flymake :type built-in)  
+  :straight (flymake :type built-in)
   :init
   (setq-default flymake-diagnostic-functions nil)
   (with-eval-after-load 'flymake-proc
