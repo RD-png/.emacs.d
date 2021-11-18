@@ -535,6 +535,7 @@
 (use-package avy
   :straight t
   :config
+  (setq avy-timeout-seconds 0.35)
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
                       ?v ?b ?n ?. ?, ?/ ?u ?p ?e
                       ?c ?q ?2 ?3 ?'))
@@ -556,8 +557,7 @@
   (avy-single-candidate-jump nil)
   :bind*
   ("C-j" . avy-goto-char-timer)
-  ("M-m" . avy-goto-word-0)
-  ("M-s" . avy-goto-char))
+  ("M-m" . avy-goto-word-0))
 
 (defun avy-action-kill-whole-line (pt)
   (save-excursion
@@ -599,6 +599,13 @@
   (select-window
    (cdr (ring-ref avy-ring 0)))
   t)
+
+(use-package embrace
+  :straight t
+  :bind 
+  ("M-s a" . embrace-add)
+  ("M-s c" . embrace-change)
+  ("M-s d" . embrace-delete))
 
 (use-package expand-region
   :straight t
