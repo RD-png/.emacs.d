@@ -1090,8 +1090,7 @@
 ;;   (setq lsp-ui-sideline-show-code-actions nil)
 ;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
-(use-package direnv
-  :defer 5
+(use-package direnv  
   :straight t
   :config
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
