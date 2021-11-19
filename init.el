@@ -1346,13 +1346,12 @@
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump)
          :map dired-mode-map
-         ("<return>" . dired-find-alternate-file)
-         ("q" . (lambda () (interactive) (find-alternate-file ".."))))
+         ("q" . dired-up-directory))
   :custom
   ((dired-listing-switches "-AGFhlv --group-directories-first")
    (dired-recursive-copies t))
-  :config
-  (put 'dired-find-alternate-file 'disabled nil)
+  :config  
+  (setf dired-kill-when-opening-new-dired-buffer t)
   (setq dired-recursive-copies 'always
         dired-recursive-deletes 'always
         delete-by-moving-to-trash t))
