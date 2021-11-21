@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t; -*-
+(setq-default lexical-binding t)
 
 ;; GC config
 (setq gc-cons-threshold 16777216
@@ -26,6 +27,7 @@
     (setq warning-minimum-level :error)
     (setq package-native-compile t)
     (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))))
+(setq load-prefer-newer t)
 
 ;; Stop the native comp warnings
 (defvar grep-find-ignored-directories nil)
@@ -280,7 +282,9 @@
     (outline-minor-mode . " [o]";; " ֍"
                         )
     (strokes-mode . "")
-    (flymake-mode . "")))
+    (flymake-mode . "")
+    (flyspell-mode . "")
+    ))
 
 (defun clean-mode-line ()
   (cl-loop for cleaner in mode-line-cleaner-alist
@@ -1325,6 +1329,10 @@
   :config
   (setq flymake-start-on-flymake-mode t
         flymake-start-on-save-buffer t))
+
+(use-package flyspell
+  :straight (flyspell :type built-in)
+  :hook (text-mode . flyspell-mode))
 
 (use-package smartparens
   :straight t
