@@ -137,7 +137,7 @@
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner 'official)
-  (setq dashboard-items '((recents  . 10)                          
+  (setq dashboard-items '((recents  . 10)
                           (bookmarks . 5)))
   (setq dashboard-banner-logo-title "")
   (setq dashboard-set-file-icons t))
@@ -419,7 +419,7 @@
   (marginalia-mode)
   :custom
   (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :config  
+  :config
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
   (setq marginalia-command-categories
         (append '(
@@ -636,7 +636,7 @@
                           '(("^ *\\([-]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-  
+
   (defun org-archive-done-tasks ()
     (interactive)
     (org-map-entries
@@ -1059,9 +1059,14 @@
   :hook (lsp)
   :config
   (setq lsp-completion-provider :none)
+  :preface
+  (defun my/lsp-format-buffer ()
+    (interactive)
+    (lsp-format-buffer)    
+    (delete-trailing-whitespace))
   :bind (:map lsp-mode-map
               ("C-c o d" . lsp-describe-thing-at-point)
-              ("C-c o f" . lsp-format-buffer)
+              ("C-c o f" . my/lsp-format-buffer)
               ("C-c o a" . lsp-execute-code-action)
               ("C-c o r" . lsp-find-references)
               ("C-c o g" . lsp-find-definition))
@@ -1094,7 +1099,7 @@
 ;;   (setq lsp-ui-sideline-show-code-actions nil)
 ;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
-(use-package direnv  
+(use-package direnv
   :straight t
   :config
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
@@ -1239,7 +1244,7 @@
 
 (use-package latex
   :defer 5
-  :straight (latex :type built-in)  
+  :straight (latex :type built-in)
   :after tex
   :mode ("\\.tex\\'" . LaTeX-mode))
 
@@ -1258,7 +1263,7 @@
   (global-set-key (kbd "C-c p") project-prefix-map)
   (cl-defgeneric project-root (project) (car project))
   (setq project-switch-commands
-        '((?f "Find file" project-find-file)          
+        '((?f "Find file" project-find-file)
           (?g "Find regexp" project-find-regexp)
           (?d "Dired" project-dired)
           (?b "Buffer" project-switch-to-buffer)
@@ -1358,7 +1363,7 @@
   :custom
   ((dired-listing-switches "-AGFhlv --group-directories-first")
    (dired-recursive-copies t))
-  :config  
+  :config
   (setf dired-kill-when-opening-new-dired-buffer t)
   (setq dired-recursive-copies 'always
         dired-recursive-deletes 'always
@@ -1472,7 +1477,6 @@
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
-(global-set-key (kbd "C-c o R")  #'delete-trailing-whitespace)
 (global-set-key (kbd "C-c o g")  #'xref-find-definitions)
 (global-set-key (kbd "C-/")  #'undo-only)
 (global-set-key (kbd "C-?")  #'undo-redo)
