@@ -1,0 +1,115 @@
+:PROPERTIES:
+:ID:       684d2cf7-8ae9-4827-b67d-e764953dc7a1
+:END:
+#+title: Laravel-Requests
+* Accessing Requests
+The access the request we can inject the Request class on the route function, laravel will automatically inject to the request, allowing us to access request data in the following way
+#+begin_src php
+  use Illuminate\Http\Request;
+  
+  public function store(Request $request)
+  {
+      $name = $request->input('name');
+  }
+#+end_src
+Other required route parameters can be defined after the request parameter.
+
+The Request class allows to get find information about the http request, for example we can tell which operation has been passed, POST GET etc. The url it came from, the headers etc. We can edit these if needed or use them to apply different logic in our function based on the context of the request.
+
+** Request Class functionality
+*** All
+We can access all the requests data by calling all on it, this will return the information as an array. This will return all information about the request, including information about the request operation.
+#+begin_src php
+  $input = $request->all();
+#+end_src
+*** Collect
+Collect allows us to retrieve all the user inputs from the request, this will exclude information that relates to the request, for example no operation information etc will be included in the response from collect.
+
+Collect can be called with an argument to retrieve a subset of the requests inputs.
+#+begin_src php
+  $input = $request->collect(); // ->collect('users') will return just the users input
+#+end_src
+*** Input
+This simply allows us to access the user input from a request (query and payload), using the following structure
+#+begin_src php
+  $input = $request->input('name');
+#+end_src
+Can also be called with a default value if the input is not set
+#+begin_src php
+  $input = $request->input('name', 'sally');
+#+end_src
+If we wish to retrieve all the inputs an associative array we can input with no arguments
+#+begin_src php
+  $input = $request->input();
+#+end_src
+*** Query
+Query allows us to retrieve values from the query string 
+#+begin_src php
+  $input = $request->query('name');
+#+end_src
+Can also pass a default
+#+begin_src php
+  $input = $request->query('name', 'sally');
+#+end_src
+Or just return the entire query string using no arguments
+#+begin_src php
+  $input = $request->query();
+#+end_src
+*** Has
+We can use this to determine if a request contains a value
+#+begin_src php
+ if($request->has('name')) -> Bool
+#+end_src
+We can also pass it can array and it will check that each of the fields exist on the request
+#+begin_src php
+ if($request->has(['name', 'age'])) -> Bool
+#+end_src
+*** whenHas
+Allows us to execute a closure when a value is present in the request
+#+begin_src php
+ $request->whenHas('name', function ($input) {});
+#+end_src
+If the value is not present we can pass a secondary closure that will be executed
+#+begin_src php
+  $request->whenHas('name', function ($input) {
+  }, function () {
+      
+  });
+#+end_src
+*** hasAny
+Similar to has with an array, however if any of the values exists in the request true will be returned
+#+begin_src php
+  if ($request->hasAny(['name', 'email'])) -> Bool
+#+end_src
+*** whenFilled
+can be used to check a value exists and not empty, we can pass multiple values and call closures depending on the resulting boolean.
+*** Missing
+Check if a value is missing from a request, very similar in functionality as has, essentially syntax sugar to allude to the fact we are checking something is missing rather than if something exists
+*** Cookie
+Access a cookie sent with the request
+#+begin_src php
+$request->cookie('name')
+#+end_src
+*** File
+Access files passed via the request
+#+begin_src php
+$request->file('photo')
+#+end_src
+*** hasFile
+Predicate for if a file input with a given name exists on the request
+#+begin_src php
+$request->hasFile('photo')
+#+end_src
+*** isValid
+Predicate for if the file was uploaded correctly
+*** Storing
+We can tell laravel to store files using the following syntax, we can a folder the resource should be stored in and the disk to store it on
+#+begin_src php
+  $path = $request->photo->store('images', 's3');
+#+end_src
+If we wish to manually name the file we can use storeAs
+#+begin_src php
+  $path = $request->photo->storeAs('images', 'filename.jpg', 's3');
+#+end_src
+
+

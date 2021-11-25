@@ -1,0 +1,37 @@
+:PROPERTIES:
+:ID:       42b1108e-b9ce-4520-8b4f-aea51c6e4918
+:END:
+#+title: Laravel-Routing
+* Default Routes
+Routes are stored in the routes directory in the root of the project, they are defined per type, for example api, channels, console and web are stored in there own files. These routes are loaded automatically by the RouteServiceProvider.
+
+** Api Routes
+These are simply routes that are used to call functionality, they are defined in their own file separate from the web routes.
+
+** Web Routes
+These can be used to call api functionality but typically are used to return a html view, as we use a front end framework(Vue), we will not need to define any web routes.
+
+** Channel Routes
+Not sure.
+
+** Console Routes
+These are routes only accessible via the laravel cli, these will typical be to us functionality we don't wish to be accessible via an api call, admin related functionality.
+
+* Registering Controllers
+We our controllers to be accessible via api, web etc, via importing the class as a dependency and then registering it as a resource, this can be done using the following syntax.
+#+begin_src php
+  Route::resources([
+      'photos' => PhotoController::class,
+      'posts' => PostController::class,
+  ]);
+#+end_src
+
+** ApiResource
+Usually I will not require the front end functionality included in the resources class, so I can use this to register the class if I cam producing a pure api
+#+begin_src php
+  Route::apiResources([
+    'photos' => PhotoController::class,
+    'posts' => PostController::class,
+]);
+#+end_src
+

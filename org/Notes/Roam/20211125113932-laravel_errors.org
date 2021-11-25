@@ -1,0 +1,7 @@
+:PROPERTIES:
+:ID:       39e19685-6269-4fc1-83d1-55fb819efac1
+:END:
+#+title: Laravel-Errors
+* Reporting Errors
+We can create custom Exceptions and return them using Laravels Handler class, custom exceptions are stored in the app/Exceptions directory, we still have the default exceptions and the ones laravel provides, so shouldn't need to implement too many custom ones.
+

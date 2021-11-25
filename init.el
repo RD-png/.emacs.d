@@ -629,6 +629,8 @@
           (lambda () (setq-local devdocs-current-docs '("vue~3"))))
 (add-hook 'python-mode-hook
           (lambda () (setq-local devdocs-current-docs '("django_rest_framework" "django~3.2"))))
+(add-hook 'php-mode-hook
+          (lambda () (setq-local devdocs-current-docs '("laravel~8"))))
 
 (defun org-font-setup ()
   ;; Replace list hyphen with dot

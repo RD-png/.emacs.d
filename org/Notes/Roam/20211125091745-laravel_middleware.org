@@ -1,0 +1,33 @@
+:PROPERTIES:
+:ID:       e360d03a-4c9c-47df-9d6d-8a065aa49a46
+:END:
+#+title: Laravel-MiddleWare
+* Basic Concept
+Allows us to filter the http requests that are entering our application, an example would
+be to test if the user is authenticated before we pass the call to the desired route.
+
+* Defining Middleware
+This will create a new middleware class under the directory app/HTTP/MiddleWare
+#+begin_src bash
+  php artisan make:middleware EnsureTokenIsValid
+#+end_src
+
+This for example would only allow routes to be accessed if a valid token is supplied with the request.
+#+begin_src php
+  public function handle($request, Closure $next)
+  {
+      if ($request->input('token') !== 'my-secret-token') {
+          return redirect('home');
+      }
+
+      return $next($request);
+  }
+#+end_src
+
+* Assign Middleware To Routes
+#+begin_src php
+  protected $routeMiddleware = [
+      'auth' => \App\Http\Middleware\Authenticate::class,
+  ];
+#+end_src
+
