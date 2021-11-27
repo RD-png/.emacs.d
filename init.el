@@ -214,6 +214,7 @@
          ("C-c C-/" . popper-cycle)
          ("C-c C-;" . popper-toggle-type))
   :init
+  (setq popper-window-height 10)
   (setq popper-reference-buffers
         (append
          '("\\*Messages\\*"
@@ -222,7 +223,11 @@
            "^\\*Backtrace\\*"
            "\\*Async Shell Command\\*"
            "\\*Completions\\*"
+           "\\*devdocs\\*"
            "[Oo]utput\\*"
+           "*helpful command: *.*$"
+           "*helpful function: *.*$"
+           "*helpful variable: *.*$"
            help-mode
            compilation-mode)))
   (popper-mode +1)
@@ -357,14 +362,46 @@
 
 (use-package embark
   :straight t
+  :after minibuffer
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
-  :bind
-  (:map minibuffer-local-map
-        ("C-c C-o" . embark-export))
+  :config
+  (define-key embark-file-map (kbd "o") (my/embark-ace-action find-file))
+  (define-key embark-buffer-map   (kbd "o") (my/embark-ace-action switch-to-buffer))
+  (define-key embark-bookmark-map (kbd "o") (my/embark-ace-action bookmark-jump))
+  (define-key embark-file-map (kbd "S") 'sudo-find-file)
+  :bind (:map minibuffer-local-map
+              ("C-c C-o" . embark-export))
   :bind*
   ("C-o" . embark-act)
   ("C-h h" . embark-bindings))
+
+(eval-when-compile
+  (defmacro my/embark-ace-action (fn)
+    `(defun ,(intern (concat "my/embark-ace-" (symbol-name fn))) ()
+       (interactive)
+       (with-demoted-errors "%s"
+         (require 'ace-window)
+         (let ((aw-dispatch-always t))
+           (aw-switch-to-window (aw-select nil))
+           (call-interactively (symbol-function ',fn)))))))
+
+(defun sudo-find-file (file)
+  "Open FILE as root."
+  (interactive "FOpen file as root: ")
+  (when (file-writable-p file)
+    (user-error "File is user writeable, aborting sudo"))
+  (find-file (if (file-remote-p file)
+                 (concat "/" (file-remote-p file 'method) ":"
+                         (file-remote-p file 'user) "@" (file-remote-p file 'host)
+                         "|sudo:root@"
+                         (file-remote-p file 'host) ":" (file-remote-p file 'localname))
+               (concat "/sudo:root@localhost:" (file-truename file)))))
+
+(defun sudo-this-file ()
+  "Open the current file as root."
+  (interactive)
+  (sudo-find-file (file-truename buffer-file-name)))
 
 (use-package embark-consult
   :straight '(embark-consult :host github
@@ -380,6 +417,8 @@
   :demand t
   :after project
   :bind (("C-s" . consult-line)
+         ("C-M-m" . consult-imenu)
+         ("C-M-S-m" . consult-imenu-multi)
          ("C-M-s" . multi-occur)
          ("C-M-l" . consult-outline)
          ("M-g M-g" . consult-goto-line)
@@ -460,19 +499,10 @@
   :config
   (setq aw-dispatch-always t)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  (defun my/ace-window ()
-    (interactive)
-    (if (> (length (mapcar #'window-buffer (window-list))) 2)
-        (ace-select-window)
-      (other-window -1)))
-  (defun my/ace-swap-window ()
-    (interactive)
-    (if (> (length (mapcar #'window-buffer (window-list))) 2)
-        (ace-swap-window)
-      (window-swap-states)))
-  :bind (("C-x o" . my/ace-window)
+  :bind (("C-x o" . ace-window)
+         ("M-o" . other-window)
          ("C-x 0" . ace-delete-window)
-         ("C-x O" . my/ace-swap-window)
+         ("C-x O" . ace-swap-window)
          ("C-x M-0" . delete-other-windows)))
 
 (defun split-and-follow-horizontally ()
@@ -691,8 +721,6 @@
   :pin org
   :commands (org-capture org-agenda)
   :hook (org-mode . org-mode-setup)
-  :bind (("M-o a" . org-agenda)
-         ("M-o p t" . my/project-task-file))
   :config
   (setq org-ellipsis " ▾")
   (setq org-agenda-start-with-log-mode t)
@@ -1064,7 +1092,7 @@
   :preface
   (defun my/lsp-format-buffer ()
     (interactive)
-    (lsp-format-buffer)    
+    (lsp-format-buffer)
     (delete-trailing-whitespace))
   :bind (:map lsp-mode-map
               ("C-c o d" . lsp-describe-thing-at-point)
