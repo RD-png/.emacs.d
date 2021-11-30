@@ -275,7 +275,6 @@
     (scheme-mode . " SCM")
     (matlab-mode . "M")
     (org-mode . "Org")
-    ;; (projectile-mode . "")
     (valign-mode . "")
     (eldoc-mode . "")
     (org-cdlatex-mode . "")
@@ -1271,6 +1270,15 @@
 
 (use-package scheme-mode
   :mode ("\\.sld\\'"))
+
+(use-package rustic
+  :straight t
+  :mode ("\\.rs$" . rustic-mode)
+  :config
+  (setq rustic-lsp-server 'rls)
+  (setq rustic-lsp-server 'rustfmt)
+  (setq rustic-lsp-client 'lsp-mode)
+  (setq rustic-indent-method-chain t))
 
 (use-package latex
   :defer 5
