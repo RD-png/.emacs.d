@@ -1,0 +1,38 @@
+:PROPERTIES:
+:ID:       cb9aa70e-ee54-4049-bc57-edd9f067246b
+:END:
+#+title: Rust-Ownership
+The purpose of ownership is to provide memory safety without the need to garbage collect
+
+* The Stack
+The stack stores values in the order it receives them and removed them in the opposite order. Which follows the idea of last in first out. All data stored on the stack must have a known fixed size, as without this it will be stored on the heap.
+
+* The Heap
+Anything that has a none fixed size can be stored on the heap, the heap is not organized and things are allocated wherever there is enough space and a pointer is returned to its position for access later.
+
+* Ownership Rules
+- Each value in rust has a variable which we refer to as its owner
+- There can only be one owner
+- When the owner is out of scope the value will be dropped
+
+
+* Storing A String In Memory
+When storing a non literal string, we need to store 3 parts, a pointer, a length and capacity, which are stored on the stack. The pointer references the position of the data on the heap, the length is the length of the string and the capacity refers to how many bytes were allocated to store the data.
+
+When we assign a variable to another variable, rust creates a copy of the properties stored on the stack for the variable we are copying, so the pointer, length and capacity will be copied to another point on the stack. As we have copied the pointer, the variable we have just defined points to the same data on the heap.
+
+As dropping memory twice will result in corrupted memory, rust prevents this by considering the original variable invalid and it can not be accessed, therefore only the copy will be dropped when the variable is out of scope.
+
+This can essentially be summarized as the data from the original variable was moved to the copy of the variable.
+
+* Clone
+This is a rust primitive function that acts in a similar way as copying the stack properties of the original variable, however the pointer will be changed and the allocator will find a new position on the heap to copy the original data to. Therefore there is issues with ownership and dropping heap data. This however is more expensive than making a direct copy of a variable.
+
+* Clone Fixed Size Types
+Since types with a fixed size are always stored on the stack and it is inexpensive to create copies of them we can assign a variable to another variable without the original variable being invalid. In this case the clone function is also not needed as using clone on integers for example would produce the same result as just assigning one variable to another.
+
+* Passing A Variable To A Function
+Depending on the type of the variable, it will either be moved or copied, for example a string will be moved, while an integer would be copied. This would mean that calling a function and passing it a string would result in the string being invalid after the function call, however an integer would be usable.
+
+This would result in a very tedious cycle of passing back data types that are stored on the heap from every function we passed them to, we can avoid this pattern by using [[id:ab8bd989-c7d8-4445-b773-c4af5517baf6][References]].
+
