@@ -444,6 +444,12 @@
         register-preview-function #'consult-register-format)
   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
 
+(use-package affe
+  :straight t
+  :config
+  (setq affe-regexp-function #'orderless-pattern-compiler
+        affe-highlight-function #'orderless--highlight))
+
 (use-package consult-dir
   :straight t
   :bind (("C-x C-d" . consult-dir)
@@ -1271,14 +1277,22 @@
 (use-package scheme-mode
   :mode ("\\.sld\\'"))
 
+(use-package racket-mode
+  :straight t
+  :mode ("\\.rkt\\'"))
+
 (use-package rustic
   :straight t
   :mode ("\\.rs$" . rustic-mode)
+  :custom
+  (rustic-lsp-client nil)
+  (rustic-lsp-server 'rust-analyzer)
+
   :config
   (setq rustic-lsp-server 'rls)
-  (setq rustic-lsp-server 'rustfmt)
-  (setq rustic-lsp-client 'lsp-mode)
   (setq rustic-indent-method-chain t))
+
+(add-hook 'rustic-mode-hook #'rustic-lsp-mode-setup)
 
 (use-package latex
   :defer 5
@@ -1564,7 +1578,7 @@
            (habit . traffic-light-deuteranopia))
          modus-themes-headings  '((t . (background overline rainbow)))
          modus-themes-variable-pitch-ui nil
-         modus-themes-scale-headings t
+         modus-themes-scale-vheadings t
          modus-themes-scale-1 1.1
          modus-themes-scale-2 1.15
          modus-themes-scale-3 1.20
