@@ -418,7 +418,7 @@
   :bind (("C-s" . consult-line)
          ("C-M-m" . consult-imenu)
          ("C-M-S-m" . consult-imenu-multi)
-         ("C-M-s" . multi-occur)
+         ("C-M-s" . consult-multi-occur)
          ("C-M-l" . consult-outline)
          ("M-g M-g" . consult-goto-line)
          ("C-c h" . consult-mark)
@@ -1284,12 +1284,10 @@
 (use-package rustic
   :straight t
   :mode ("\\.rs$" . rustic-mode)
-  :custom
-  (rustic-lsp-client nil)
-  (rustic-lsp-server 'rust-analyzer)
-
   :config
   (setq rustic-lsp-server 'rls)
+  (setq rustic-lsp-server 'rustfmt)
+  (setq rustic-lsp-client 'lsp-mode)
   (setq rustic-indent-method-chain t))
 
 (add-hook 'rustic-mode-hook #'rustic-lsp-mode-setup)

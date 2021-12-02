@@ -1,0 +1,74 @@
+:PROPERTIES:
+:ID:       dfeaa35f-13c5-454e-b171-dc400555a62c
+:END:
+#+title: Rust-Structs
+A custom user defined data structure which allows us to group together data to create a meaningful group which can be used throughout our code. Structs are similar to the object oriented concept of data attributes, where you may have a model class called product which contains all the properties of a product.
+
+* Initializing Structs
+Similar to tuples, structs can contain any data type, however structs allow for data to be in any order as they are named, so as long as some piece of data related to the struct contains all the required values and correct types the data object is valid type of that struct. We can define a struct as so
+#+begin_src rust
+  struct User {
+      active: bool,
+      username: String,
+      email: String,
+      sign_in_count: u64,
+  }
+#+end_src
+We assign a name for the struct and then define the fields that belong to it and the type of each of the fields.
+
+We can now use this struct to define an object, as so
+#+begin_src rust
+  let user1 = User {
+      email: String::from("someone@example.com"),
+      username: String::from("someusername123"),
+      active: true,
+      sign_in_count: 1,
+  };
+#+end_src
+Again the order of the fields does not matter, however for clarity and readability it will be easier to define the fields in order they are defined in the struct definition.
+
+* Accessing / Mutating Strcuts
+Once we have define a piece of data using the struct we can access / mutate the struct using dot notation, similar to how we access object properties in JavaScript.
+#+begin_src rust
+  // Define as mut var
+  let mut user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+    };
+
+    user1.email = String::from("anotheremail@example.com"); // Use dot notation to mutate field
+#+end_src
+
+* Creating Structs
+It is a common pattern to have a function that will take some arguments and return an instance of a struct, as it can be quite tedious to assign a argument to a field of the same name, we can use this syntax sugar to bind it for us, similar to JavaScript's object property binding.
+#+begin_src rust
+  User {
+      email, // Argument name email, automatically binded to struct field 'email'
+      username, // Argument name username, automatically binded to struct field 'username'
+      active: true,
+      sign_in_count: 1,
+  }
+#+end_src
+
+* Struct Update Syntax
+Allows us to essentially copy an existing instance of a struct to another struct, any field we provide a value for will be overwritten.
+#+begin_src rust
+  let user2 = User {
+      email: String::from("another@example.com"),
+      ..user1
+  };
+#+end_src
+Note that if we used types not stored on the stack then the variable we are moving data from will no longer be available.
+
+* Tuple Structs
+This allows us to provide a name to a type of tuple, for example we might have a tuple which uses 2 i32 integers, we may wish to define this as a Tuple struct and call this a co-ordinate for example
+#+begin_src rust
+  struct co_ordinate(i32, i32);
+#+end_src
+There are no names to refer to its fields however we can use this struct to define structs without specifying the data type of each of the elements
+
+* Unit Type Structs
+Allow us to assign a name to reference the unit type ()
+

@@ -1,0 +1,61 @@
+:PROPERTIES:
+:ID:       3339f75f-a28a-4c1c-b943-64f717d4e672
+:END:
+#+title: Rust-Enums
+Enumerations also referred to as enums are a type which is defined by enumerating its possible variants.
+
+* Defining Enums
+We define a enum in a similar fashion to structs, here is an example using ip addresses of type ip4 and ip6
+#+begin_src rust
+  enum IpAddrKind {
+      V4,
+      V6,
+  }
+#+end_src
+We can now initialize a variant using
+#+begin_src rust
+  let four = IpAddrKind::V4;
+  let six = IpAddrKind::V6;
+#+end_src
+this allows us to define functions which accept the enum as an argument, meaning that any variant of the IpAddrKind enum is a valid argument.
+#+begin_src rust
+  fn route(ip_kind: IpAddrKind) {}
+#+end_src
+
+* Typed Enum
+We can define the type of an enum variant using the follow syntax
+#+begin_src rust
+  enum IpAddr {
+        V4(String),
+        V6(String),
+    }
+#+end_src
+The reason we would use an enum over s struct may not be clear with this simple example, however we may way to represent more complex data structures for the variants which are not as cleanly expressed using structs, for example
+#+begin_src rust
+  enum IpAddr {
+      V4(u8, u8, u8, u8),
+      V6(String),
+  }
+#+end_src
+
+* Why We Might Use An Enum
+Often we may have some types that are related which dont need distinct handling, rather than defining multiple structs, we can define them within one enum, for example
+#+begin_src rust
+  enum Message {
+      Quit,
+      Move { x: i32, y: i32 },
+      Write(String),
+      ChangeColor(i32, i32, i32),
+  }
+#+end_src
+
+** Enum Methods
+Similar to structs we can also define an impl block which refers to an enum, for example
+#+begin_src rust
+  impl Message {
+      fn call(&self) {
+          // method body would be defined here
+      }
+  }
+#+end_src
+Where this call method can be called on any variant of the Message enum
