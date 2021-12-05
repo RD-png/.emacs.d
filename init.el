@@ -1550,7 +1550,7 @@
 
 ;; Load theme
 (use-package modus-themes
-  :straight (modus-themes :type built-in)
+  :straight (modus-themes :host github :repo "protesilaos/modus-themes")
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
