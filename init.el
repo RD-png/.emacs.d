@@ -49,36 +49,52 @@
 (defvar default-variable-font-size 140)
 (setq custom-safe-themes t)
 
-;; Default to utf-8
-(setq default-buffer-file-coding-system 'utf-8-unix
-      buffer-file-coding-system 'utf-8-unix)
-
 (push "node_modules/" completion-ignored-extensions)
 (push "__pycache__/" completion-ignored-extensions)
-
-;; Syntax highlight for all buffers
-(global-font-lock-mode t)
-(blink-cursor-mode -1)
-(global-subword-mode 1)
-
-;; Dont save duplicate variables in kill ring
-(setq kill-do-not-save-duplicates t)
 
 ;; When using gui confirm before closing
 (when (window-system)
   (setq confirm-kill-emacs 'yes-or-no-p))
 
-;; Weird
-(setq system-uses-terminfo nil)
-
 ;; Set eec paths for npm packages on nix
 (add-to-list 'exec-path "~/.npm/bin")
 
 ;; General Defaults
-(setq undo-limit 1600000)
-(setq delete-old-versions t
+(setq undo-limit 80000000
+      delete-old-versions t
       delete-by-moving-to-trash t
-      enable-recursive-minibuffers t)
+      enable-recursive-minibuffers t
+      scroll-conservatively 100
+      scroll-preserve-screen-position t
+      system-uses-terminfo nil
+      kill-do-not-save-duplicates t
+      sentence-end-double-space nil
+      make-backup-files nil
+      backup-inhibited t
+      auto-save-default nil
+      create-lockfiles nil)
+(defalias 'yes-or-no-p 'y-or-n-p)
+(global-font-lock-mode t)
+(blink-cursor-mode -1)
+(global-subword-mode 1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
+(set-fringe-mode 10)
+(menu-bar-mode -1)
+(column-number-mode)
+(global-display-line-numbers-mode t)
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq initial-scratch-message "")
+
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook
+                dired-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (setq uniquify-buffer-name-style 'forward)
 
@@ -86,29 +102,13 @@
 (setq ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain)
 
-;; Remove startup message
-(advice-add 'display-startup-echo-area-message :override #'ignore)
-(package-activate-all)
-(setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
-			                   ("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")))
-
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-
-;; Initialize use-package on non-Linux platforms (incase I ever use emacs on windows)
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure nil
+(setq straight-check-for-modifications '(check-on-save find-when-checking))
+(setq package-enable-at-startup nil
+      straight-use-package-by-default t
       straight-disable-native-compile nil
-      straight-use-package-by-default nil)
-
-(setq straight-check-for-modifications nil
-      autoload-compute-prefixes nil
-      straight-vc-git-default-clone-depth 1)
+      straight-check-for-modifications nil
+      straight-vc-git-default-clone-depth 1
+      autoload-compute-prefixes nil)
 
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
@@ -123,14 +123,14 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
-
-;; Always use straight to install on systems other than Linux
-(setq straight-use-package-by-default (not (eq system-type 'gnu/linux)))
-
-;; Use straight.el for use-package expressions
 (straight-use-package 'use-package)
 
-;; Load the helper package for commands like `straight-x-clean-unused-repos'
+(advice-add 'display-startup-echo-area-message :override #'ignore)
+(setq inhibit-message nil)
+(setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
+			                   ("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")))
+(require 'use-package)
 (require 'straight-x)
 
 (use-package dashboard
@@ -142,36 +142,6 @@
                           (bookmarks . 5)))
   (setq dashboard-banner-logo-title "")
   (setq dashboard-set-file-icons t))
-
-(setq inhibit-startup-message t)
-(setq initial-scratch-message "")
-
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(tooltip-mode -1)
-(set-fringe-mode 10)
-(menu-bar-mode -1)
-(column-number-mode)
-(global-display-line-numbers-mode t)
-
-;; y or n instead of yes or no
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Fullscreen default
-(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                eshell-mode-hook
-                dired-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-;; Better scrolling
-(setq scroll-conservatively 100
-      scroll-preserve-screen-position t)
 
 (require 'server nil t)
 (use-package server
@@ -496,7 +466,7 @@
   (wgrep-finish-edit)
   (wgrep-save-all-buffers))
 
-(use-package helpful
+(use-package helpful  
   :straight t
   :bind
   ([remap describe-function] . helpful-function)
@@ -631,12 +601,6 @@
 (use-package no-littering
   :straight t)
 
-;; Disable auto saving and backups and symbolic link files
-(setq make-backup-files nil)
-(setq backup-inhibited t)
-(setq auto-save-default nil)
-(setq create-lockfiles nil)
-
 ;; (use-package mu4e
 ;;   :config
 ;;   (setq mu4e-change-filenames-when-moving t
@@ -722,19 +686,8 @@
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
-(defun my/org-last-task ()
-  (interactive)
-  (end-of-buffer)
-  (org-previous-visible-heading 0))
-
-(defun my/org-first-task ()
-  (interactive)
-  (beginning-of-buffer)
-  (org-next-visible-heading 0))
-
 (use-package org
-  :straight (org :type built-in)
-  :pin org
+  :straight t
   :commands (org-capture org-agenda)
   :hook (org-mode . org-mode-setup)
   :config
@@ -1146,6 +1099,7 @@
 ;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 (use-package direnv
+  :defer 2
   :straight t
   :config
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
@@ -1286,6 +1240,7 @@
   :hook (lisp-mode . emacs-lisp-mode))
 
 (use-package scheme-mode
+  :straight (scheme-mode :type built-in)
   :mode ("\\.sld\\'"))
 
 (use-package racket-mode
@@ -1661,4 +1616,4 @@
     (org-cycle)))
 
 ;; This should add a task under the current level, basically function the same as a sub heading 
-(defun org-new-sub-todo ()
+;; (defun org-new-sub-todo ()
