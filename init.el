@@ -499,6 +499,11 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-key] . helpful-key))
 
+(use-package info-colors
+  :straight t
+  :init
+  (add-hook 'Info-selection-hook 'info-colors-fontify-node))
+
 (use-package ace-window
   :straight t
   :config
