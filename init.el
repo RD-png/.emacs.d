@@ -59,6 +59,7 @@
 ;; Syntax highlight for all buffers
 (global-font-lock-mode t)
 (blink-cursor-mode -1)
+(global-subword-mode 1)
 
 ;; Dont save duplicate variables in kill ring
 (setq kill-do-not-save-duplicates t)
@@ -421,8 +422,6 @@
          ("C-M-s" . consult-multi-occur)
          ("C-M-l" . consult-outline)
          ("M-g M-g" . consult-goto-line)
-         ("C-c h" . consult-mark)
-         ("C-c H" . consult-global-mark)
          ("C-c f" . consult-flymake)
          ("C-x M-f" . consult-recent-file)
          ([remap popup-kill-ring] . consult-yank-from-kill-ring)
@@ -456,6 +455,19 @@
          :map minibuffer-local-map
          ("C-x j" . consult-dir-jump-file)))
 
+(use-package dogears
+  :straight (dogears :host github :repo "alphapapa/dogears.el"
+                     :files (:defaults (:exclude "helm-dogears.el")))
+  :config
+  (setq dogears-hooks '(imenu-after-jump-hook consult-after-jump-hook 'xref-after-jump-hook 'dumb-jump-after-jump-hook))
+  :bind (:map global-map
+              ("C-c h g" . dogears-go)
+              ("C-c h r" . dogears-remember)
+              ("C-c h f" . dogears-forward)
+              ("C-c h b" . dogears-back))
+  :init
+  (dogears-mode))
+
 (use-package marginalia
   :straight t
   :after vertico
@@ -466,13 +478,7 @@
   :config
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
   (setq marginalia-command-categories
-        (append '(
-                  ;; (projectile-find-file . project-file)
-                  ;; (projectile-find-dir . project-file)
-                  ;; (projectile-switch-project . project-file)
-                  ;; (projectile-recentf . project-file)
-                  ;; (projectile-switch-to-buffer . buffer)
-                  (persp-switch-to-buffer . buffer))
+        (append '((persp-switch-to-buffer . buffer))
                 marginalia-command-categories)))
 
 (use-package wgrep
@@ -1588,3 +1594,71 @@
          modus-themes-scale-4 1.25
          modus-themes-scale-title 1.30)
   (load-theme 'modus-operandi))
+
+
+;; Create a new org todo file for a project
+(defun my-mark-as-project ()
+"This function makes sure that the current heading has
+(1) the tag :project:
+(2) has property COOKIE_DATA set to \"todo recursive\"
+(3) has any TODO keyword and
+(4) a leading progress indicator"
+    (interactive)
+    (org-toggle-tag "project" 'on)
+    (org-set-property "COOKIE_DATA" "todo recursive")
+    (org-back-to-heading t)
+    (let* ((title (nth 4 (org-heading-components)))
+           (keyword (nth 2 (org-heading-components))))
+       (when (and (bound-and-true-p keyword) (string-prefix-p "[" title))
+           (message "TODO keyword and progress indicator found")
+           )
+       (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
+           (message "no TODO keyword but progress indicator found")
+           (forward-whitespace 1)
+           (insert "NEXT ")
+           )
+       (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
+           (message "no TODO keyword and no progress indicator found")
+           (forward-whitespace 1)
+           (insert "NEXT [/] ")
+           )
+       (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
+           (message "TODO keyword but no progress indicator found")
+           (forward-whitespace 2)
+           (insert "[/] ")
+           )
+       )
+    )
+
+
+;; Need a way to create projects ?
+
+;; This allows me to mark something with a tag which can be picked up by org view by tag, and gives a sort of progress of the project using the percentage complete tag
+(defun org-new-project ()
+  (interactive)
+  (insert "* [/] ")
+  (save-excursion
+    (insert (format (concat "\n"
+                            ":project:\n"
+                            ":COOKIE_DATA: todo recursive\n"
+                            ":ID:       %s\n"
+                            ":CREATED:  %s\n")
+                    (substring (shell-command-to-string "uuidgen") 0 -1)
+                    (format-time-string (org-time-stamp-format t t))))))
+
+;; This should add a task at the level below the :project: tag
+(defun org-new-todo ()
+  (interactive)    
+  (insert "TODO ")
+  (save-excursion
+    (insert (format (concat "\n"                            
+                            ":ID:       %s\n"
+                            ":CREATED:  %s\n")
+                    (substring (shell-command-to-string "uuidgen") 0 -1)
+                    (format-time-string (org-time-stamp-format t t)))))
+  (save-excursion
+    (forward-line)
+    (org-cycle)))
+
+;; This should add a task under the current level, basically function the same as a sub heading 
+(defun org-new-sub-todo ()
