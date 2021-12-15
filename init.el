@@ -1,12 +1,12 @@
-;; -*- lexical-binding: t; -*-
 (setq-default lexical-binding t)
 
-;; GC config
+;; GC Config
 (setq gc-cons-threshold 16777216
       gc-cons-percentage 0.1)
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
 (setq read-process-output-max 1048576)
+
 
 (defun my/defer-garbage-collection ()
   (setq gc-cons-threshold most-positive-fixnum))
@@ -18,7 +18,7 @@
 (add-hook 'minibuffer-exit-hook 'my/restore-garbage-collection)
 (add-hook 'emacs-startup-hook #'emacs-init-time)
 
-;; native comp
+;; Native Comp
 (when (and (fboundp 'native-comp-available-p)
            (native-comp-available-p))
   (progn
@@ -29,37 +29,12 @@
     (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))))
 (setq load-prefer-newer t)
 
-;; Stop the native comp warnings
-(defvar grep-find-ignored-directories nil)
-(defvar grep-find-ignored-files nil)
-(defvar ido-context-switch-command nil)
-(defvar ido-cur-item nil)
-(defvar ido-cur-list nil)
-(defvar ido-default-item nil)
-(defvar inherit-input-method nil)
-(defvar oauth--token-data nil)
-(defvar tls-checktrust nil)
-(defvar tls-program nil)
-(defvar url-callback-arguments nil)
-(defvar url-callback-function nil)
-(defvar url-http-extra-headers nil)
-
-;; Set default font size values
-(defvar default-font-size 140)
-(defvar default-variable-font-size 140)
-(setq custom-safe-themes t)
-
+;; Paths
 (push "node_modules/" completion-ignored-extensions)
 (push "__pycache__/" completion-ignored-extensions)
-
-;; When using gui confirm before closing
-(when (window-system)
-  (setq confirm-kill-emacs 'yes-or-no-p))
-
-;; Set eec paths for npm packages on nix
 (add-to-list 'exec-path "~/.npm/bin")
 
-;; General Defaults
+;; Defaults
 (setq undo-limit 80000000
       delete-old-versions t
       delete-by-moving-to-trash t
@@ -68,12 +43,17 @@
       scroll-preserve-screen-position t
       system-uses-terminfo nil
       kill-do-not-save-duplicates t
-      sentence-end-double-space nil
+      sentence-end-double-spacev nil
       make-backup-files nil
       backup-inhibited t
       auto-save-default nil
-      create-lockfiles nil)
-(defalias 'yes-or-no-p 'y-or-n-p)
+      create-lockfiles nil
+      initial-scratch-message ""
+      uniquify-buffer-name-style 'forward)
+(when (window-system)
+  (setq confirm-kill-emacs 'yes-or-no-p))
+
+;; Interface
 (global-font-lock-mode t)
 (blink-cursor-mode -1)
 (global-subword-mode 1)
@@ -84,11 +64,7 @@
 (menu-bar-mode -1)
 (column-number-mode)
 (global-display-line-numbers-mode t)
-(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-(setq initial-scratch-message "")
 
-;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
                 term-mode-hook
                 shell-mode-hook
@@ -96,9 +72,16 @@
                 dired-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-(setq uniquify-buffer-name-style 'forward)
+;; Alias
+(defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Ediff layout
+;; Buffers / Frames
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain)
+
+;; Straight
 (setq ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain)
 
@@ -110,7 +93,6 @@
       straight-vc-git-default-clone-depth 1
       autoload-compute-prefixes nil)
 
-;; Bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -125,13 +107,43 @@
   (load bootstrap-file nil 'nomessage))
 (straight-use-package 'use-package)
 
-(advice-add 'display-startup-echo-area-message :override #'ignore)
-(setq inhibit-message nil)
 (setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
 			                   ("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")))
 (require 'use-package)
 (require 'straight-x)
+
+;; Remove Messages
+(advice-add 'display-startup-echo-area-message :override #'ignore)
+(setq inhibit-message nil)
+
+;; Font
+(defvar default-font-size 140)
+(defvar default-variable-font-size 140)
+(set-face-attribute 'default nil :font "Fantasque Sans Mono" :foundry "PfEd" :slant 'normal :weight 'normal :width 'normal :height 140)
+(set-face-attribute 'fixed-pitch nil :font "Fantasque Sans Mono" :height default-font-size)
+(set-face-attribute 'variable-pitch nil :font "Fantasque Sans Mono" :height default-variable-font-size :weight 'regular)
+
+;; Faces / Theme
+;; (set-foreground-color "#c5c8c6")
+;; (set-background-color "#1d1f21")
+
+(setq custom-safe-themes t)
+(custom-set-faces
+ '(cursor ((t (:background "IndianRed3"))))
+ '(mode-line ((t (:underline (:line-width 1)))))
+ '(vertico-current ((t (:background "light blue")))))
+(setq x-underline-at-descent-line t)
+
+;;;; Packages
+(require 'server nil t)
+(use-package server
+  :straight t
+  :demand t
+  :if window-system
+  :init
+  (when (not (server-running-p server-name))
+    (server-start)))
 
 (use-package dashboard
   :straight t
@@ -142,31 +154,6 @@
                           (bookmarks . 5)))
   (setq dashboard-banner-logo-title "")
   (setq dashboard-set-file-icons t))
-
-(require 'server nil t)
-(use-package server
-  :straight t
-  :demand t
-  :if window-system
-  :init
-  (when (not (server-running-p server-name))
-    (server-start)))
-
-(set-face-attribute 'default nil :font "Fantasque Sans Mono" :foundry "PfEd" :slant 'normal :weight 'normal :width 'normal :height 140)
-(set-face-attribute 'fixed-pitch nil :font "Fantasque Sans Mono" :height default-font-size)
-(set-face-attribute 'variable-pitch nil :font "Fantasque Sans Mono" :height default-variable-font-size :weight 'regular)
-
-(add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-;; (set-foreground-color "#c5c8c6")
-;; (set-background-color "#1d1f21")
-
-;; Custom faces
-(custom-set-faces
- `(mode-line ((t (:underline (:line-width 1)))))
- `(cursor ((t (:background "IndianRed3")))))
-
-;; mode line underline in right place
-(setq x-underline-at-descent-line t)
 
 (use-package tree-sitter-langs
   :straight t)
@@ -186,6 +173,11 @@
          ("C-c C-;" . popper-toggle-type))
   :init
   (setq popper-window-height 10)
+  (setq even-window-sizes nil)
+  (setq display-buffer-base-action
+        '(display-buffer-reuse-mode-window
+          display-buffer-reuse-window
+          display-buffer-same-window))
   (setq popper-reference-buffers
         (append
          '("\\*Messages\\*"
@@ -204,14 +196,6 @@
   (popper-mode +1)
   (popper-echo-mode +1))
 
-(setq display-buffer-base-action
-      '(display-buffer-reuse-mode-window
-        display-buffer-reuse-window
-        display-buffer-same-window))
-
-;; If a popup does happen, don't resize windows to be equal-sized
-(setq even-window-sizes nil)
-
 (use-package all-the-icons
   :straight t)
 
@@ -224,7 +208,7 @@
   (sml/setup))
 
 (defvar mode-line-cleaner-alist
-  `((company-mode . " ⇝")
+  `((subword-mode . "")
     (yas-minor-mode . "")
     (smartparens-mode . "")
     (tree-sitter-mode . "")
@@ -282,42 +266,51 @@
    vertico-cycle t
    vertico-resize nil)
   (setq read-file-name-completion-ignore-case t
-        read-buffer-completion-ignore-case t)
+        read-buffer-completion-ignore-case t
+        completion-ignore-case t)
   :custom-face
   (vertico-current ((t (:background "light blue"))))
   :init
   (vertico-mode))
 
+(use-package corfu
+  :straight (corfu :repo "minad/corfu" :branch "main")
+  :bind (:map corfu-map
+              ("<tab>" . corfu-insert))
+  :config
+  (setq corfu-cycle t
+        corfu-auto t
+        corfu-count 10
+        corfu-preview-current nil
+        corfu-auto-prefix 3
+        corfu-auto-delay 0.01
+        corfu-quit-at-boundary t
+        corfu-quit-no-match t)
+  :init
+  (corfu-global-mode))
+
 (use-package orderless
   :straight t
-  :demand t
-  :config
-  (defun orderless-company-fix-face+ (fn &rest args)
-    (let ((orderless-match-faces [completions-common-part]))
-      (apply fn args)))
-
-  (setq completion-styles '(orderless)
+  :init
+  (setq completion-styles '(basic partial-completion orderless)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles . (orderless partial-completion)))))
+        completion-category-overrides '((file (styles partial-completion)))))
 
-  (with-eval-after-load 'company
-    (advice-add 'company-capf--candidates :around #'orderless-company-fix-face+)))
+(use-package savehist
+  :straight (savehist :type built-in)
+  :custom
+  (savehist-additional-variables
+   '(kill-ring search-ring regexp-search-ring
+               consult--line-history evil-ex-history))
+  :init
+  (savehist-mode))
 
 (use-package prescient
   :straight t
-  :demand t
   :custom
   (prescient-history-length 1000)
   :config
   (prescient-persist-mode +1))
-
-(use-package savehist
-  :straight (savehist :type built-in)
-  :hook (after-init . savehist-mode)
-  :custom
-  (savehist-additional-variables
-   '(kill-ring search-ring regexp-search-ring
-               consult--line-history evil-ex-history)))
 
 (use-package emacs
   :straight (emacs :type built-in)
@@ -325,9 +318,11 @@
   (defun crm-indicator (args)
     (cons (concat "[CRM] " (car args)) (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+  
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  
   (setq enable-recursive-minibuffers t))
 
 (use-package embark
@@ -368,11 +363,6 @@
                          (file-remote-p file 'host) ":" (file-remote-p file 'localname))
                (concat "/sudo:root@localhost:" (file-truename file)))))
 
-(defun sudo-this-file ()
-  "Open the current file as root."
-  (interactive)
-  (sudo-find-file (file-truename buffer-file-name)))
-
 (use-package embark-consult
   :straight '(embark-consult :host github
                              :repo "oantolin/embark"
@@ -384,7 +374,6 @@
 
 (use-package consult
   :straight t
-  :demand t
   :after project
   :bind (("C-s" . consult-line)
          ("C-M-m" . consult-imenu)
@@ -413,12 +402,6 @@
         register-preview-function #'consult-register-format)
   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
 
-(use-package affe
-  :straight t
-  :config
-  (setq affe-regexp-function #'orderless-pattern-compiler
-        affe-highlight-function #'orderless--highlight))
-
 (use-package consult-dir
   :straight t
   :bind (("C-x C-d" . consult-dir)
@@ -438,6 +421,12 @@
   :init
   (dogears-mode))
 
+(use-package affe
+  :straight t
+  :config
+  (setq affe-regexp-function #'orderless-pattern-compiler
+        affe-highlight-function #'orderless--highlight))
+
 (use-package marginalia
   :straight t
   :after vertico
@@ -451,20 +440,74 @@
         (append '((persp-switch-to-buffer . buffer))
                 marginalia-command-categories)))
 
+(use-package cape
+  :straight t)
+
+(use-package lsp-mode
+  :straight t
+  ;; :hook (lsp)
+  :custom
+  (lsp-completion-provider :none)
+  :preface
+  (defun my/lsp-format-buffer ()
+    (interactive)
+    (lsp-format-buffer)
+    (delete-trailing-whitespace))
+  :bind (:map lsp-mode-map
+              ("C-c o d" . lsp-describe-thing-at-point)
+              ("C-c o f" . my/lsp-format-buffer)
+              ("C-c o a" . lsp-execute-code-action)
+              ("C-c o r" . lsp-find-references)
+              ("C-c o g" . lsp-find-definition))
+  :custom
+  (lsp-modeline-diagnostics-enable nil)
+  (lsp-enable-folding nil)
+  (lsp-enable-text-document-color nil)
+  (lsp-enable-on-type-formatting nil)
+  (lsp-signature-render-documentation nil)
+  (lsp-completion-show-detail nil)
+  (lsp-eldoc-render-all nil)
+  (lsp-enable-snippet t)
+  (lsp-eldoc-enable-hover nil)
+  (lsp-document-sync-method nil)
+  (lsp-signature-auto-activate nil)
+  (lsp-print-performance t)
+  (lsp-before-save-edits nil)
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-signature-render-documentation t)
+  :init
+  (defun my/orderless-dispatch-flex-first (_pattern index _total)
+    (and (eq index 0) 'orderless-flex))
+  
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless)))
+
+  (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
+
+  (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
+  
+  :hook
+  (lsp-completion-mode . my/lsp-mode-setup-completion))
+
 (use-package wgrep
   :defer 2
   :straight t
   :config
+  (defun custom-wgrep-apply-save ()
+    "Apply the edits and save the buffers"
+    (interactive)
+    (wgrep-finish-edit)
+    (wgrep-save-all-buffers))
+  
   (setq wgrep-change-readonly-file t)
   :bind (:map wgrep-mode-map
               ("C-x C-s" . custom-wgrep-apply-save)))
 
-
-(defun custom-wgrep-apply-save ()
-  "Apply the edits and save the buffers"
-  (interactive)
-  (wgrep-finish-edit)
-  (wgrep-save-all-buffers))
+(use-package php-mode
+  :straight t
+  :mode "\\.php\\'"
+  :hook (php-mode . lsp-deferred))
 
 (use-package helpful  
   :straight t
@@ -600,31 +643,6 @@
 
 (use-package no-littering
   :straight t)
-
-;; (use-package mu4e
-;;   :config
-;;   (setq mu4e-change-filenames-when-moving t
-;;         mu4e-get-mail-command "mbsync -a"
-;;         mu4e-view-show-images t
-;;         mu4e-update-interval (* 10 60)
-;;         mu4e-maildir "~/Mail")
-;;   (setq mu4e-contexts
-;;         `(,(make-mu4e-context
-;;             :name "elixir"
-;;             :vars '(
-;;                     (user-full-name . "Ryan Denby")
-;;                     (user-mail-address . "ryan@elixirgardens.co.uk")
-;;                     (mu4e-sent-folder . "/sent/new")
-;;                     (mu4e-trash-folder . "/trash/new")
-;;                     (mu4e-drafts-folder . "/drafts/new")
-;;                     (mu4e-sent-messages-behavior . sent)
-;;                     ))))
-
-;;   (setq mail-user-agent 'mu4e-user-agent
-;;         message-send-mail-function 'smtpmail-send-it
-;;         smtpmail-smtp-server "smtp.123-reg.co.uk"
-;;         smtpmail-smtp-service 465
-;;         smtpmail-stream-type 'ssl))
 
 (use-package devdocs
   :defer 2
@@ -935,8 +953,6 @@
   (eshell-hist-initialize)
   (setenv "PAGER" "cat")
 
-  ;; Disable company in eshell
-  (company-mode -1)
   (setq eshell-prompt-function 'my/eshell-prompt
         eshell-prompt-regexp "[a-zA-z]+ ⟣─ [^#$\n]+ # "
         eshell-history-size 10000
@@ -975,129 +991,6 @@
   (setq tramp-auto-save-directory "~/.cache/emacs/backups"
         tramp-persistency-file-name "~/.config/emacs/data/tramp"))
 
-(use-package company
-  :straight t
-  :defer 1
-  :defines company-backends
-  :bind (:map company-active-map
-              ("<tab>" . company-complete-selection))
-  :init
-  (global-company-mode 1)
-  (setq company-auto-commit nil
-        company-minimum-prefix-length 2
-        company-tooltip-limit 10
-        company-tooltip-align-annotations t
-        company-dabbrev-ignore-case nil
-        company-require-match 'never
-        company-idle-delay 0.01
-        company-dabbrev-other-buffers nil
-        company-dabbrev-downcase nil))
-
-(setq-default company-backends '(company-capf))
-
-(defvar my/company-backend-alist
-  '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
-    (prog-mode (:separate company-yasnippet company-capf company-dabbrev-code))
-    (conf-mode company-capf company-dabbrev-code company-yasnippet)
-    (emacs-lisp-mode company-elisp))
-  "An alist matching modes to company backends. The backends for any mode is
-        built from this.")
-
-(defun my/set-company-backend (modes &rest backends)
-  "Prepends backends (in order) to `company-backends' in modes"
-  (declare (indent defun))
-  (dolist (mode (list modes))
-    (if (null (car backends))
-        (setq my/company-backend-alist
-              (delq (assq mode my/company-backend-alist)
-                    my/company-backend-alist))
-      (setf (alist-get mode my/company-backend-alist)
-            backends))))
-
-(defun my/company-backends ()
-  (let (backends)
-    (let ((mode major-mode)
-          (modes (list major-mode)))
-      (while (setq mode (get mode 'derived-mode-parent))
-        (push mode modes))
-      (dolist (mode modes)
-        (dolist (backend (append (cdr (assq mode my/company-backend-alist))
-                                 (default-value 'company-backends)))
-          (push backend backends)))
-      (delete-dups
-       (append (cl-loop for (mode . backends) in my/company-backend-alist
-                        if (or (eq major-mode mode)
-                               (and (boundp mode)
-                                    (symbol-value mode)))
-                        append backends)
-               (nreverse backends))))))
-
-(add-hook 'after-change-major-mode-hook
-          (defun my/company-setup-backends ()
-            (interactive)
-            "Set `company-backends' for the current buffer."
-            (setq-local company-backends (my/company-backends))))
-
-;; (use-package corfu
-;;   :straight (corfu :repo "minad/corfu" :branch "main")
-;;   :bind (:map corfu-map
-;;               ("<tab>" . corfu-insert))
-;;   :config
-;;   (setq corfu-cycle t
-;;         corfu-auto t
-;;         corfu-count 10
-;;         corfu-auto-delay 0.01
-;;         corfu-quit-at-boundary t
-;;         corfu-quit-no-match t)
-;;   :init
-;;   (corfu-global-mode))
-
-(use-package lsp-mode
-  :straight t
-  :after direnv
-  :hook (lsp)
-  :config
-  (setq lsp-completion-provider :none)
-  :preface
-  (defun my/lsp-format-buffer ()
-    (interactive)
-    (lsp-format-buffer)
-    (delete-trailing-whitespace))
-  :bind (:map lsp-mode-map
-              ("C-c o d" . lsp-describe-thing-at-point)
-              ("C-c o f" . my/lsp-format-buffer)
-              ("C-c o a" . lsp-execute-code-action)
-              ("C-c o r" . lsp-find-references)
-              ("C-c o g" . lsp-find-definition))
-  :custom
-  (lsp-modeline-diagnostics-enable nil)
-  (lsp-enable-folding nil)
-  (lsp-enable-text-document-color nil)
-  (lsp-enable-on-type-formatting nil)
-  (lsp-signature-render-documentation nil)
-  (lsp-completion-show-detail nil)
-  (lsp-eldoc-render-all nil)
-  (lsp-enable-snippet t)
-  (lsp-eldoc-enable-hover nil)
-  (lsp-document-sync-method nil)
-  (lsp-signature-auto-activate nil)
-  (lsp-print-performance t)
-  (lsp-before-save-edits nil)
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-signature-render-documentation t))
-
-;; (use-package lsp-ui
-;;   :straight t
-;;   :hook (lsp-mode . lsp-ui-mode)
-;;   :config
-;;   (setq lsp-ui-sideline-enable nil)
-;;   (setq lsp-ui-sideline-ignore-duplicate t)
-;;   (setq lsp-ui-doc-enable nil)
-;;   (setq lsp-ui-doc-show-with-cursor nil)
-;;   (setq lsp-ui-doc-show-with-mouse nil)
-;;   (setq lsp-ui-sideline-show-code-actions nil)
-;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
 (use-package direnv
   :defer 2
   :straight t
@@ -1128,7 +1021,6 @@
 ;;         eglot-autoshutdown t
 ;;         eglot-send-changes-idle-time 0.5
 ;;         eglot-auto-display-help-buffer nil
-;;         eglot-stay-out-of '(company)
 ;;         eglot-ignored-server-capabilites '(:documentHighlightProvider))
 ;;   (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend)
 ;;   :bind
@@ -1553,37 +1445,37 @@
 
 ;; Create a new org todo file for a project
 (defun my-mark-as-project ()
-"This function makes sure that the current heading has
+  "This function makes sure that the current heading has
 (1) the tag :project:
 (2) has property COOKIE_DATA set to \"todo recursive\"
 (3) has any TODO keyword and
 (4) a leading progress indicator"
-    (interactive)
-    (org-toggle-tag "project" 'on)
-    (org-set-property "COOKIE_DATA" "todo recursive")
-    (org-back-to-heading t)
-    (let* ((title (nth 4 (org-heading-components)))
-           (keyword (nth 2 (org-heading-components))))
-       (when (and (bound-and-true-p keyword) (string-prefix-p "[" title))
-           (message "TODO keyword and progress indicator found")
-           )
-       (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
-           (message "no TODO keyword but progress indicator found")
-           (forward-whitespace 1)
-           (insert "NEXT ")
-           )
-       (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
-           (message "no TODO keyword and no progress indicator found")
-           (forward-whitespace 1)
-           (insert "NEXT [/] ")
-           )
-       (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
-           (message "TODO keyword but no progress indicator found")
-           (forward-whitespace 2)
-           (insert "[/] ")
-           )
-       )
+  (interactive)
+  (org-toggle-tag "project" 'on)
+  (org-set-property "COOKIE_DATA" "todo recursive")
+  (org-back-to-heading t)
+  (let* ((title (nth 4 (org-heading-components)))
+         (keyword (nth 2 (org-heading-components))))
+    (when (and (bound-and-true-p keyword) (string-prefix-p "[" title))
+      (message "TODO keyword and progress indicator found")
+      )
+    (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
+      (message "no TODO keyword but progress indicator found")
+      (forward-whitespace 1)
+      (insert "NEXT ")
+      )
+    (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
+      (message "no TODO keyword and no progress indicator found")
+      (forward-whitespace 1)
+      (insert "NEXT [/] ")
+      )
+    (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
+      (message "TODO keyword but no progress indicator found")
+      (forward-whitespace 2)
+      (insert "[/] ")
+      )
     )
+  )
 
 
 ;; Need a way to create projects ?
