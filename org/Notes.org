@@ -1,3 +1,0 @@
-if the period is over 6 months, avoid using weeks as cancer to deal with
-
-This limits the amount of records we have to pull in and makes the source => date graph readable
