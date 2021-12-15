@@ -303,14 +303,14 @@
    '(kill-ring search-ring regexp-search-ring
                consult--line-history evil-ex-history))
   :init
-  (savehist-mode))
+  (savehist-mode 1))
 
 (use-package prescient
   :straight t
   :custom
   (prescient-history-length 1000)
-  :config
-  (prescient-persist-mode +1))
+  :init
+  (setq prescient-persist-mode t))
 
 (use-package emacs
   :straight (emacs :type built-in)
@@ -318,11 +318,11 @@
   (defun crm-indicator (args)
     (cons (concat "[CRM] " (car args)) (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-  
+
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-  
+
   (setq enable-recursive-minibuffers t))
 
 (use-package embark
@@ -441,11 +441,15 @@
                 marginalia-command-categories)))
 
 (use-package cape
-  :straight t)
+  :straight t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-tex)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-keyword))
 
 (use-package lsp-mode
   :straight t
-  ;; :hook (lsp)
   :custom
   (lsp-completion-provider :none)
   :preface
@@ -478,7 +482,7 @@
   :init
   (defun my/orderless-dispatch-flex-first (_pattern index _total)
     (and (eq index 0) 'orderless-flex))
-  
+
   (defun my/lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
           '(orderless)))
@@ -486,7 +490,7 @@
   (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
 
   (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
-  
+
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
 
@@ -499,7 +503,7 @@
     (interactive)
     (wgrep-finish-edit)
     (wgrep-save-all-buffers))
-  
+
   (setq wgrep-change-readonly-file t)
   :bind (:map wgrep-mode-map
               ("C-x C-s" . custom-wgrep-apply-save)))
@@ -509,7 +513,7 @@
   :mode "\\.php\\'"
   :hook (php-mode . lsp-deferred))
 
-(use-package helpful  
+(use-package helpful
   :straight t
   :bind
   ([remap describe-function] . helpful-function)
@@ -1002,33 +1006,6 @@
 ;;   :straight t
 ;;   :defer)
 
-;; (use-package eglot
-;;   :straight t
-;;   :after project
-;;   :hook (eglot-connect . eglot-signal-didChangeConfiguration)
-;;   :commands (eglot
-;;              eglot-ensure
-;;              my/eglot-mode-server
-;;              my/eglot-mode-server-all)
-;;   :config
-;;   (add-to-list 'eglot-server-programs '(php-mode . ("intelephense" "--stdio")))
-;;   (add-to-list 'eglot-server-programs '(web-mode "vls"))
-;;   :init
-;;   (setq eglot-sync-connect 1
-;;         eglot-connect-timeout 10
-;;         eglot-confirm-server-initiated-edits nil
-;;         eglot-autoreconnect nil
-;;         eglot-autoshutdown t
-;;         eglot-send-changes-idle-time 0.5
-;;         eglot-auto-display-help-buffer nil
-;;         eglot-ignored-server-capabilites '(:documentHighlightProvider))
-;;   (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend)
-;;   :bind
-;;   ("C-c o d" . eldoc-doc-buffer)
-;;   ("C-c o f" . eglot-format-buffer)
-;;   ("C-c o a" . eglot-code-actions)
-;;   ("C-c o r" . xref-find-references))
-
 (use-package dumb-jump
   :straight t
   :init
@@ -1231,7 +1208,20 @@
   :init
   (yas-global-mode 1)
   :config
-  (yas-reload-all))
+  (defun do-yas-expand ()
+    (let ((yas/fallback-behavior 'return-nil))
+      (yas/expand)))
+
+  (defun tab-complete-or-next-field ()
+    (interactive)
+    (if (or (not yas/minor-mode)
+            (null (do-yas-expand)))
+        (if corfu--candidates
+            (corfu-insert)
+          (yas-next-field))))
+  (yas-reload-all)
+  :bind (:map yas-keymap
+              ("<tab>" . tab-complete-or-next-field)))
 
 (use-package flymake
   :straight (flymake :type built-in)
@@ -1495,10 +1485,10 @@
 
 ;; This should add a task at the level below the :project: tag
 (defun org-new-todo ()
-  (interactive)    
+  (interactive)
   (insert "TODO ")
   (save-excursion
-    (insert (format (concat "\n"                            
+    (insert (format (concat "\n"
                             ":ID:       %s\n"
                             ":CREATED:  %s\n")
                     (substring (shell-command-to-string "uuidgen") 0 -1)
@@ -1507,5 +1497,5 @@
     (forward-line)
     (org-cycle)))
 
-;; This should add a task under the current level, basically function the same as a sub heading 
+;; This should add a task under the current level, basically function the same as a sub heading
 ;; (defun org-new-sub-todo ()
