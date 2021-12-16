@@ -1217,7 +1217,9 @@
     (if (or (not yas/minor-mode)
             (null (do-yas-expand)))
         (if corfu--candidates
-            (corfu-insert)
+            (progn
+              (corfu-insert)
+              (yas-next-field))  
           (yas-next-field))))
   (yas-reload-all)
   :bind (:map yas-keymap
