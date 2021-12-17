@@ -208,7 +208,8 @@
   (sml/setup))
 
 (defvar mode-line-cleaner-alist
-  `((subword-mode . "")
+  `((org-gantt-mode . "")
+    (subword-mode . "")
     (yas-minor-mode . "")
     (smartparens-mode . "")
     (tree-sitter-mode . "")
@@ -718,6 +719,8 @@
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.75))
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
 
   (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
 
@@ -744,10 +747,9 @@
           ("@home" . ?H)
           ("@work" . ?W)
           ("agenda" . ?a)
-          ("planning" . ?p)
-          ("publish" . ?P)
           ("batch" . ?b)
           ("note" . ?n)
+          ("project" . ?p)
           ("idea" . ?i)))
 
   ;; Configure custom agenda views
@@ -823,6 +825,33 @@
               (lambda () (interactive) (org-capture nil "jj")))
 
   (org-font-setup))
+
+(use-package ts
+  :straight t)
+
+(use-package htmlize
+  :straight (htmlize :host github :repo "hniksic/emacs-htmlize"))
+
+(use-package org-gantt-mode
+  :straight (org-gantt-mode :host gitlab :repo "joukeHijlkema/org-gantt")
+  :init  
+  (defvar og-Cols '((strokeColor  . "#000000")
+                    (dayColor     . "#d7d7d7")
+                    (bgTitleBlock . "#ffffff")
+                    (bgGridHead   . "#ffffff")
+                    (bgTaskEven   . "#ffffff")
+                    (bgTaskOdd    . "#ffffff")
+                    (bgTaskLevel1 . "#bfc0c4")
+                    (taskDone     . "#4fe42f")
+                    (taskDuration . "#f0dd60")
+                    (fillTaskLevel1 . "#000000")
+                    (bgTask       . "#77baff")
+                    (bgTaskP      . "white")
+                    (bgKP         . "#77baff")
+                    (bgKPdone     . "#4fe42f")
+                    (stLink       . "#fe6060"))
+    "default gantt colors")
+  (setq org-gantt-mode t))
 
 (use-package org-make-toc
   :defer 5
@@ -1219,7 +1248,7 @@
         (if corfu--candidates
             (progn
               (corfu-insert)
-              (yas-next-field))  
+              (yas-next-field))
           (yas-next-field))))
   (yas-reload-all)
   :bind (:map yas-keymap
@@ -1434,70 +1463,41 @@
          modus-themes-scale-title 1.30)
   (load-theme 'modus-operandi))
 
-
-;; Create a new org todo file for a project
-(defun my-mark-as-project ()
-  "This function makes sure that the current heading has
-(1) the tag :project:
-(2) has property COOKIE_DATA set to \"todo recursive\"
-(3) has any TODO keyword and
-(4) a leading progress indicator"
-  (interactive)
-  (org-toggle-tag "project" 'on)
-  (org-set-property "COOKIE_DATA" "todo recursive")
-  (org-back-to-heading t)
-  (let* ((title (nth 4 (org-heading-components)))
-         (keyword (nth 2 (org-heading-components))))
-    (when (and (bound-and-true-p keyword) (string-prefix-p "[" title))
-      (message "TODO keyword and progress indicator found")
-      )
-    (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
-      (message "no TODO keyword but progress indicator found")
-      (forward-whitespace 1)
-      (insert "NEXT ")
-      )
-    (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
-      (message "no TODO keyword and no progress indicator found")
-      (forward-whitespace 1)
-      (insert "NEXT [/] ")
-      )
-    (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
-      (message "TODO keyword but no progress indicator found")
-      (forward-whitespace 2)
-      (insert "[/] ")
-      )
-    )
-  )
-
-
-;; Need a way to create projects ?
-
-;; This allows me to mark something with a tag which can be picked up by org view by tag, and gives a sort of progress of the project using the percentage complete tag
+;; Custom Org
 (defun org-new-project ()
   (interactive)
-  (insert "* [/] ")
+  (insert "* " (read-string "Enter Project Name:"))
+  (insert " [%]")
   (save-excursion
     (insert (format (concat "\n"
-                            ":project:\n"
-                            ":COOKIE_DATA: todo recursive\n"
-                            ":ID:       %s\n"
-                            ":CREATED:  %s\n")
-                    (substring (shell-command-to-string "uuidgen") 0 -1)
-                    (format-time-string (org-time-stamp-format t t))))))
+                            ":CREATED:      %s\n"
+                            ":COOKIE_DATA:  todo recursive\n"
+                            ":ID:           %s")
+                    (format-time-string (org-time-stamp-format t t))
+                    (substring (shell-command-to-string "uuidgen") 0 -1))))
+  (org-backward-heading-same-level 0)
+  (org-toggle-tag "project" 'on)
+  (org-next-visible-heading 1))
 
-;; This should add a task at the level below the :project: tag
-(defun org-new-todo ()
-  (interactive)
+(defun my/org-new-todo-header ()
   (insert "TODO ")
   (save-excursion
     (insert (format (concat "\n"
-                            ":ID:       %s\n"
-                            ":CREATED:  %s\n")
-                    (substring (shell-command-to-string "uuidgen") 0 -1)
-                    (format-time-string (org-time-stamp-format t t)))))
-  (save-excursion
-    (forward-line)
-    (org-cycle)))
+                            ":CREATED:    %s\n"
+                            ":SCHEDULED:  %s\n"
+                            ":DEADLINE:   %s\n"
+                            ":ID:         %s\n")
+                    (format-time-string (org-time-stamp-format t t))
+                    (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
+                    (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
+                    (substring (shell-command-to-string "uuidgen") 0 -1)))))
 
-;; This should add a task under the current level, basically function the same as a sub heading
-;; (defun org-new-sub-todo ()
+(defun org-new-inline-heading ()
+  (interactive)
+  (org-insert-heading)
+  (my/org-new-todo-header))
+
+(defun org-new-sub-heading ()
+  (interactive)
+  (org-insert-subheading (org-current-level))
+  (my/org-new-todo-header))
