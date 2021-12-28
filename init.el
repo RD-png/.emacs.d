@@ -296,15 +296,6 @@
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
-(use-package savehist
-  :straight (savehist :type built-in)
-  :custom
-  (savehist-additional-variables
-   '(kill-ring search-ring regexp-search-ring
-               consult--line-history evil-ex-history))
-  :init
-  (savehist-mode 1))
-
 (use-package prescient
   :straight t
   :custom
@@ -920,7 +911,7 @@
   (concat
    "\n"
    (propertize (user-login-name) 'face `(:foreground "#8f0075"))
-   (propertize " ⟣─ " 'face `(:foreground "#2544bb"))
+   (propertize " @ " 'face `(:foreground "#2544bb"))
    (propertize (my/pwd-shorten-dirs (my/get-prompt-path)) 'face `(:foreground "#145c33"))
    (propertize " #" 'face `(:foreground "#70480f"))
    (propertize " " 'face `(:foreground "white"))))
@@ -958,7 +949,7 @@
   (setenv "PAGER" "cat")
 
   (setq eshell-prompt-function 'my/eshell-prompt
-        eshell-prompt-regexp "[a-zA-z]+ ⟣─ [^#$\n]+ # "
+        eshell-prompt-regexp "[a-zA-z]+ @ [^#$\n]+ # "
         eshell-history-size 10000
         eshell-buffer-maximum-lines 10000
         eshell-hist-ignoredups t
@@ -1390,6 +1381,22 @@
 (global-unset-key  (kbd "C-z"))
 (global-unset-key  (kbd "C-x C-z"))
 
+;; Advice
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, copy a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Single line killed")
+     (list (line-beginning-position)
+	   (line-beginning-position 2)))))
+
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+	   (line-beginning-position 2)))))
+
 ;; Open my default persp layouts
 (defun my/persp-setup-hook ()
   (interactive)
@@ -1501,3 +1508,11 @@
 
 ;; This should add a task under the current level, basically function the same as a sub heading
 ;; (defun org-new-sub-todo ()
+
+(use-package savehist
+  :defer 2
+  :hook (after-init . savehist-mode)
+  :config
+  (setq history-length 1000)
+  (setq history-delete-duplicates t)
+  (setq savehist-save-minibuffer-history t))
