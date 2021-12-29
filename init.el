@@ -7,6 +7,8 @@
       gc-cons-percentage 0.6)
 (setq read-process-output-max 1048576)
 
+(custom-set-variables
+ '(warning-suppress-log-types '((org-element-cache))))
 
 (defun my/defer-garbage-collection ()
   (setq gc-cons-threshold most-positive-fixnum))
@@ -293,7 +295,7 @@
 (use-package orderless
   :straight t
   :init
-  (setq completion-styles '(basic partial-completion orderless)
+  (setq completion-styles '(orderless basic)
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
@@ -730,7 +732,7 @@
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-          (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+          (sequence "BACKLOG(b)" "PLAN(p)" "NOTE(n)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
   (setq org-refile-targets
         '(("Archive.org" :maxlevel . 1)
@@ -830,33 +832,37 @@
   :straight t)
 
 (use-package htmlize
-  :straight (htmlize :host github :repo "hniksic/emacs-htmlize"))
+  :defer 2
+  :straight (htmlize :host github :repo "hniksic/emacs-htmlize")
+  :config
+  (setq org-html-htmlize-output-type 'css))
 
-(use-package org-gantt-mode
-  :straight (org-gantt-mode :host gitlab :repo "joukeHijlkema/org-gantt")
-  :init  
-  (defvar og-Cols '((strokeColor  . "#000000")
-                    (dayColor     . "#d7d7d7")
-                    (bgTitleBlock . "#ffffff")
-                    (bgGridHead   . "#ffffff")
-                    (bgTaskEven   . "#ffffff")
-                    (bgTaskOdd    . "#ffffff")
-                    (bgTaskLevel1 . "#bfc0c4")
-                    (taskDone     . "#4fe42f")
-                    (taskDuration . "#f0dd60")
-                    (fillTaskLevel1 . "#000000")
-                    (bgTask       . "#77baff")
-                    (bgTaskP      . "white")
-                    (bgKP         . "#77baff")
-                    (bgKPdone     . "#4fe42f")
-                    (stLink       . "#fe6060"))
-    "default gantt colors")
-  (setq org-gantt-mode t))
+;; (use-package org-gantt-mode
+;;   :straight (org-gantt-mode :host gitlab :repo "joukeHijlkema/org-gantt")
+;;   :init  
+;;   (defvar og-Cols '((strokeColor  . "#000000")
+;;                     (dayColor     . "#d7d7d7")
+;;                     (bgTitleBlock . "#ffffff")
+;;                     (bgGridHead   . "#ffffff")
+;;                     (bgTaskEven   . "#ffffff")
+;;                     (bgTaskOdd    . "#ffffff")
+;;                     (bgTaskLevel1 . "#bfc0c4")
+;;                     (taskDone     . "#4fe42f")
+;;                     (taskDuration . "#f0dd60")
+;;                     (fillTaskLevel1 . "#000000")
+;;                     (bgTask       . "#77baff")
+;;                     (bgTaskP      . "white")
+;;                     (bgKP         . "#77baff")
+;;                     (bgKPdone     . "#4fe42f")
+;;                     (stLink       . "#fe6060"))
+;;     "default gantt colors")
+;;   (setq org-gantt-mode t))
 
-(use-package org-make-toc
-  :defer 5
+(use-package toc-org
   :straight t
-  :after org)
+  :defer 5
+  :init
+  (add-hook 'org-mode-hook 'toc-org-mode))
 
 (use-package org-superstar
   :straight (org-superstar-mode :host github :repo "integral-dw/org-superstar-mode")
@@ -1084,13 +1090,11 @@
   :straight t
   :after python-mode)
 
-
 (use-package pyvenv
   :straight t
   :after python
   :config
-  (setq pyvenv-menu t)
-  )
+  (setq pyvenv-menu t))
 
 (use-package python-black
   :straight t
@@ -1418,6 +1422,29 @@
 (global-unset-key  (kbd "M-`"))
 (global-unset-key  (kbd "C-z"))
 (global-unset-key  (kbd "C-x C-z"))
+
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, copy a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Single line killed")
+     (list (line-beginning-position)
+	   (line-beginning-position 2)))))
+
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+	         (line-beginning-position 2)))))
+
+(defadvice kill-line (before kill-line-autoreindent activate)
+  "Kill excess whitespace when joining lines.
+If the next line is joined to the current line, kill the extra indent whitespace in front of the next line."
+  (when (and (eolp) (not (bolp)))
+    (save-excursion
+      (forward-char 1)
+      (just-one-space 1))))
 
 ;; Open my default persp layouts
 (defun my/persp-setup-hook ()
