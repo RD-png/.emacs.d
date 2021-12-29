@@ -702,6 +702,48 @@
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
+;; Custom Org
+(defun my/org-new-project ()
+  (interactive)
+  (insert "* " (read-string "Enter Project Name:"))
+  (insert " [%]")
+  (save-excursion
+    (insert (format (concat "\n"
+                            ":PROPERTIES:\n"
+                            ":CREATED:      %s\n"
+                            ":COOKIE_DATA:  todo recursive\n"
+                            ":ID:           %s\n"
+                            ":END:\n")
+                    (format-time-string (org-time-stamp-format t t))
+                    (substring (shell-command-to-string "uuidgen") 0 -1))))
+  (org-backward-heading-same-level 0)
+  (org-toggle-tag "project" 'on)
+  (org-next-visible-heading 1))
+
+(defun my/org-new-todo-header ()
+  (insert "TODO ")
+  (save-excursion
+    (insert (format (concat "\n"
+                            "DEADLINE:   %s SCHEDULED:  %s\n"
+                            ":PROPERTIES:\n"
+                            ":CREATED:    %s\n"
+                            ":ID:         %s\n"
+                            ":END:\n")
+                    (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
+                    (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
+                    (format-time-string (org-time-stamp-format t t))
+                    (substring (shell-command-to-string "uuidgen") 0 -1)))))
+
+(defun my/org-new-inline-heading ()
+  (interactive)
+  (org-insert-heading)
+  (my/org-new-todo-header))
+
+(defun my/org-new-sub-heading ()
+  (interactive)
+  (org-insert-subheading (org-current-level))
+  (my/org-new-todo-header))
+
 (use-package org
   :straight t
   :commands (org-capture org-agenda)
@@ -817,7 +859,11 @@
   (define-key global-map (kbd "C-c j")
               (lambda () (interactive) (org-capture nil "jj")))
 
-  (org-font-setup))
+  (org-font-setup)
+  :bind (:map org-mode-map
+              ("C-c t p" . my/org-new-project)
+              ("C-c t i" . my/org-new-inline-heading)
+              ("C-c t s" . my/org-new-sub-heading)))
 
 (use-package ts
   :straight t)
@@ -1414,20 +1460,22 @@
 (global-unset-key  (kbd "C-z"))
 (global-unset-key  (kbd "C-x C-z"))
 
-(defadvice kill-ring-save (before slick-copy activate compile)
-  "When called interactively with no active region, copy a single line instead."
+(defun slick-cut (beg end)
   (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (message "Single line killed")
-     (list (line-beginning-position)
-	   (line-beginning-position 2)))))
+   (if mark-active
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position) (line-end-position)))))
 
-(defadvice kill-region (before slick-cut activate compile)
-  "When called interactively with no active region, kill a single line instead."
+(advice-add 'kill-region :before #'slick-cut)
+
+(defun slick-copy (beg end)
   (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (list (line-beginning-position)
-	         (line-beginning-position 2)))))
+   (if mark-active
+       (list (region-beginning) (region-end))
+     (message "Copied line")
+     (list (line-beginning-position) (line-end-position)))))
+
+(advice-add 'kill-ring-save :before #'slick-copy)
 
 (defadvice kill-line (before kill-line-autoreindent activate)
   "Kill excess whitespace when joining lines.
@@ -1480,48 +1528,6 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-scale-4 1.25
          modus-themes-scale-title 1.30)
   (load-theme 'modus-operandi))
-
-;; Custom Org
-(defun org-new-project ()
-  (interactive)
-  (insert "* " (read-string "Enter Project Name:"))
-  (insert " [%]")
-  (save-excursion
-    (insert (format (concat "\n"
-                            ":CREATED:      %s\n"
-                            ":COOKIE_DATA:  todo recursive\n"
-                            ":ID:           %s")
-                    (format-time-string (org-time-stamp-format t t))
-                    (substring (shell-command-to-string "uuidgen") 0 -1))))
-  (org-backward-heading-same-level 0)
-  (org-toggle-tag "project" 'on)
-  (org-next-visible-heading 1))
-
-(defun my/org-new-todo-header ()
-  (insert "TODO ")
-  (save-excursion
-    (insert (format (concat "\n"
-                            ":CREATED:    %s\n"
-                            ":SCHEDULED:  %s\n"
-                            ":DEADLINE:   %s\n"
-                            ":ID:         %s\n")
-                    (format-time-string (org-time-stamp-format t t))
-                    (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
-                    (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
-                    (substring (shell-command-to-string "uuidgen") 0 -1)))))
-
-(defun org-new-inline-heading ()
-  (interactive)
-  (org-insert-heading)
-  (my/org-new-todo-header))
-
-(defun org-new-sub-heading ()
-  (interactive)
-  (org-insert-subheading (org-current-level))
-  (my/org-new-todo-header))
-
-;; This should add a task under the current level, basically function the same as a sub heading
-;; (defun org-new-sub-todo ()
 
 (use-package savehist
   :defer 2
