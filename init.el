@@ -157,14 +157,15 @@
   (setq dashboard-banner-logo-title "")
   (setq dashboard-set-file-icons t))
 
-(use-package tree-sitter-langs
-  :straight t)
-
 (use-package tree-sitter
   :straight t
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :straight t
+  :after tree-sitter)
 
 (use-package popper
   :straight t
@@ -355,7 +356,13 @@
                          (file-remote-p file 'user) "@" (file-remote-p file 'host)
                          "|sudo:root@"
                          (file-remote-p file 'host) ":" (file-remote-p file 'localname))
-               (concat "/sudo:root@localhost:" (file-truename file)))))
+               (concat "/sudo:root@localhost:" file))))
+
+;;;###autoload
+(defun sudo-this-file ()
+  "Open the current file as root."
+  (interactive)
+  (sudo-find-file (file-truename buffer-file-name)))
 
 (use-package embark-consult
   :straight '(embark-consult :host github
@@ -429,13 +436,11 @@
   :custom
   (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
   :config
-  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
-  (setq marginalia-command-categories
-        (append '((persp-switch-to-buffer . buffer))
-                marginalia-command-categories)))
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 
 (use-package cape
   :straight t
+  :defer 2
   :init
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-tex)
@@ -546,18 +551,39 @@
   (other-window 1))
 (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 
-(use-package perspective
-  :straight t
-  :bind (("C-c C-'" . persp-next)
-         ("C-x M-b" . persp-switch))
-  :custom
-  (persp-initial-frame-name "Win1")
+(use-package tab-bar
+  :defer
+  :bind-keymap ("C-c t" . tab-prefix-map)
+  :bind
+  ("C-c C-'" . tab-bar-switch-to-prev-tab)
+  (:map tab-prefix-map
+        ("n" . tab-bar-switch-to-next-tab)
+        ("p" . tab-bar-switch-to-prev-tab)
+        ("N" . tab-bar-history-forward)
+        ("P" . tab-bar-history-back))
   :config
-  (setq persp-modestring-dividers '("|" "|" "|"))
-  (unless (equal persp-mode t)
-    (persp-mode)))
+  (tab-bar-history-mode 1)
+  (setq  tab-bar-close-last-tab-choice 'tab-bar-mode-disable
+         tab-bar-show                   nil
+         tab-bar-tab-name-truncated-max 14
+         tab-bar-new-tab-choice        'ibuffer
+         tab-bar-tab-name-function '(lambda nil
+                                      "Use directory as tab name."
+                                      (let ((dir (expand-file-name
+                                                  (or (if (fboundp 'project-root)
+                                                          (project-root (project-current)))
+                                                      default-directory))))
+                                        (substring dir (1+ (string-match "/[^/]+/$" dir)) -1 ))))
+  :hook (after-init . (lambda () (tab-bar-new-tab))))
 
-;; Yoinked from karthinks blog
+(use-package tab-bar-echo-area
+  :straight t
+  :after tab-bar
+  :init
+  (defvar tab-bar-format nil "Format for tab-bar-echo-area-mode")
+  :config
+  (tab-bar-echo-area-mode 1))
+
 (use-package avy
   :straight t
   :config
@@ -997,8 +1023,6 @@
    (propertize " #" 'face `(:foreground "#70480f"))
    (propertize " " 'face `(:foreground "white"))))
 
-
-
 (defun eshell-configure ()
   (use-package xterm-color
     :straight t)
@@ -1038,7 +1062,6 @@
         eshell-scroll-to-bottom-on-input t
         eshell-prefer-lisp-functions nil
         comint-prompt-read-only t)
-  (setq eshell-buffer-name (concat (persp-current-name) " *eshell*"))
   (generate-new-buffer eshell-buffer-name))
 
 (use-package eshell
@@ -1058,11 +1081,13 @@
   :straight t
   :hook (eshell-mode . eshell-syntax-highlighting-mode))
 
-(use-package tramp
+(use-package tramp  
+  :straight t
   :defer 5
   :custom
   (tramp-default-method "ssh")
   :config
+  (setq tramp-verbose 1)
   (put 'temporary-file-directory 'standard-value '("/tmp"))
   (setq tramp-auto-save-directory "~/.cache/emacs/backups"
         tramp-persistency-file-name "~/.config/emacs/data/tramp"))
@@ -1074,12 +1099,9 @@
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
   (direnv-mode))
 
-;; (use-package undo-tree
-;;   :straight t
-;;   :defer)
-
 (use-package dumb-jump
   :straight t
+  :defer 5
   :init
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
@@ -1231,6 +1253,7 @@
   ("C-c p s r" . consult-ripgrep))
 
 (use-package rg
+  :defer 3
   :straight t)
 
 (use-package magit
@@ -1297,6 +1320,7 @@
 
 (use-package flymake
   :straight (flymake :type built-in)
+  :defer 3
   :init
   (setq-default flymake-diagnostic-functions nil)
   (with-eval-after-load 'flymake-proc
@@ -1436,6 +1460,7 @@
 ;; General binds
 (global-set-key (kbd "C-c w") #'copy-word)
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
+(global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
 (global-set-key (kbd "C-a") #'my/beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
@@ -1484,14 +1509,6 @@ If the next line is joined to the current line, kill the extra indent whitespace
     (save-excursion
       (forward-char 1)
       (just-one-space 1))))
-
-;; Open my default persp layouts
-(defun my/persp-setup-hook ()
-  (interactive)
-  (persp-switch "Win2")
-  (persp-switch "Win1"))
-
-(add-hook 'after-init-hook #'my/persp-setup-hook)
 
 ;; Load theme
 (use-package modus-themes
