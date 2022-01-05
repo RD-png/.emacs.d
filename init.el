@@ -1122,7 +1122,7 @@
   :straight t
   :mode
   ("\\.ts\\'"
-   "\\.Js\\'")
+   "\\.js\\'")
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
