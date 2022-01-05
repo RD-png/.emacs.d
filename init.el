@@ -216,6 +216,7 @@
     (yas-minor-mode . "")
     (smartparens-mode . "")
     (tree-sitter-mode . "")
+    (anzu-mode . "")
     (eldoc-mode . "")
     (abbrev-mode . "")
     (ivy-mode . "")
@@ -445,7 +446,8 @@
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-tex)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-keyword))
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'tempel--templates))
 
 (use-package lsp-mode
   :straight t
@@ -511,6 +513,10 @@
   :straight t
   :mode "\\.php\\'"
   :hook (php-mode . lsp-deferred))
+
+;; (use-package restclient
+;;   :straight t
+;;   :defer 10)
 
 (use-package helpful
   :straight t
@@ -1219,6 +1225,14 @@
 
 (add-hook 'rustic-mode-hook #'rustic-lsp-mode-setup)
 
+(use-package prog-mode
+  :straight (prog-mode :type built-in)
+  :hook (prog-mode . prettify-symbols-mode)
+  :config
+  (setq-default prettify-symbols-alist
+                '(("lambda" . ?λ)))
+  (setq prettify-symbols-unprettify-at-point 'right-edge))
+
 (use-package latex
   :defer 5
   :straight (latex :type built-in)
@@ -1251,6 +1265,14 @@
           (?e "Eshell" consult-recent-file)))
   :bind*
   ("C-c p s r" . consult-ripgrep))
+
+(use-package anzu
+  :straight t
+  :bind
+  ([remap query-replace] . anzu-query-replace)
+  ([remap query-replace-regexp] . anzu-query-replace-regexp)
+  :config
+  (global-anzu-mode +1))
 
 (use-package rg
   :defer 3
@@ -1553,3 +1575,10 @@ If the next line is joined to the current line, kill the extra indent whitespace
   (setq history-length 1000)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t))
+
+(use-package recentf
+  :straight (:type built-in)
+  :defer 2
+  :config
+  (setq recentf-max-saved-items 100)
+  (recentf-mode 1))
