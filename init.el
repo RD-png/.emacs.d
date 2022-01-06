@@ -132,6 +132,10 @@
 
 (setq custom-safe-themes t)
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(cursor ((t (:background "IndianRed3"))))
  '(mode-line ((t (:underline (:line-width 1)))))
  '(vertico-current ((t (:background "light blue")))))
@@ -220,6 +224,8 @@
     (eldoc-mode . "")
     (abbrev-mode . "")
     (ivy-mode . "")
+    (better-jumper-mode . "")
+    (better-jumper-local-mode . "")
     (counsel-mode . "")
     (wrap-region-mode . "")
     (rainbow-mode . "")
@@ -410,18 +416,42 @@
          :map minibuffer-local-map
          ("C-x j" . consult-dir-jump-file)))
 
-(use-package dogears
-  :straight (dogears :host github :repo "alphapapa/dogears.el"
-                     :files (:defaults (:exclude "helm-dogears.el")))
-  :config
-  (setq dogears-hooks '(imenu-after-jump-hook consult-after-jump-hook 'xref-after-jump-hook 'dumb-jump-after-jump-hook))
-  :bind (:map global-map
-              ("C-c h g" . dogears-go)
-              ("C-c h r" . dogears-remember)
-              ("C-c h f" . dogears-forward)
-              ("C-c h b" . dogears-back))
+(use-package better-jumper
+  :straight t
+  :bind
+  ("C-c h g" . consult-better-jumper)
+  ("C-c h r" . better-jumper-set-jump)
+  ("C-c h f" . better-jumper-jump-forward)
+  ("C-c h b" . better-jumper-jump-backward)
   :init
-  (dogears-mode))
+  (better-jumper-mode +1))
+
+(defun consult-better-jumper--candidates ()
+  (let ((markers (better-jumper--get-marker-table)))
+    (mapcar
+     (pcase-lambda (`(,_path ,_pt ,key))
+       (when-let ((marker (gethash key markers)))
+         (save-excursion
+           (goto-char marker)
+           (consult--location-candidate
+            (consult--line-with-cursor marker)
+            marker (line-number-at-pos)))))
+     (ring-elements (better-jumper--get-jump-list)))))
+
+(defun consult-better-jumper ()
+  "Browse better-jumper jump points with consult"
+  (interactive)
+  (consult--read
+   (consult-better-jumper--candidates)
+   :prompt "Jump to: "
+   :annotate (consult--line-prefix)
+   :category 'consult-location
+   :sort nil
+   :require-match t
+   :lookup #'consult--lookup-location
+   :history '(:input consult--line-history)
+   :add-history (thing-at-point 'symbol)
+   :state (consult--jump-state)))
 
 (use-package affe
   :straight t
@@ -572,7 +602,6 @@
   (setq  tab-bar-close-last-tab-choice 'tab-bar-mode-disable
          tab-bar-show                   nil
          tab-bar-tab-name-truncated-max 14
-         tab-bar-new-tab-choice        'ibuffer
          tab-bar-tab-name-function '(lambda nil
                                       "Use directory as tab name."
                                       (let ((dir (expand-file-name
