@@ -162,14 +162,19 @@
   (setq dashboard-set-file-icons t))
 
 (use-package tree-sitter
-  :straight t
-  :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  :straight (tree-sitter :branch "master")
+  :hook ((emacs-startup . global-tree-sitter-mode)
+         (tree-sitter-mode . tree-sitter-hl-mode)))
 
 (use-package tree-sitter-langs
-  :straight t
-  :after tree-sitter)
+  :straight (tree-sitter-langs :branch "master")
+  :after tree-sitter
+  :demand t
+  :config
+  (push '(typescript-react-mode . typescript)
+        tree-sitter-major-mode-language-alist)
+  (push '(web-mode . html)
+        tree-sitter-major-mode-language-alist))
 
 (use-package popper
   :straight t
@@ -454,6 +459,7 @@
 
 (use-package affe
   :straight t
+  :defer 2
   :config
   (setq affe-regexp-function #'orderless-pattern-compiler
         affe-highlight-function #'orderless--highlight))
@@ -1194,6 +1200,7 @@
 
 (use-package pyvenv
   :straight t
+  :defer 5
   :after python
   :config
   (setq pyvenv-menu t))
