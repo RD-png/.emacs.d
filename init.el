@@ -173,7 +173,6 @@
 
 (use-package popper
   :straight t
-  :after project
   :bind (("C-c C-." . popper-toggle-latest)
          ("C-c M-." . popper-kill-latest-popup)
          ("C-c C-/" . popper-cycle)
@@ -476,8 +475,7 @@
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-tex)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'tempel--templates))
+  (add-to-list 'completion-at-point-functions #'cape-keyword))
 
 (use-package lsp-mode
   :straight t
@@ -588,7 +586,8 @@
 (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 
 (use-package tab-bar
-  :defer
+  :straight (tab-bar :type built-in)
+  :hook (after-init . (lambda () (tab-bar-new-tab)))
   :bind-keymap ("C-c t" . tab-prefix-map)
   :bind
   ("C-c C-'" . tab-bar-switch-to-prev-tab)
@@ -601,6 +600,7 @@
   (tab-bar-history-mode 1)
   (setq  tab-bar-close-last-tab-choice 'tab-bar-mode-disable
          tab-bar-show                   nil
+         tab-bar-new-tab-choice        'ibuffer
          tab-bar-tab-name-truncated-max 14
          tab-bar-tab-name-function '(lambda nil
                                       "Use directory as tab name."
@@ -608,8 +608,7 @@
                                                   (or (if (fboundp 'project-root)
                                                           (project-root (project-current)))
                                                       default-directory))))
-                                        (substring dir (1+ (string-match "/[^/]+/$" dir)) -1 ))))
-  :hook (after-init . (lambda () (tab-bar-new-tab))))
+                                        (substring dir (1+ (string-match "/[^/]+/$" dir)) -1 )))))
 
 (use-package tab-bar-echo-area
   :straight t
@@ -698,7 +697,16 @@
   :straight t
   :bind (("C-}" . er/expand-region)
          ("C-M-}" . er/mark-outside-pairs)
-         ("C-{" . er/mark-inside-pairs)))
+         ("C-{" . er/select-text-in-delims)))
+
+(defun er/select-text-in-delims ()
+  (interactive)
+  (let ( $skipChars $p1 )
+    (setq $skipChars "^\"'`<>(){}[]‹›«»")
+    (skip-chars-backward $skipChars)
+    (setq $p1 (point))
+    (skip-chars-forward $skipChars)
+    (set-mark $p1)))
 
 (use-package no-littering
   :straight t)
@@ -1040,7 +1048,7 @@
     (if (> (length p-lst) 2)
         (concat
          (mapconcat (lambda (elm) (if (zerop (length elm)) ""
-                                    (substring elm 0 0)))
+                               (substring elm 0 0)))
                     (butlast p-lst 2)
                     "/")
          "/"
@@ -1435,13 +1443,34 @@
          ("C->" . mc/mark-previous-like-this)
          ("C-c m a" . mc/mark-all-like-this)))
 
-(defun copy-word ()
-  (interactive)
+(defun get-point (symbol &optional arg)
+  "get the point"
+  (funcall symbol arg)
+  (point))
+
+(defun copy-thing (begin-of-thing end-of-thing &optional arg)
+  "Copy thing between beg & end into kill ring."
   (save-excursion
-    (forward-char 1)
-    (backward-word)
-    (kill-word 1)
+    (let ((beg (get-point begin-of-thing 1))
+          (end (get-point end-of-thing arg)))
+      (copy-region-as-kill beg end))))
+
+(defun paste-to-mark (&optional arg)
+  "Paste things to mark, or to the prompt in shell-mode."
+  (unless (eq arg 1)
+    (if (string= "shell-mode" major-mode)
+        (comint-next-prompt 25535)
+      (goto-char (mark)))
     (yank)))
+
+(defun copy-word (&optional arg)
+  "Copy words at point into kill-ring"
+  (interactive "P")
+  (global-superword-mode 1)
+  (forward-char 1)
+  (copy-thing 'backward-word 'forward-word arg)
+  (backward-char 1)
+  (global-superword-mode -1))
 
 (defun my/beginning-of-line ()
   (interactive)
