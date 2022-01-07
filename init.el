@@ -1442,35 +1442,6 @@
          ("C->" . mc/mark-previous-like-this)
          ("C-c m a" . mc/mark-all-like-this)))
 
-(defun get-point (symbol &optional arg)
-  "get the point"
-  (funcall symbol arg)
-  (point))
-
-(defun copy-thing (begin-of-thing end-of-thing &optional arg)
-  "Copy thing between beg & end into kill ring."
-  (save-excursion
-    (let ((beg (get-point begin-of-thing 1))
-          (end (get-point end-of-thing arg)))
-      (copy-region-as-kill beg end))))
-
-(defun paste-to-mark (&optional arg)
-  "Paste things to mark, or to the prompt in shell-mode."
-  (unless (eq arg 1)
-    (if (string= "shell-mode" major-mode)
-        (comint-next-prompt 25535)
-      (goto-char (mark)))
-    (yank)))
-
-(defun copy-word (&optional arg)
-  "Copy words at point into kill-ring"
-  (interactive "P")
-  (superword-mode 1)
-  (forward-char 1)
-  (copy-thing 'backward-word 'forward-word arg)
-  (backward-char 1)
-  (superword-mode -1))
-
 (defun my/beginning-of-line ()
   (interactive)
 	(if (= (point) (progn (back-to-indentation) (point)))
@@ -1529,17 +1500,17 @@
               (backward-kill-word 1))))
       (kill-region cp (- cp 1)))))
 
-(defun my/kill-thing-at-point (thing)
+(defun my/op-thing-at-point (op thing)
   "Get the start and end bounds of a type of thing at point."
   (superword-mode 1)
   (let ((bounds (bounds-of-thing-at-point thing)))
     (if bounds
-        (kill-region (car bounds) (cdr bounds))
+        (funcall op (car bounds) (cdr bounds))
       (error "No %s at point" thing)))
   (superword-mode -1))
 
 ;; General binds
-(global-set-key (kbd "C-c w") #'copy-word)
+(global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
 (global-set-key (kbd "C-a") #'my/beginning-of-line)
@@ -1547,7 +1518,7 @@
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
-(global-set-key (kbd "M-d") (lambda () (interactive) (my/kill-thing-at-point 'word)))
+(global-set-key (kbd "M-d") (lambda () (interactive) (my/op-thing-at-point 'kill-region 'word)))
 (global-set-key (kbd "C-M-<backspace>") #'backward-kill-sexp)
 (global-set-key (kbd "C-M-<return>") #'eshell)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
