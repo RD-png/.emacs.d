@@ -591,12 +591,30 @@
   (other-window 1))
 (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 
+(use-package project
+  :straight (project :type built-in)
+  :init
+  (global-set-key (kbd "C-c p") project-prefix-map)
+  (cl-defgeneric project-root (project) (car project))
+  (setq project-switch-commands
+        '((?f "Find file" project-find-file)
+          (?g "Find regexp" project-find-regexp)
+          (?d "Dired" project-dired)
+          (?b "Buffer" project-switch-to-buffer)
+          (?r "Query replace" project-query-replace-regexp)
+          (?v "VC-Dir" project-vc-dir)
+          (?k "Kill buffers" project-kill-buffers)
+          (?! "Shell command" project-shell-command)
+          (?e "Eshell" consult-recent-file)))
+  :bind*
+  ("C-c p s r" . consult-ripgrep))
+
 (use-package tab-bar
   :straight (tab-bar :type built-in)
   :hook (after-init . (lambda () (tab-bar-new-tab)))
   :bind-keymap ("C-c t" . tab-prefix-map)
   :bind
-  ("C-c C-'" . tab-bar-switch-to-prev-tab)
+  ("C-c C-'" . tab-bar-switch-to-recent-tab) 
   (:map tab-prefix-map
         ("n" . tab-bar-switch-to-next-tab)
         ("p" . tab-bar-switch-to-prev-tab)
@@ -932,13 +950,13 @@
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
 
   (define-key global-map (kbd "C-c j")
-              (lambda () (interactive) (org-capture nil "jj")))
+    (lambda () (interactive) (org-capture nil "jj")))
 
   (org-font-setup)
   :bind (:map org-mode-map
-              ("C-c t p" . my/org-new-project)
-              ("C-c t i" . my/org-new-inline-heading)
-              ("C-c t s" . my/org-new-sub-heading)))
+              ("C-c o p" . my/org-new-project)
+              ("C-c o i" . my/org-new-inline-heading)
+              ("C-c o s" . my/org-new-sub-heading)))
 
 (use-package ts
   :straight t)
@@ -1054,7 +1072,7 @@
     (if (> (length p-lst) 2)
         (concat
          (mapconcat (lambda (elm) (if (zerop (length elm)) ""
-                               (substring elm 0 0)))
+                                    (substring elm 0 0)))
                     (butlast p-lst 2)
                     "/")
          "/"
@@ -1269,14 +1287,6 @@
 
 (add-hook 'rustic-mode-hook #'rustic-lsp-mode-setup)
 
-(use-package prog-mode
-  :straight (prog-mode :type built-in)
-  :hook (prog-mode . prettify-symbols-mode)
-  :config
-  (setq-default prettify-symbols-alist
-                '(("lambda" . ?λ)))
-  (setq prettify-symbols-unprettify-at-point 'right-edge))
-
 (use-package latex
   :defer 5
   :straight (latex :type built-in)
@@ -1291,24 +1301,6 @@
   :defer 5
   :after latex
   :hook (LaTeX-mode . turn-on-cdlatex))
-
-(use-package project
-  :straight (project :type built-in)
-  :init
-  (global-set-key (kbd "C-c p") project-prefix-map)
-  (cl-defgeneric project-root (project) (car project))
-  (setq project-switch-commands
-        '((?f "Find file" project-find-file)
-          (?g "Find regexp" project-find-regexp)
-          (?d "Dired" project-dired)
-          (?b "Buffer" project-switch-to-buffer)
-          (?r "Query replace" project-query-replace-regexp)
-          (?v "VC-Dir" project-vc-dir)
-          (?k "Kill buffers" project-kill-buffers)
-          (?! "Shell command" project-shell-command)
-          (?e "Eshell" consult-recent-file)))
-  :bind*
-  ("C-c p s r" . consult-ripgrep))
 
 (use-package anzu
   :straight t
@@ -1473,11 +1465,11 @@
 (defun copy-word (&optional arg)
   "Copy words at point into kill-ring"
   (interactive "P")
-  (global-superword-mode 1)
+  (superword-mode 1)
   (forward-char 1)
   (copy-thing 'backward-word 'forward-word arg)
   (backward-char 1)
-  (global-superword-mode -1))
+  (superword-mode -1))
 
 (defun my/beginning-of-line ()
   (interactive)
@@ -1539,10 +1531,12 @@
 
 (defun my/kill-thing-at-point (thing)
   "Get the start and end bounds of a type of thing at point."
+  (superword-mode 1)
   (let ((bounds (bounds-of-thing-at-point thing)))
     (if bounds
         (kill-region (car bounds) (cdr bounds))
-      (error "No %s at point" thing))))
+      (error "No %s at point" thing)))
+  (superword-mode -1))
 
 ;; General binds
 (global-set-key (kbd "C-c w") #'copy-word)
@@ -1647,3 +1641,24 @@ If the next line is joined to the current line, kill the extra indent whitespace
   :config
   (setq recentf-max-saved-items 100)
   (recentf-mode 1))
+
+(use-package ligature
+  :straight (ligature :host github :repo "mickeynp/ligature.el")
+  :config
+  (ligature-set-ligatures 't '("www"))
+  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                       "\\\\" "://"))
+  :config
+  (global-ligature-mode +1))
