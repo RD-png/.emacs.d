@@ -176,6 +176,24 @@
   (push '(web-mode . html)
         tree-sitter-major-mode-language-alist))
 
+(use-package window
+  :straight (window :type built-in)
+  :config
+  (setq display-buffer-alist
+        `(("\\*\\(scheme\\|info\\)\\*"
+           (display-buffer-in-side-window)
+           (dedicated . t)
+           (side . bottom)
+           (slot . 0))
+          ("\\*Embark Actions\\*"
+           (display-buffer-reuse-mode-window display-buffer-at-bottom)
+           (window-height . fit-window-to-buffer)
+           (window-parameters . ((no-other-window . t)
+                                 (mode-line-format . none))))))
+  (setq switch-to-buffer-in-dedicated-window 'pop)
+  (setq window-sides-vertical nil)
+  (setq window-combination-resize t))
+
 (use-package popper
   :straight t
   :bind (("C-c C-." . popper-toggle-latest)
@@ -183,7 +201,7 @@
          ("C-c C-/" . popper-cycle)
          ("C-c C-;" . popper-toggle-type))
   :init
-  (setq popper-window-height 10)
+  (setq popper-window-height 15)
   (setq even-window-sizes nil)
   (setq display-buffer-base-action
         '(display-buffer-reuse-mode-window
@@ -192,6 +210,8 @@
   (setq popper-reference-buffers
         (append
          '("\\*Messages\\*"
+           "\\*scheme\\*"
+           "\\*info\\*"
            "^\\*Warnings\\*$"
            "Output\\*$"
            "^\\*Backtrace\\*"
