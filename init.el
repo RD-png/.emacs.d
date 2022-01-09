@@ -137,7 +137,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cursor ((t (:background "IndianRed3"))))
- '(mode-line ((t (:underline (:line-width 1)))))
+ ;; '(mode-line ((t (:underline (:line-width 1)))))
  '(vertico-current ((t (:background "light blue")))))
 (setq x-underline-at-descent-line t)
 
@@ -230,67 +230,67 @@
 (use-package all-the-icons
   :straight t)
 
-(use-package smart-mode-line
-  :straight t
-  :commands sml/setup
-  :init
-  (setq sml/no-confirm-load-theme t)
-  (setq sml/theme nil)
-  (sml/setup))
+;; (use-package smart-mode-line
+;;   :straight t
+;;   :commands sml/setup
+;;   :init
+;;   (setq sml/no-confirm-load-theme t)
+;;   (setq sml/theme nil)
+;;   (sml/setup))
 
-(defvar mode-line-cleaner-alist
-  `((org-gantt-mode . "")
-    (subword-mode . "")
-    (yas-minor-mode . "")
-    (smartparens-mode . "")
-    (tree-sitter-mode . "")
-    (anzu-mode . "")
-    (eldoc-mode . "")
-    (abbrev-mode . "")
-    (ivy-mode . "")
-    (better-jumper-mode . "")
-    (better-jumper-local-mode . "")
-    (counsel-mode . "")
-    (wrap-region-mode . "")
-    (rainbow-mode . "")
-    (which-key-mode . "")
-    (undo-tree-mode . "")
-    (auto-revert-mode . "")
-    (lisp-interaction-mode . "λ")
-    (buffer-face-mode . "")
-    (hi-lock-mode . "")
-    (python-mode . "Py")
-    (emacs-lisp-mode . "Eλ")
-    (dot-mode . " .")
-    (scheme-mode . " SCM")
-    (matlab-mode . "M")
-    (org-mode . "Org")
-    (valign-mode . "")
-    (eldoc-mode . "")
-    (org-cdlatex-mode . "")
-    (org-indent-mode . "")
-    (org-roam-mode . "")
-    (visual-line-mode . "")
-    (all-the-icons-dired-mode . "")
-    (latex-mode . "TeX")
-    (outline-minor-mode . " [o]";; " ֍"
-                        )
-    (strokes-mode . "")
-    (flymake-mode . "")
-    (flyspell-mode . "")
-    ))
+;; (defvar mode-line-cleaner-alist
+;;   `((org-gantt-mode . "")
+;;     (subword-mode . "")
+;;     (yas-minor-mode . "")
+;;     (smartparens-mode . "")
+;;     (tree-sitter-mode . "")
+;;     (anzu-mode . "")
+;;     (eldoc-mode . "")
+;;     (abbrev-mode . "")
+;;     (ivy-mode . "")
+;;     (better-jumper-mode . "")
+;;     (better-jumper-local-mode . "")
+;;     (counsel-mode . "")
+;;     (wrap-region-mode . "")
+;;     (rainbow-mode . "")
+;;     (which-key-mode . "")
+;;     (undo-tree-mode . "")
+;;     (auto-revert-mode . "")
+;;     (lisp-interaction-mode . "λ")
+;;     (buffer-face-mode . "")
+;;     (hi-lock-mode . "")
+;;     (python-mode . "Py")
+;;     (emacs-lisp-mode . "Eλ")
+;;     (dot-mode . " .")
+;;     (scheme-mode . " SCM")
+;;     (matlab-mode . "M")
+;;     (org-mode . "Org")
+;;     (valign-mode . "")
+;;     (eldoc-mode . "")
+;;     (org-cdlatex-mode . "")
+;;     (org-indent-mode . "")
+;;     (org-roam-mode . "")
+;;     (visual-line-mode . "")
+;;     (all-the-icons-dired-mode . "")
+;;     (latex-mode . "TeX")
+;;     (outline-minor-mode . " [o]";; " ֍"
+;;                         )
+;;     (strokes-mode . "")
+;;     (flymake-mode . "")
+;;     (flyspell-mode . "")
+;;     ))
 
-(defun clean-mode-line ()
-  (cl-loop for cleaner in mode-line-cleaner-alist
-           do (let* ((mode (car cleaner))
-                     (mode-str (cdr cleaner))
-                     (old-mode-str (cdr (assq mode minor-mode-alist))))
-                (when old-mode-str
-                  (setcar old-mode-str mode-str))
-                (when (eq mode major-mode)
-                  (setq mode-name mode-str)))))
+;; (defun clean-mode-line ()
+;;   (cl-loop for cleaner in mode-line-cleaner-alist
+;;            do (let* ((mode (car cleaner))
+;;                      (mode-str (cdr cleaner))
+;;                      (old-mode-str (cdr (assq mode minor-mode-alist))))
+;;                 (when old-mode-str
+;;                   (setcar old-mode-str mode-str))
+;;                 (when (eq mode major-mode)
+;;                   (setq mode-name mode-str)))))
 
-(add-hook 'after-change-major-mode-hook 'clean-mode-line)
+;; (add-hook 'after-change-major-mode-hook 'clean-mode-line)
 
 (use-package vertico
   :straight (vertico :repo "minad/vertico"
@@ -1652,6 +1652,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-scale-title 1.30)
   (setq modus-themes-operandi-color-overrides
         '((bg-main . "#FFFFE8")
+          (bg-dim . "#FFFFF8")
           (blue-alt-other . "#0f3d8c")
           (blue-alt . "#2544bb")
           (magenta-alt-other . "#55348e")
@@ -1694,3 +1695,17 @@ If the next line is joined to the current line, kill the extra indent whitespace
                                        "\\\\" "://"))
   :config
   (global-ligature-mode +1))
+
+(use-package doom-modeline
+  :straight t
+  :custom ((doom-modeline-height 10))
+  :init
+  (doom-modeline-mode +1)
+  (setq doom-modeline-buffer-modification-icon nil)  
+  (setq all-the-icons-scale-factor 1)
+  (setq doom-modeline-hud t))
+
+(advice-add #'doom-modeline-lsp-icon :override
+            (defun doom-modeline-lsp-icon+ (text face)
+              (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
+                                  :face face :height 1.0 :v-adjust -0.0575)))
