@@ -1567,7 +1567,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-variable-pitch-headings nil
          modus-themes-intense-paren-match t
          modus-themes-diffs 'desaturated
-         modus-themes-syntax '(alt-syntax-other faint green-strings yellow-comments)
+         modus-themes-syntax '(alt-syntax faint green-strings yellow-comments)
          modus-themes-links '(faint neutral-underline)
          modus-themes-hl-line '(intense)
          modus-themes-prompts '(bold background)
