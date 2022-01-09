@@ -230,68 +230,6 @@
 (use-package all-the-icons
   :straight t)
 
-;; (use-package smart-mode-line
-;;   :straight t
-;;   :commands sml/setup
-;;   :init
-;;   (setq sml/no-confirm-load-theme t)
-;;   (setq sml/theme nil)
-;;   (sml/setup))
-
-;; (defvar mode-line-cleaner-alist
-;;   `((org-gantt-mode . "")
-;;     (subword-mode . "")
-;;     (yas-minor-mode . "")
-;;     (smartparens-mode . "")
-;;     (tree-sitter-mode . "")
-;;     (anzu-mode . "")
-;;     (eldoc-mode . "")
-;;     (abbrev-mode . "")
-;;     (ivy-mode . "")
-;;     (better-jumper-mode . "")
-;;     (better-jumper-local-mode . "")
-;;     (counsel-mode . "")
-;;     (wrap-region-mode . "")
-;;     (rainbow-mode . "")
-;;     (which-key-mode . "")
-;;     (undo-tree-mode . "")
-;;     (auto-revert-mode . "")
-;;     (lisp-interaction-mode . "λ")
-;;     (buffer-face-mode . "")
-;;     (hi-lock-mode . "")
-;;     (python-mode . "Py")
-;;     (emacs-lisp-mode . "Eλ")
-;;     (dot-mode . " .")
-;;     (scheme-mode . " SCM")
-;;     (matlab-mode . "M")
-;;     (org-mode . "Org")
-;;     (valign-mode . "")
-;;     (eldoc-mode . "")
-;;     (org-cdlatex-mode . "")
-;;     (org-indent-mode . "")
-;;     (org-roam-mode . "")
-;;     (visual-line-mode . "")
-;;     (all-the-icons-dired-mode . "")
-;;     (latex-mode . "TeX")
-;;     (outline-minor-mode . " [o]";; " ֍"
-;;                         )
-;;     (strokes-mode . "")
-;;     (flymake-mode . "")
-;;     (flyspell-mode . "")
-;;     ))
-
-;; (defun clean-mode-line ()
-;;   (cl-loop for cleaner in mode-line-cleaner-alist
-;;            do (let* ((mode (car cleaner))
-;;                      (mode-str (cdr cleaner))
-;;                      (old-mode-str (cdr (assq mode minor-mode-alist))))
-;;                 (when old-mode-str
-;;                   (setcar old-mode-str mode-str))
-;;                 (when (eq mode major-mode)
-;;                   (setq mode-name mode-str)))))
-
-;; (add-hook 'after-change-major-mode-hook 'clean-mode-line)
-
 (use-package vertico
   :straight (vertico :repo "minad/vertico"
                      :branch "main")
@@ -1699,13 +1637,13 @@ If the next line is joined to the current line, kill the extra indent whitespace
 (use-package doom-modeline
   :straight t
   :custom ((doom-modeline-height 10))
+  :config
+  (advice-add #'doom-modeline-lsp-icon :override
+              (defun doom-modeline-lsp-icon+ (text face)
+                (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
+                                    :face face :height 1.0 :v-adjust -0.0575)))
   :init
   (doom-modeline-mode +1)
   (setq doom-modeline-buffer-modification-icon nil)  
   (setq all-the-icons-scale-factor 1)
   (setq doom-modeline-hud t))
-
-(advice-add #'doom-modeline-lsp-icon :override
-            (defun doom-modeline-lsp-icon+ (text face)
-              (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
-                                  :face face :height 1.0 :v-adjust -0.0575)))
