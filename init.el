@@ -228,7 +228,9 @@
   (popper-echo-mode +1))
 
 (use-package all-the-icons
-  :straight t)
+  :straight t
+  :config
+  (setq all-the-icons-scale-factor 1))
 
 (use-package vertico
   :straight (vertico :repo "minad/vertico"
@@ -1129,7 +1131,7 @@
 
   (with-eval-after-load 'esh-opt
     (setq eshell-destroy-buffer-when-process-dies t)
-    (setq eshell-visual-commands '("htop" "zsh" "vim"))))
+    (setq eshell-visual-commands '("htop" "zsh"))))
 
 (use-package capf-autosuggest
   :straight (capf-autosuggest :host github :repo "emacs-straight/capf-autosuggest")
@@ -1565,7 +1567,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-variable-pitch-headings nil
          modus-themes-intense-paren-match t
          modus-themes-diffs 'desaturated
-         modus-themes-syntax '(alt-syntax-other green-strings yellow-comments)
+         modus-themes-syntax '(alt-syntax-other faint green-strings yellow-comments)
          modus-themes-links '(faint neutral-underline)
          modus-themes-hl-line '(intense)
          modus-themes-prompts '(bold background)
@@ -1589,13 +1591,15 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-scale-4 1.25
          modus-themes-scale-title 1.30)
   (setq modus-themes-operandi-color-overrides
-        '((bg-main . "#FFFFE8")
+        '(
+          (bg-main . "#FFFFE8")
           (bg-dim . "#FFFFF8")
-          (blue-alt-other . "#0f3d8c")
-          (blue-alt . "#2544bb")
-          (magenta-alt-other . "#55348e")
-          (magenta-alt . "#7b206f")
-          (magenta-intense . "#8f0075")))
+          ;; (blue-alt-other . "#0f3d8c")
+          ;; (blue-alt . "#2544bb")
+          ;; (magenta-alt-other . "#55348e")
+          ;; (magenta-alt . "#752f50")
+          ;; (magenta-intense . "#8f0075")
+          ))
   (load-theme 'modus-operandi))
 
 (use-package savehist
@@ -1642,8 +1646,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
               (defun doom-modeline-lsp-icon+ (text face)
                 (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
                                     :face face :height 1.0 :v-adjust -0.0575)))
+  (setq doom-modeline-buffer-modification-icon nil)
+  (setq doom-modeline-hud t)
   :init
-  (doom-modeline-mode +1)
-  (setq doom-modeline-buffer-modification-icon nil)  
-  (setq all-the-icons-scale-factor 1)
-  (setq doom-modeline-hud t))
+  (doom-modeline-mode +1))
