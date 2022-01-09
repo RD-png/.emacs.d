@@ -377,23 +377,51 @@
            (aw-switch-to-window (aw-select nil))
            (call-interactively (symbol-function ',fn)))))))
 
+(defun sudo-file-path (file)
+  (let ((host (or (file-remote-p file 'host) "localhost")))
+    (concat "/" (when (file-remote-p file)
+                  (concat (file-remote-p file 'method) ":"
+                          (if-let (user (file-remote-p file 'user))
+                              (concat user "@" host)
+                            host)
+                          "|"))
+            "sudo:root@" host
+            ":" (or (file-remote-p file 'localname)
+                    file))))
+
+;;;###autoload
 (defun sudo-find-file (file)
   "Open FILE as root."
   (interactive "FOpen file as root: ")
-  (when (file-writable-p file)
-    (user-error "File is user writeable, aborting sudo"))
-  (find-file (if (file-remote-p file)
-                 (concat "/" (file-remote-p file 'method) ":"
-                         (file-remote-p file 'user) "@" (file-remote-p file 'host)
-                         "|sudo:root@"
-                         (file-remote-p file 'host) ":" (file-remote-p file 'localname))
-               (concat "/sudo:root@localhost:" file))))
+  (find-file (sudo-file-path file)))
 
 ;;;###autoload
 (defun sudo-this-file ()
   "Open the current file as root."
   (interactive)
-  (sudo-find-file (file-truename buffer-file-name)))
+  (find-file
+   (sudo-file-path
+    (or buffer-file-name
+        (when (or (derived-mode-p 'dired-mode)
+                  (derived-mode-p 'wdired-mode))
+          default-directory)))))
+
+;;;###autoload
+(defun sudo-save-buffer ()
+  "Save this file as root."
+  (interactive)
+  (let ((file (sudo-file-path buffer-file-name)))
+    (if-let (buffer (find-file-noselect file))
+        (let ((origin (current-buffer)))
+          (copy-to-buffer buffer (point-min) (point-max))
+          (unwind-protect
+              (with-current-buffer buffer
+                (save-buffer))
+            (unless (eq origin buffer)
+              (kill-buffer buffer))
+            (with-current-buffer origin
+              (revert-buffer t t))))
+      (user-error "Unable to open %S" file))))
 
 (use-package embark-consult
   :straight '(embark-consult :host github
@@ -634,7 +662,7 @@
   :hook (after-init . (lambda () (tab-bar-new-tab)))
   :bind-keymap ("C-c t" . tab-prefix-map)
   :bind
-  ("C-c C-'" . tab-bar-switch-to-recent-tab) 
+  ("C-c C-'" . tab-bar-switch-to-recent-tab)
   (:map tab-prefix-map
         ("n" . tab-bar-switch-to-next-tab)
         ("p" . tab-bar-switch-to-prev-tab)
@@ -751,6 +779,11 @@
     (setq $p1 (point))
     (skip-chars-forward $skipChars)
     (set-mark $p1)))
+
+;; (defun er/change-in-sexp (arg char)
+;;   (interactive "p\ncZap to char: ")
+;;   (re-search-backward (char-to-string char))
+;;   (sp-change-inner))
 
 (use-package no-littering
   :straight t)
@@ -989,7 +1022,7 @@
 
 ;; (use-package org-gantt-mode
 ;;   :straight (org-gantt-mode :host gitlab :repo "joukeHijlkema/org-gantt")
-;;   :init  
+;;   :init
 ;;   (defvar og-Cols '((strokeColor  . "#000000")
 ;;                     (dayColor     . "#d7d7d7")
 ;;                     (bgTitleBlock . "#ffffff")
@@ -1168,8 +1201,8 @@
   :straight t
   :hook (eshell-mode . eshell-syntax-highlighting-mode))
 
-(use-package tramp  
-  :straight t
+(use-package tramp
+  :straight (tramp :type built-in)
   :defer 5
   :custom
   (tramp-default-method "ssh")
@@ -1531,6 +1564,7 @@
 
 ;; General binds
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
+;; (global-set-key (kbd "C-c i") #'er/change-in-sexp)
 (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
 (global-set-key (kbd "C-a") #'my/beginning-of-line)
@@ -1616,6 +1650,13 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-scale-3 1.20
          modus-themes-scale-4 1.25
          modus-themes-scale-title 1.30)
+  (setq modus-themes-operandi-color-overrides
+        '((bg-main . "#FFFFE8")
+          (blue-alt-other . "#0f3d8c")
+          (blue-alt . "#2544bb")
+          (magenta-alt-other . "#55348e")
+          (magenta-alt . "#7b206f")
+          (magenta-intense . "#8f0075")))
   (load-theme 'modus-operandi))
 
 (use-package savehist
