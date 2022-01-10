@@ -565,20 +565,6 @@
          ("C-x O" . ace-swap-window)
          ("C-x M-0" . delete-other-windows)))
 
-(defun split-and-follow-horizontally ()
-  (interactive)
-  (split-window-below)
-  (balance-windows)
-  (other-window 1))
-(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
-
-(defun split-and-follow-vertically ()
-  (interactive)
-  (split-window-right)
-  (balance-windows)
-  (other-window 1))
-(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
-
 (use-package project
   :straight (project :type built-in)
   :init
@@ -1531,22 +1517,18 @@
 (global-unset-key  (kbd "C-z"))
 (global-unset-key  (kbd "C-x C-z"))
 
-(defun slick-cut (beg end)
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
   (interactive
-   (if mark-active
-       (list (region-beginning) (region-end))
+   (if mark-active (list (region-beginning) (region-end))
      (list (line-beginning-position) (line-end-position)))))
 
-(advice-add 'kill-region :before #'slick-cut)
-
-(defun slick-copy (beg end)
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, copy a single line instead."
   (interactive
-   (if mark-active
-       (list (region-beginning) (region-end))
-     (message "Copied line")
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Line Copied")
      (list (line-beginning-position) (line-end-position)))))
-
-(advice-add 'kill-ring-save :before #'slick-copy)
 
 (defadvice kill-line (before kill-line-autoreindent activate)
   "Kill excess whitespace when joining lines.
@@ -1555,6 +1537,18 @@ If the next line is joined to the current line, kill the extra indent whitespace
     (save-excursion
       (forward-char 1)
       (just-one-space 1))))
+
+(defun pils-follow (&rest _arg)
+  "Advice to follow a function which spawn a window."
+  (other-window 1))
+
+(advice-add 'split-window-below :after #'pils-follow)
+(advice-add 'split-window-right :after #'pils-follow)
+
+;; Save position in better jumper before jumping anywhere
+(advice-add 'find-function :before 'better-jumper-set-jump)
+(advice-add 'consult-ripgrep :before 'better-jumper-set-jump)
+(advice-add 'consult-line :before 'better-jumper-set-jump)
 
 ;; Load theme
 (use-package modus-themes
