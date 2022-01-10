@@ -1567,7 +1567,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-variable-pitch-headings nil
          modus-themes-intense-paren-match t
          modus-themes-diffs 'desaturated
-         modus-themes-syntax '(alt-syntax faint green-strings yellow-comments)
+         modus-themes-syntax '(alt-syntax green-strings yellow-comments)
          modus-themes-links '(faint neutral-underline)
          modus-themes-hl-line '(intense)
          modus-themes-prompts '(bold background)
@@ -1592,8 +1592,9 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-scale-title 1.30)
   (setq modus-themes-operandi-color-overrides
         '(
-          (bg-main . "#FFFFE8")
-          (bg-dim . "#FFFFF8")
+          (bg-main . "#F5F5F5")
+          (bg-dim . "#F8F8F8")
+          (bg-alt . "#E8E8E8")
           ;; (blue-alt-other . "#0f3d8c")
           ;; (blue-alt . "#2544bb")
           ;; (magenta-alt-other . "#55348e")
