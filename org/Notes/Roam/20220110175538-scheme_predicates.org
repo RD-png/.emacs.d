@@ -1,0 +1,39 @@
+:PROPERTIES:
+:ID:       9c402cf4-9507-4724-beae-d7892fc74cf5
+:END:
+#+title: Scheme-Predicates
+* Scheme Predicates
+There are a range of predicate functions in scheme, however some have very similar names which can make it harder to remember which is to be used for which data type.
+
+** null?
+This allows us to check if a list is empty, for example.
+#+begin_src scheme
+  (null? '()) ;-> #t
+  (null? (list 1 2 3)) ;-> #f
+#+end_src
+
+** list?
+Rather simply allows us to check if something is a list, for example we pass an argument to a procedure and need to check if it is a list before we proceed.
+#+begin_src scheme
+  (define (test-func arg)
+    (if (not (list? arg))
+        (error "Incorrect type -- parameter arg" arg)))
+#+end_src
+
+** equal?
+Check if two lists are entirely equal, for example.
+#+begin_src scheme
+  (define x (list 1 2 3))
+  (define y (list 1 2 3))
+  (define z (list 4 5 6))
+
+  (equal? x y) ;-> #t
+  (equal? x z) ;-> #f
+#+end_src
+
+** eq?
+Allow comparison of elements of lists
+#+begin_src scheme
+(eq? (car x) (car y)) ;-> #t
+#+end_src
+
