@@ -478,7 +478,7 @@
   :preface
   (defun my/lsp-format-buffer ()
     (interactive)
-    (lsp-format-buffer)
+    ;; (lsp-format-buffer)
     (delete-trailing-whitespace))
   :bind (:map lsp-mode-map
               ("C-c o d" . lsp-describe-thing-at-point)
@@ -1486,7 +1486,8 @@
     (if bounds
         (funcall op (car bounds) (cdr bounds))
       (error "No %s at point" thing)))
-  (superword-mode -1))
+  (superword-mode -1)
+  (global-subword-mode 1))
 
 ;; General binds
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
