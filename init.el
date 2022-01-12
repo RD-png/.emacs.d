@@ -1310,9 +1310,9 @@
 
 (use-package rainbow-delimiters
   :straight t
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-(show-paren-mode 1)
+  :hook (prog-mode . rainbow-delimiters-mode)
+  :config
+  (setq show-paren-mode 1))
 
 ;; Colors for # colors
 (use-package rainbow-mode
@@ -1321,16 +1321,6 @@
   :hook (org-mode
          emacs-lisp-mode
          typescript-mode))
-
-;; (custom-set-faces
-;;  '(rainbow-delimiters-depth-1-face ((t (:foreground "#f66d9b"))))
-;;  '(rainbow-delimiters-depth-2-face ((t (:foreground "#66c1b7"))))
-;;  '(rainbow-delimiters-depth-3-face ((t (:foreground "#6574cd"))))
-;;  '(rainbow-delimiters-depth-4-face ((t (:foreground "#fa7b62"))))
-;;  '(rainbow-delimiters-depth-5-face ((t (:foreground "#fdb900"))))
-;;  '(rainbow-delimiters-depth-6-face ((t (:foreground "#ff70bf"))))
-;;  '(rainbow-delimiters-depth-7-face ((t (:foreground "#fdae42"))))
-;;  '(rainbow-delimiters-depth-8-face ((t (:foreground "#8f87de")))))
 
 (use-package yasnippet
   :straight t
@@ -1601,6 +1591,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
   :defer 2
   :hook (after-init . savehist-mode)
   :config
+  (setq savehist-file (locate-user-emacs-file "var/savehist.el"))
   (setq history-length 1000)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t))
