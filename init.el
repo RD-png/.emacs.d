@@ -374,6 +374,7 @@
 
 (use-package consult
   :straight t
+  :demand t
   :after project
   :bind (("C-s" . consult-line)
          ("C-M-m" . consult-imenu)
@@ -392,6 +393,7 @@
   (setq consult-project-root-function (lambda () "Return current project root"
                                         (project-root (project-current))))
   (setq consult-narrow-key "<")
+  (setq consult-preview-key (kbd "M-."))
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   (consult-line-start-from-top nil)
@@ -585,17 +587,23 @@
 
 (use-package tab-bar
   :straight (tab-bar :type built-in)
-  :hook (after-init . (lambda () (tab-bar-new-tab)))
-  :bind-keymap ("C-c t" . tab-prefix-map)
-  :bind
-  ("C-c C-'" . tab-bar-switch-to-recent-tab)
-  (:map tab-prefix-map
-        ("n" . tab-bar-switch-to-next-tab)
-        ("p" . tab-bar-switch-to-prev-tab)
-        ("N" . tab-bar-history-forward)
-        ("P" . tab-bar-history-back))
+  :hook (after-init . (lambda ()
+                        (doom-modeline-def-segment workspace-name    
+                          (when doom-modeline-workspace-name
+                            (when-let
+                                ((name (cond
+                                        (t
+                                         (let* ((current-tab (tab-bar--current-tab))
+                                                (tab-index (tab-bar--current-tab-index))
+                                                (explicit-name (alist-get 'name current-tab))
+                                                (tab-name (alist-get 'name current-tab)))
+                                           (if explicit-name tab-name (+ 1 tab-index)))))))
+                              (propertize (format " %s " name) 'face
+                                          (if (doom-modeline--active)
+                                              'doom-modeline-buffer-major-mode
+                                            'mode-line-inactive)))))))
   :config
-  (tab-bar-history-mode 1)
+  (tab-bar-history-mode 1)  
   (setq  tab-bar-close-last-tab-choice 'tab-bar-mode-disable
          tab-bar-show                   nil
          tab-bar-new-tab-choice        'ibuffer
@@ -606,7 +614,52 @@
                                                   (or (if (fboundp 'project-root)
                                                           (project-root (project-current)))
                                                       default-directory))))
-                                        (substring dir (1+ (string-match "/[^/]+/$" dir)) -1 )))))
+                                        (substring dir (1+ (string-match "/[^/]+/$" dir)) -1))))
+  
+  (defun my/vertico-tab-source ()
+    (setq buffer-names-to-keep
+          (append (mapcar #'buffer-name (alist-get 'wc-bl (tab-bar--tab)))
+                  (mapcar #'buffer-name (alist-get 'wc-bbl (tab-bar--tab)))))
+    `(:name ,(s--aget (cdr (tab-bar--current-tab)) 'name)
+            :hidden nil
+            :narrow ?0
+            :category buffer
+            :state ,#'consult--buffer-state
+            :items ,(lambda ()
+                      (consult--buffer-query
+                       :sort 'visibility
+                       :as #'buffer-name
+                       :predicate (lambda (buf)
+                                    (when (member (buffer-name buf) buffer-names-to-keep)
+                                      t))))))
+
+
+  (defun my/switch-tab-bar-buffer ()
+    (interactive)
+    (when-let (buffer (consult--multi (list (my/vertico-tab-source))
+                                      :require-match
+                                      (confirm-nonexistent-file-or-buffer)
+                                      :prompt (format "Switch to buffer (%s): "
+                                                      (s--aget (cdr (tab-bar--current-tab)) 'name))
+                                      :history 'consult--buffer-history
+                                      :sort nil))
+      (unless (cdr buffer)
+        (funcall consult--buffer-display (car buffer)))))
+
+  :bind-keymap ("C-c t" . tab-prefix-map)
+  :bind
+  ("C-c C-'" . tab-bar-switch-to-recent-tab)
+  (:map tab-prefix-map
+        ("n" . tab-bar-switch-to-next-tab)
+        ("p" . tab-bar-switch-to-prev-tab)
+        ("N" . tab-bar-history-forward)
+        ("P" . tab-bar-history-back))
+  :bind*
+  ("C-x C-p" . tab-switch)
+  ("C-x C-b" . my/switch-tab-bar-buffer)
+  :init
+  (tab-bar-new-tab)
+  (tab-bar-mode -1))
 
 (use-package tab-bar-echo-area
   :straight t
@@ -1482,7 +1535,7 @@
 ;; General binds
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
 ;; (global-set-key (kbd "C-c i") #'er/change-in-sexp)
-(global-set-key (kbd "C-x C-b") #'switch-to-buffer)
+;; (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
 (global-set-key (kbd "C-a") #'my/beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
@@ -1634,6 +1687,9 @@ If the next line is joined to the current line, kill the extra indent whitespace
                 (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
                                     :face face :height 1.0 :v-adjust -0.0575)))
   (setq doom-modeline-buffer-modification-icon nil)
+  (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
   (setq doom-modeline-hud t)
   :init
   (doom-modeline-mode +1))
+
+
