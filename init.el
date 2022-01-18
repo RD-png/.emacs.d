@@ -608,14 +608,8 @@
          tab-bar-show                   nil
          tab-bar-new-tab-choice        'ibuffer
          tab-bar-tab-name-truncated-max 14
-         tab-bar-tab-name-function '(lambda nil
-                                      "Use directory as tab name."
-                                      (let ((dir (expand-file-name
-                                                  (or (if (fboundp 'project-root)
-                                                          (project-root (project-current)))
-                                                      default-directory))))
-                                        (substring dir (1+ (string-match "/[^/]+/$" dir)) -1))))
-  
+         tab-bar-tab-name-function 'tab-bar-tab-name-current)
+
   (defun my/vertico-tab-source ()
     (setq buffer-names-to-keep
           (append (mapcar #'buffer-name (alist-get 'wc-bl (tab-bar--tab)))
@@ -1551,7 +1545,7 @@
 (global-set-key (kbd "C-c o g")  #'xref-find-definitions)
 (global-set-key (kbd "C-/")  #'undo-only)
 (global-set-key (kbd "C-?")  #'undo-redo)
-(global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
+;; (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 
 (bind-key* "C-<backspace>" #'my/backward-kill-word)
 
@@ -1687,9 +1681,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
                 (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
                                     :face face :height 1.0 :v-adjust -0.0575)))
   (setq doom-modeline-buffer-modification-icon nil)
-  (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
+  ;; (setq doom-modeline-buffer-file-name-style 'file-name)
   (setq doom-modeline-hud t)
   :init
   (doom-modeline-mode +1))
-
-
