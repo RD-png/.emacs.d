@@ -603,12 +603,11 @@
                                               'doom-modeline-buffer-major-mode
                                             'mode-line-inactive)))))))
   :config
-  (tab-bar-history-mode 1)  
+  (tab-bar-history-mode 1)
   (setq  tab-bar-close-last-tab-choice 'tab-bar-mode-disable
          tab-bar-show                   nil
          tab-bar-new-tab-choice        'ibuffer
-         tab-bar-tab-name-truncated-max 14
-         tab-bar-tab-name-function 'tab-bar-tab-name-current)
+         tab-bar-tab-name-truncated-max 14)
 
   (defun my/vertico-tab-source ()
     (setq buffer-names-to-keep
@@ -866,7 +865,7 @@
 (use-package org
   :straight t
   :commands (org-capture org-agenda)
-  :hook (org-mode . org-mode-setup)
+  :hook (org-mode . org-mode-setup)  
   :config
   (setq org-ellipsis " ▾")
   (setq org-agenda-start-with-log-mode t)
@@ -1461,7 +1460,7 @@
 (defun my/beginning-of-line ()
   (interactive)
 	(if (= (point) (progn (back-to-indentation) (point)))
-			(beginning-of-line)))
+			(beginning-of-visual-line)))
 
 (defun shift-text (distance)
   (if (use-region-p)
@@ -1531,7 +1530,7 @@
 ;; (global-set-key (kbd "C-c i") #'er/change-in-sexp)
 ;; (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
-(global-set-key (kbd "C-a") #'my/beginning-of-line)
+(define-key prog-mode-map (kbd "C-a") #'my/beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key (kbd "M-n") 'forward-paragraph)
@@ -1548,6 +1547,8 @@
 ;; (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 
 (bind-key* "C-<backspace>" #'my/backward-kill-word)
+
+
 
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))
