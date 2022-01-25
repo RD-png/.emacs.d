@@ -288,7 +288,7 @@
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
+  
   (setq enable-recursive-minibuffers t))
 
 (use-package embark
@@ -532,6 +532,10 @@
   (setq wgrep-change-readonly-file t)
   :bind (:map wgrep-mode-map
               ("C-x C-s" . custom-wgrep-apply-save)))
+
+(use-package prog-mode
+  :straight (prog-mode :type built-in)
+  :hook (prog-mode . prettify-symbols-mode))
 
 (use-package php-mode
   :straight t
@@ -975,7 +979,7 @@
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
 
   (define-key global-map (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "jj")))
+              (lambda () (interactive) (org-capture nil "jj")))
 
   (org-font-setup)
   :bind (:map org-mode-map
@@ -1686,3 +1690,4 @@ If the next line is joined to the current line, kill the extra indent whitespace
   (setq doom-modeline-hud t)
   :init
   (doom-modeline-mode +1))
+
