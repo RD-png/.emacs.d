@@ -533,10 +533,6 @@
   :bind (:map wgrep-mode-map
               ("C-x C-s" . custom-wgrep-apply-save)))
 
-(use-package prog-mode
-  :straight (prog-mode :type built-in)
-  :hook (prog-mode . prettify-symbols-mode))
-
 (use-package php-mode
   :straight t
   :mode "\\.php\\'"
@@ -1271,6 +1267,9 @@
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-style-padding 0)
   (setq web-mode-script-padding 0))
+
+;; (use-package lsp-volar
+;;   :straight (lsp-volar :host github :repo "jadestrong/lsp-volar"))
 
 (use-package css-mode
   :straight t
