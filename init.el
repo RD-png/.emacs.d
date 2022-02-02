@@ -515,9 +515,14 @@
   (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
 
   (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
-
+  ;; :config
+  ;; (setq lsp-disabled-clients '(eslint vls))
+  ;; (setq lsp-enabled-clients '(lsp-volar))
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
+
+;; (use-package lsp-volar
+;;   :straight (lsp-volar :host github :repo "jadestrong/lsp-volar"))
 
 (use-package wgrep
   :defer 2
@@ -1262,14 +1267,21 @@
   :mode ("\\.vue\\'")
   :hook (web-mode . lsp-deferred)
   :config
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-style-padding 0)
-  (setq web-mode-script-padding 0))
+  (setq web-mode-enable-html-entities-fontification t
+        web-mode-auto-close-style 2
+        web-mode-code-indent-offset 2
+        web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-style-padding 0
+        web-mode-script-padding 0
+        web-mode-enable-auto-quoting nil
+        web-mode-enable-auto-pairing t)
+  (setf (alist-get "javascript" web-mode-comment-formats nil nil #'equal)
+        "//"))
 
-;; (use-package lsp-volar
-;;   :straight (lsp-volar :host github :repo "jadestrong/lsp-volar"))
+;; (use-package vue-mode
+;;   :mode ("\\.vue\\'")
+;;   :hook (vue-mode . lsp-deferred))
 
 (use-package css-mode
   :straight t
@@ -1594,7 +1606,8 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 ;; Load theme
 (use-package modus-themes
-  :straight (modus-themes :host github :repo "protesilaos/modus-themes")
+  ;; :straight (modus-themes :host github :repo "protesilaos/modus-themes")
+  :straight t
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
