@@ -613,37 +613,6 @@
          tab-bar-show                   nil
          tab-bar-new-tab-choice        'ibuffer
          tab-bar-tab-name-truncated-max 14)
-
-  (defun my/vertico-tab-source ()
-    (setq buffer-names-to-keep
-          (append (mapcar #'buffer-name (alist-get 'wc-bl (tab-bar--tab)))
-                  (mapcar #'buffer-name (alist-get 'wc-bbl (tab-bar--tab)))))
-    `(:name ,(s--aget (cdr (tab-bar--current-tab)) 'name)
-            :hidden nil
-            :narrow ?0
-            :category buffer
-            :state ,#'consult--buffer-state
-            :items ,(lambda ()
-                      (consult--buffer-query
-                       :sort 'visibility
-                       :as #'buffer-name
-                       :predicate (lambda (buf)
-                                    (when (member (buffer-name buf) buffer-names-to-keep)
-                                      t))))))
-
-
-  (defun my/switch-tab-bar-buffer ()
-    (interactive)
-    (when-let (buffer (consult--multi (list (my/vertico-tab-source))
-                                      :require-match
-                                      (confirm-nonexistent-file-or-buffer)
-                                      :prompt (format "Switch to buffer (%s): "
-                                                      (s--aget (cdr (tab-bar--current-tab)) 'name))
-                                      :history 'consult--buffer-history
-                                      :sort nil))
-      (unless (cdr buffer)
-        (funcall consult--buffer-display (car buffer)))))
-
   :bind-keymap ("C-c t" . tab-prefix-map)
   :bind
   ("C-c C-'" . tab-bar-switch-to-recent-tab)
@@ -654,7 +623,6 @@
         ("P" . tab-bar-history-back))
   :bind*
   ("C-x C-p" . tab-switch)
-  ("C-x C-b" . my/switch-tab-bar-buffer)
   :init
   (tab-bar-new-tab)
   (tab-bar-mode -1))
@@ -1190,7 +1158,6 @@
         tramp-persistency-file-name "~/.config/emacs/data/tramp"))
 
 (use-package direnv
-  :defer 2
   :straight t
   :config
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
@@ -1543,7 +1510,7 @@
 ;; General binds
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
 ;; (global-set-key (kbd "C-c i") #'er/change-in-sexp)
-;; (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
+(global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
 (define-key prog-mode-map (kbd "C-a") #'my/beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
@@ -1693,10 +1660,6 @@ If the next line is joined to the current line, kill the extra indent whitespace
   :straight t
   :custom ((doom-modeline-height 10))
   :config
-  (advice-add #'doom-modeline-lsp-icon :override
-              (defun doom-modeline-lsp-icon+ (text face)
-                (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
-                                    :face face :height 1.0 :v-adjust -0.0575)))
   (setq doom-modeline-buffer-modification-icon nil)
   ;; (setq doom-modeline-buffer-file-name-style 'file-name)
   (setq doom-modeline-hud t)
