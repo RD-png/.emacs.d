@@ -180,7 +180,7 @@
   :straight (window :type built-in)
   :config
   (setq display-buffer-alist
-        `(("\\*\\(scheme\\|info\\)\\*"
+        `(("\\*\\(scheme\\|info\\|eshell\\)\\*"
            (display-buffer-in-side-window)
            (dedicated . t)
            (side . bottom)
@@ -1282,6 +1282,13 @@
 (use-package racket-mode
   :straight t
   :mode ("\\.rkt\\'"))
+
+(use-package go-mode
+  :straight t
+  :mode ("\\.go\\'")
+  :hook(go-mode . lsp-deferred)
+  :config
+  (setq lsp-gopls-server-path "/home/ryan/go/bin/gopls"))
 
 (use-package rustic
   :straight t
