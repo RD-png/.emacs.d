@@ -1,0 +1,20 @@
+:PROPERTIES:
+:ID:       628c1ec6-934b-488c-8bd5-03139d783106
+:END:
+#+title: Functional-Programming
+
+* Functional
+What does functional mean. It can be interpreted in several ways, however the following two statements summarize the main themes of functional programming languages.
+
++ Functions are first class, they are treated and can be used the same as any other value.
++ Evaluation a functional program can be viewed as the evaluating expressions rather than instructions.
+
+
+* Pure
+While not all functional programming languages are purely functional, most generally contain the following concepts.
+
+** Referentially Transparent
++ No mutation of any sort, whether this state within the scope of a function or global state.
++ No side effects, no mutation of global state, no printing etc.
++ Deterministic, functions produce the same results given one input.
+
