@@ -1,4 +1,4 @@
-(setq-default lexical-binding t)
+;; -*- lexical-binding: t; -*-
 
 ;; GC Config
 (setq gc-cons-threshold 16777216
@@ -110,7 +110,7 @@
 (straight-use-package 'use-package)
 
 (setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
-			                   ("melpa" . "https://melpa.org/packages/")
+			             ("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")))
 (require 'use-package)
 (require 'straight-x)
@@ -211,6 +211,7 @@
         (append
          '("\\*Messages\\*"
            "\\*scheme\\*"
+           "\\*eshell\\*"
            "\\*info\\*"
            "^\\*Warnings\\*$"
            "Output\\*$"
@@ -948,7 +949,7 @@
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
 
   (define-key global-map (kbd "C-c j")
-              (lambda () (interactive) (org-capture nil "jj")))
+    (lambda () (interactive) (org-capture nil "jj")))
 
   (org-font-setup)
   :bind (:map org-mode-map
@@ -1189,7 +1190,7 @@
    "\\.js\\'")
   :hook (typescript-mode . lsp-deferred)
   :config
-  (setq typescript-indent-level 2))
+  (setq typescript-indent-level 4))
 
 (use-package pip-requirements
   :straight t
@@ -1235,10 +1236,10 @@
   :hook (web-mode . lsp-deferred)
   :config
   (setq web-mode-enable-html-entities-fontification t
-        web-mode-auto-close-style 2
-        web-mode-code-indent-offset 2
-        web-mode-markup-indent-offset 2
-        web-mode-css-indent-offset 2
+        web-mode-auto-close-style 4
+        web-mode-code-indent-offset 4
+        web-mode-markup-indent-offset 4
+        web-mode-css-indent-offset 4
         web-mode-style-padding 0
         web-mode-script-padding 0
         web-mode-enable-auto-quoting nil
@@ -1436,7 +1437,7 @@
   (setq diredfl-ignore-compressed-flag nil)
   (diredfl-global-mode 1))
 
-(setq-default tab-width 2
+(setq-default tab-width 4
               indent-tabs-mode nil)
 
 (use-package multiple-cursors
@@ -1448,8 +1449,8 @@
 
 (defun my/beginning-of-line ()
   (interactive)
-	(if (= (point) (progn (back-to-indentation) (point)))
-			(beginning-of-visual-line)))
+  (if (= (point) (progn (back-to-indentation) (point)))
+	  (beginning-of-visual-line)))
 
 (defun shift-text (distance)
   (if (use-region-p)
@@ -1672,4 +1673,3 @@ If the next line is joined to the current line, kill the extra indent whitespace
   (setq doom-modeline-hud t)
   :init
   (doom-modeline-mode +1))
-

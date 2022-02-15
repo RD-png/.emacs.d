@@ -8,8 +8,7 @@ What does functional mean. It can be interpreted in several ways, however the fo
 
 + Functions are first class, they are treated and can be used the same as any other value.
 + Evaluation a functional program can be viewed as the evaluating expressions rather than instructions.
-
-
+  
 * Pure
 While not all functional programming languages are purely functional, most generally contain the following concepts.
 

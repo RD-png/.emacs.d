@@ -47,6 +47,7 @@ While the reclusive implementation offers are cleaner and easier to read procedu
 
 ** Solution - Tail Recursion.
 While its not a necessarily a solution, if we desired the readability of the recursive solution with the performance of the iterative implementation, we can opt for a sort of hybrid approach.
+
 ** Tail Recursive
 Known as tail recursive as at the tail of the expression it calls itself, similar to a recursive function, however the stack remains the same size regardless of n, by passing the required state via recursive calls to the iter producer. This avoid defining and mutating state and produces not side effects, therefore many people would find this to be the desirable implementation.
 #+begin_src scheme
