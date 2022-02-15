@@ -71,7 +71,8 @@
                 term-mode-hook
                 shell-mode-hook
                 eshell-mode-hook
-                dired-mode-hook))
+                dired-mode-hook
+                vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Alias
@@ -180,7 +181,7 @@
   :straight (window :type built-in)
   :config
   (setq display-buffer-alist
-        `(("\\*\\(scheme\\|info\\|eshell\\)\\*"
+        `(("\\*\\(scheme\\|info\\|eshell\\|vterm\\)\\*"
            (display-buffer-in-side-window)
            (dedicated . t)
            (side . bottom)
@@ -212,6 +213,7 @@
          '("\\*Messages\\*"
            "\\*scheme\\*"
            "\\*eshell\\*"
+           "\\*vterm\\*"
            "\\*info\\*"
            "^\\*Warnings\\*$"
            "Output\\*$"
@@ -289,7 +291,7 @@
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-  
+
   (setq enable-recursive-minibuffers t))
 
 (use-package embark
@@ -594,7 +596,7 @@
 (use-package tab-bar
   :straight (tab-bar :type built-in)
   :hook (after-init . (lambda ()
-                        (doom-modeline-def-segment workspace-name    
+                        (doom-modeline-def-segment workspace-name
                           (when doom-modeline-workspace-name
                             (when-let
                                 ((name (cond
@@ -839,7 +841,7 @@
 (use-package org
   :straight t
   :commands (org-capture org-agenda)
-  :hook (org-mode . org-mode-setup)  
+  :hook (org-mode . org-mode-setup)
   :config
   (setq org-ellipsis " ▾")
   (setq org-agenda-start-with-log-mode t)
@@ -1134,10 +1136,21 @@
   :straight (eshell :type built-in)
   :hook (eshell-first-time-mode . eshell-configure)
   :config
-
   (with-eval-after-load 'esh-opt
     (setq eshell-destroy-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "zsh"))))
+
+(use-package vterm
+  :straight t
+  :commands vterm-mode
+  :config
+  (setq vterm-kill-buffer-on-exit t)
+  (setq vterm-max-scrollback 5000)
+  (defun set-no-process-query-on-exit ()
+    (let ((proc (get-buffer-process (current-buffer))))
+      (when (processp proc)
+        (set-process-query-on-exit-flag proc nil))))
+  (add-hook 'vterm-mode-hook 'set-no-process-query-on-exit))
 
 (use-package capf-autosuggest
   :straight (capf-autosuggest :host github :repo "emacs-straight/capf-autosuggest")
@@ -1527,7 +1540,7 @@
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-d") (lambda () (interactive) (my/op-thing-at-point 'kill-region 'word)))
 (global-set-key (kbd "C-M-<backspace>") #'backward-kill-sexp)
-(global-set-key (kbd "C-M-<return>") #'eshell)
+(global-set-key (kbd "C-M-<return>") #'vterm)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
