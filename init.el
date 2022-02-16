@@ -1203,7 +1203,7 @@
    "\\.js\\'")
   :hook (typescript-mode . lsp-deferred)
   :config
-  (setq typescript-indent-level 4))
+  (setq typescript-indent-level 2))
 
 (use-package pip-requirements
   :straight t
@@ -1249,10 +1249,10 @@
   :hook (web-mode . lsp-deferred)
   :config
   (setq web-mode-enable-html-entities-fontification t
-        web-mode-auto-close-style 4
-        web-mode-code-indent-offset 4
-        web-mode-markup-indent-offset 4
-        web-mode-css-indent-offset 4
+        web-mode-auto-close-style 2
+        web-mode-code-indent-offset 2
+        web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
         web-mode-style-padding 0
         web-mode-script-padding 0
         web-mode-enable-auto-quoting nil
@@ -1450,7 +1450,7 @@
   (setq diredfl-ignore-compressed-flag nil)
   (diredfl-global-mode 1))
 
-(setq-default tab-width 4
+(setq-default tab-width 2
               indent-tabs-mode nil)
 
 (use-package multiple-cursors
