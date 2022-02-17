@@ -1315,6 +1315,16 @@
 
 (add-hook 'rustic-mode-hook #'rustic-lsp-mode-setup)
 
+(use-package erlang
+  :straight t
+  :mode ("\\.erl$" . erlang-mode)
+  :hook (erlang-mode . lsp-deferred))
+
+(use-package tuareg
+  :straight t
+  :mode ("\\.ml$" . tuareg-mode)
+  :hook (tuareg-mode . lsp-deferred))
+
 (use-package latex
   :defer 5
   :straight (latex :type built-in)
@@ -1558,6 +1568,8 @@
 (global-unset-key  (kbd "M-`"))
 (global-unset-key  (kbd "C-z"))
 (global-unset-key  (kbd "C-x C-z"))
+;; ignore command
+(global-set-key [remap org-cycle-agenda-files] 'ignore)
 
 (defadvice kill-region (before slick-cut activate compile)
   "When called interactively with no active region, kill a single line instead."
