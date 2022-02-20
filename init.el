@@ -121,9 +121,9 @@
 (setq inhibit-message nil)
 
 ;; Font
-(defvar default-font-size 140)
-(defvar default-variable-font-size 140)
-(set-face-attribute 'default nil :font "Fantasque Sans Mono" :foundry "PfEd" :slant 'normal :weight 'normal :width 'normal :height 140)
+(defvar default-font-size 130)
+(defvar default-variable-font-size 130)
+(set-face-attribute 'default nil :font "Fantasque Sans Mono" :foundry "PfEd" :slant 'normal :weight 'normal :width 'normal :height 130)
 (set-face-attribute 'fixed-pitch nil :font "Fantasque Sans Mono" :height default-font-size)
 (set-face-attribute 'variable-pitch nil :font "Fantasque Sans Mono" :height default-variable-font-size :weight 'regular)
 
