@@ -595,21 +595,21 @@
 
 (use-package tab-bar
   :straight (tab-bar :type built-in)
-  :hook (after-init . (lambda ()
-                        (doom-modeline-def-segment workspace-name
-                          (when doom-modeline-workspace-name
-                            (when-let
-                                ((name (cond
-                                        (t
-                                         (let* ((current-tab (tab-bar--current-tab))
-                                                (tab-index (tab-bar--current-tab-index))
-                                                (explicit-name (alist-get 'name current-tab))
-                                                (tab-name (alist-get 'name current-tab)))
-                                           (if explicit-name tab-name (+ 1 tab-index)))))))
-                              (propertize (format " %s " name) 'face
-                                          (if (doom-modeline--active)
-                                              'doom-modeline-buffer-major-mode
-                                            'mode-line-inactive)))))))
+  ;; :hook (after-init . (lambda ()
+  ;;                       (doom-modeline-def-segment workspace-name
+  ;;                         (when doom-modeline-workspace-name
+  ;;                           (when-let
+  ;;                               ((name (cond
+  ;;                                       (t
+  ;;                                        (let* ((current-tab (tab-bar--current-tab))
+  ;;                                               (tab-index (tab-bar--current-tab-index))
+  ;;                                               (explicit-name (alist-get 'name current-tab))
+  ;;                                               (tab-name (alist-get 'name current-tab)))
+  ;;                                          (if explicit-name tab-name (+ 1 tab-index)))))))
+  ;;                             (propertize (format " %s " name) 'face
+  ;;                                         (if (doom-modeline--active)
+  ;;                                             'doom-modeline-buffer-major-mode
+  ;;                                           'mode-line-inactive)))))))
   :config
   (tab-bar-history-mode 1)
   (setq  tab-bar-close-last-tab-choice 'tab-bar-mode-disable
@@ -1691,6 +1691,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 (use-package doom-modeline
   :straight t
+  :disabled t
   :custom ((doom-modeline-height 10))
   :config
   (setq doom-modeline-buffer-modification-icon nil)
