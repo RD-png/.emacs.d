@@ -577,6 +577,7 @@
 
 (use-package project
   :straight (project :type built-in)
+  :demand t
   :init
   (global-set-key (kbd "C-c p") project-prefix-map)
   (cl-defgeneric project-root (project) (car project))
@@ -1302,6 +1303,11 @@
   :mode ("\\.go\\'")
   :hook(go-mode . lsp-deferred)
   :config
+  (setq lsp-go-analyses
+        '((fieldalignment. t)
+          (nilness . t)
+          (unusedwrite . t)
+          (unusedparams . t)))
   (setq lsp-gopls-server-path "/home/ryan/go/bin/gopls"))
 
 (use-package rustic
