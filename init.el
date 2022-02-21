@@ -1304,7 +1304,7 @@
   :hook(go-mode . lsp-deferred)
   :config
   (setq lsp-go-analyses
-        '((fieldalignment. t)
+        '((fieldalignment . t)
           (nilness . t)
           (unusedwrite . t)
           (unusedparams . t)))
@@ -1466,7 +1466,7 @@
   (setq diredfl-ignore-compressed-flag nil)
   (diredfl-global-mode 1))
 
-(setq-default tab-width 2
+(setq-default tab-width 4
               indent-tabs-mode nil)
 
 (use-package multiple-cursors
