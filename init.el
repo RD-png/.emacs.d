@@ -39,19 +39,32 @@
 ;; Defaults
 (setq undo-limit 80000000
       delete-old-versions t
+      find-file-visit-truename t
+      find-file-suppress-same-file-warnings t
       delete-by-moving-to-trash t
       enable-recursive-minibuffers t
       scroll-conservatively 100
       scroll-preserve-screen-position t
       system-uses-terminfo nil
       kill-do-not-save-duplicates t
-      sentence-end-double-spacev nil
       make-backup-files nil
       backup-inhibited t
       auto-save-default nil
       create-lockfiles nil
       initial-scratch-message ""
-      uniquify-buffer-name-style 'forward)
+      uniquify-buffer-name-style 'forward
+      truncate-partial-width-windows nil
+      sentence-end-double-space nil
+      require-final-newline t
+      )
+
+(setq-default tab-width 4
+              tab-always-indent nil
+              indent-tabs-mode nil
+              fill-column 80
+              word-wrap t
+              truncate-lines t)
+
 (when (window-system)
   (setq confirm-kill-emacs 'yes-or-no-p))
 
@@ -434,6 +447,8 @@
 
 (use-package better-jumper
   :straight t
+  :preface
+  (defvar  better-jumper-local-mode nil)
   :bind
   ("C-c h g" . consult-better-jumper)
   ("C-c h r" . better-jumper-set-jump)
@@ -640,10 +655,38 @@
          tab-bar-show                   nil
          tab-bar-new-tab-choice        'ibuffer
          tab-bar-tab-name-truncated-max 14
+         ;; This makes tramp really laggy.
          tab-bar-tab-name-function #'(lambda nil (let ((path (my/project-current-root)))
                                                    (if path
                                                        (f-base path)
                                                      (f-base default-directory)))))
+  (defun my/vertico-tab-source ()
+    (setq buffer-names-to-keep
+          (append (mapcar #'buffer-name (alist-get 'wc-bl (tab-bar--tab)))
+                  (mapcar #'buffer-name (alist-get 'wc-bbl (tab-bar--tab)))))
+    `(:name ,(s--aget (cdr (tab-bar--current-tab)) 'name)
+            :hidden nil
+            :narrow ?0
+            :category buffer
+            :state ,#'consult--buffer-state
+            :items ,(lambda ()
+                      (consult--buffer-query
+                       :sort 'visibility
+                       :as #'buffer-name
+                       :predicate (lambda (buf)
+                                    (when (member (buffer-name buf) buffer-names-to-keep)
+                                      t))))))
+  (defun my/switch-tab-bar-buffer ()
+    (interactive)
+    (when-let (buffer (consult--multi (list (my/vertico-tab-source))
+                                      :require-match
+                                      (confirm-nonexistent-file-or-buffer)
+                                      :prompt (format "Switch to buffer (%s): "
+                                                      (s--aget (cdr (tab-bar--current-tab)) 'name))
+                                      :history 'consult--buffer-history
+                                      :sort nil))
+      (unless (cdr buffer)
+        (funcall consult--buffer-display (car buffer)))))
   :bind-keymap ("C-c t" . tab-prefix-map)
   :bind
   ("C-c C-'" . tab-bar-switch-to-recent-tab)
@@ -653,6 +696,7 @@
         ("N" . tab-bar-history-forward)
         ("P" . tab-bar-history-back))
   :bind*
+  ("C-x C-b" . my/switch-tab-bar-buffer)
   ("C-x C-p" . tab-switch)
   :init
   (tab-bar-new-tab)
@@ -755,11 +799,6 @@
     (setq $p1 (point))
     (skip-chars-forward $skipChars)
     (set-mark $p1)))
-
-;; (defun er/change-in-sexp (arg char)
-;;   (interactive "p\ncZap to char: ")
-;;   (re-search-backward (char-to-string char))
-;;   (sp-change-inner))
 
 (use-package no-littering
   :straight t)
@@ -1464,6 +1503,9 @@
   :hook (prog-mode . smartparens-mode)
   (text-mode . smartparens-mode)
   :config
+  (setq sp-max-prefix-length 25)
+  (setq sp-max-pair-length 4)
+  (setq sp-show-pair-from-inside t)
   (sp-local-pair '(emacs-lisp-mode scheme-mode) "'" "'" :actions nil))
 
 (use-package paren
@@ -1499,9 +1541,6 @@
   :init
   (setq diredfl-ignore-compressed-flag nil)
   (diredfl-global-mode 1))
-
-(setq-default tab-width 4
-              indent-tabs-mode nil)
 
 (use-package multiple-cursors
   :straight t
@@ -1581,7 +1620,7 @@
 ;; General binds
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
 ;; (global-set-key (kbd "C-c i") #'er/change-in-sexp)
-(global-set-key (kbd "C-x C-b") #'switch-to-buffer)
+;; (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
 (define-key prog-mode-map (kbd "C-a") #'my/beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
@@ -1734,7 +1773,6 @@ If the next line is joined to the current line, kill the extra indent whitespace
   (doom-modeline-icon t)
   (doom-modeline-major-mode-icon t)
   (doom-modeline-major-mode-color-icon t)
-  (doom-modeline-buffer-file-name-style 'truncate-upto-project)
   (doom-modeline-buffer-state-icon t)
   (doom-modeline-buffer-modification-icon t)
   (doom-modeline-minor-modes nil)
