@@ -269,6 +269,21 @@
 
 (use-package orderless
   :straight t
+  :preface
+  (defun literal-if-equals (pattern _index _total)
+    (when (string-prefix-p "=" pattern)
+      `(orderless-literal . ,(substring pattern 1))))
+  
+  (defun without-if-bang (pattern _index _total)
+    "Exclude literal when leading punctuation-mark."
+    (when (string-prefix-p "!" pattern)
+      (if (eq pattern "!")
+          `(orderless-literal . "")
+        `(orderless-without-literal . ,(substring pattern 1)))))
+  :custom
+  (orderless-matching-styles '(orderless-regexp))
+  (orderless-style-dispatchers '(literal-if-equals
+                                 without-if-bang))
   :init
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
@@ -413,6 +428,10 @@
          :map minibuffer-local-map
          ("C-x j" . consult-dir-jump-file)))
 
+(use-package consult-lsp
+  :straight t
+  :bind (("C-c o l" . consult-lsp-symbols)))
+
 (use-package better-jumper
   :straight t
   :bind
@@ -483,7 +502,7 @@
   :preface
   (defun my/lsp-format-buffer ()
     (interactive)
-    ;; (lsp-format-buffer)
+    (lsp-format-buffer)
     (delete-trailing-whitespace))
   :bind (:map lsp-mode-map
               ("C-c o d" . lsp-describe-thing-at-point)
@@ -581,6 +600,10 @@
   :init
   (global-set-key (kbd "C-c p") project-prefix-map)
   (cl-defgeneric project-root (project) (car project))
+  (defun my/project-current-root (&optional dir)
+    (when-let ((project
+                (project-current nil (or dir default-directory))))
+      (project-root project)))
   (setq project-switch-commands
         '((?f "Find file" project-find-file)
           (?g "Find regexp" project-find-regexp)
@@ -596,27 +619,31 @@
 
 (use-package tab-bar
   :straight (tab-bar :type built-in)
-  ;; :hook (after-init . (lambda ()
-  ;;                       (doom-modeline-def-segment workspace-name
-  ;;                         (when doom-modeline-workspace-name
-  ;;                           (when-let
-  ;;                               ((name (cond
-  ;;                                       (t
-  ;;                                        (let* ((current-tab (tab-bar--current-tab))
-  ;;                                               (tab-index (tab-bar--current-tab-index))
-  ;;                                               (explicit-name (alist-get 'name current-tab))
-  ;;                                               (tab-name (alist-get 'name current-tab)))
-  ;;                                          (if explicit-name tab-name (+ 1 tab-index)))))))
-  ;;                             (propertize (format " %s " name) 'face
-  ;;                                         (if (doom-modeline--active)
-  ;;                                             'doom-modeline-buffer-major-mode
-  ;;                                           'mode-line-inactive)))))))
+  :hook (after-init . (lambda ()
+                        (doom-modeline-def-segment workspace-name
+                          (when doom-modeline-workspace-name
+                            (when-let
+                                ((name (cond
+                                        (t
+                                         (let* ((current-tab (tab-bar--current-tab))
+                                                (tab-index (tab-bar--current-tab-index))
+                                                (explicit-name (alist-get 'name current-tab))
+                                                (tab-name (alist-get 'name current-tab)))
+                                           (if explicit-name tab-name (+ 1 tab-index)))))))
+                              (propertize (format " %s " name) 'face
+                                          (if (doom-modeline--active)
+                                              'doom-modeline-buffer-major-mode
+                                            'mode-line-inactive)))))))
   :config
   (tab-bar-history-mode 1)
   (setq  tab-bar-close-last-tab-choice 'tab-bar-mode-disable
          tab-bar-show                   nil
          tab-bar-new-tab-choice        'ibuffer
-         tab-bar-tab-name-truncated-max 14)
+         tab-bar-tab-name-truncated-max 14
+         tab-bar-tab-name-function #'(lambda nil (let ((path (my/project-current-root)))
+                                                   (if path
+                                                       (f-base path)
+                                                     (f-base default-directory)))))
   :bind-keymap ("C-c t" . tab-prefix-map)
   :bind
   ("C-c C-'" . tab-bar-switch-to-recent-tab)
@@ -960,6 +987,21 @@
               ("C-c o i" . my/org-new-inline-heading)
               ("C-c o s" . my/org-new-sub-heading)))
 
+(use-package org-modern
+  :straight (org-modern :host github :repo "minad/org-modern")
+  :defer 3
+  :hook (org-mode . org-modern-mode)
+  :config
+  (setq line-spacing 0.2)
+  :init
+  (org-modern-mode +1))
+
+(use-package all-the-icons-completion
+  :straight (all-the-icons-completion :host github :repo "iyefrat/all-the-icons-completion")
+  :hook (marginalia-mode-hook . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode +1))
+
 (use-package ts
   :straight t)
 
@@ -995,17 +1037,6 @@
   :defer 5
   :init
   (add-hook 'org-mode-hook 'toc-org-mode))
-
-(use-package org-superstar
-  :straight (org-superstar-mode :host github :repo "integral-dw/org-superstar-mode")
-  :hook (org-mode . org-superstar-mode)
-  :custom
-  (org-superstar-todo-bullet-alist
-   '(("TODO" . 9744)
-     ("DONE" . 9745)))
-  (org-superstar-cycle-headline-bullets t)
-  (org-hide-leading-stars t)
-  (org-superstar-special-todo-items t))
 
 (defun org-mode-visual-fill ()
   (setq visual-fill-column-width 100
@@ -1258,12 +1289,7 @@
         web-mode-script-padding 0
         web-mode-enable-auto-quoting nil
         web-mode-enable-auto-pairing t)
-  (setf (alist-get "javascript" web-mode-comment-formats nil nil #'equal)
-        "//"))
-
-;; (use-package vue-mode
-;;   :mode ("\\.vue\\'")
-;;   :hook (vue-mode . lsp-deferred))
+  (setf (alist-get "javascript" web-mode-comment-formats nil nil #'equal) "//"))
 
 (use-package css-mode
   :straight t
@@ -1283,8 +1309,6 @@
   :hook (haskell-mode . lsp-deferred)
   :custom
   (lsp-haskell-server-path "haskell-language-server"))
-
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
 (use-package emacs-lisp-mode
   :straight (emacs-lisp-mode :type built-in)
@@ -1308,6 +1332,11 @@
           (nilness . t)
           (unusedwrite . t)
           (unusedparams . t)))
+  (with-eval-after-load 'lsp-mode
+    (lsp-register-custom-settings
+     '(("gopls.completeUnimported" t t)
+       ("gopls.staticcheck" t t)
+       ("gopls.experimentalWorkspaceModule" t t))))
   (setq lsp-gopls-server-path "/home/ryan/go/bin/gopls"))
 
 (use-package rustic
@@ -1420,6 +1449,11 @@
   :config
   (setq flymake-start-on-flymake-mode t
         flymake-start-on-save-buffer t))
+
+(use-package flymake-diagnostic-at-point
+  :straight t
+  :after flymake
+  :hook (flymake-mode . flymake-diagnostic-at-point-mode))
 
 (use-package flyspell
   :straight (flyspell :type built-in)
@@ -1563,11 +1597,7 @@
 (global-set-key (kbd "C-c o g")  #'xref-find-definitions)
 (global-set-key (kbd "C-/")  #'undo-only)
 (global-set-key (kbd "C-?")  #'undo-redo)
-;; (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
-
 (bind-key* "C-<backspace>" #'my/backward-kill-word)
-
-
 
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))
@@ -1697,11 +1727,30 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 (use-package doom-modeline
   :straight t
-  :disabled t
-  :custom ((doom-modeline-height 10))
+  :hook (after-init . doom-modeline-mode)
+  :custom
+  (doom-modeline-height 10)
+  (doom-modeline-bar-width 1)
+  (doom-modeline-icon t)
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-major-mode-color-icon t)
+  (doom-modeline-buffer-file-name-style 'truncate-upto-project)
+  (doom-modeline-buffer-state-icon t)
+  (doom-modeline-buffer-modification-icon t)
+  (doom-modeline-minor-modes nil)
+  (doom-modeline-enable-word-count nil)
+  (doom-modeline-buffer-encoding t)
+  (doom-modeline-indent-info nil)
+  (doom-modeline-checker-simple-format t)
+  (doom-modeline-vcs-max-length 12)
+  (doom-modeline-env-version t)
+  (doom-modeline-irc-stylize 'identity)
+  (doom-modeline-github-timer nil)
+  (doom-modeline-gnus-timer nil)
   :config
   (setq doom-modeline-buffer-modification-icon nil)
-  ;; (setq doom-modeline-buffer-file-name-style 'file-name)
   (setq doom-modeline-hud t)
-  :init
-  (doom-modeline-mode +1))
+  (advice-add #'doom-modeline-lsp-icon :override
+              (defun doom-modeline-lsp-icon+ (text face)
+                (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
+                                    :face face :height 1.0 :v-adjust -0.0575))))
