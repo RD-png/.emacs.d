@@ -713,6 +713,7 @@
 (use-package avy
   :straight t
   :config
+  (setq avy-background t)
   (setq avy-timeout-seconds 0.35)
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
                       ?v ?b ?n ?. ?, ?/ ?u ?p ?e
@@ -1215,7 +1216,7 @@
   :straight t
   :commands vterm-mode
   :config
-  (setq vterm-kill-buffer-on-exit t)
+  (setq vterm-kill-buffer-on-exit t)    
   (setq vterm-max-scrollback 5000)
   (defun set-no-process-query-on-exit ()
     (let ((proc (get-buffer-process (current-buffer))))
@@ -1745,7 +1746,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
-  :config
+  :config  
   (ligature-set-ligatures 't '("www"))
   (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
   (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
