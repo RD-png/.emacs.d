@@ -3,6 +3,7 @@
 :END:
 #+title: Lambda-Expressions
 
+* Definition
 A lambda expression evaluates to a procedure. The environment in effect when the lambda expression is evaluated is remembered as part of the procedure, this is known as the closing environment.
 
 When the procedure is later called with some arguments, the closing environment is extended by binding the variables in the formal parameter list to fresh locations, and the locations are filled with the arguments according to rules about to be given. The new environment created by this process is referred to as the invocation environment.

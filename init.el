@@ -55,12 +55,11 @@
       uniquify-buffer-name-style 'forward
       truncate-partial-width-windows nil
       sentence-end-double-space nil
-      require-final-newline t
-      )
+      require-final-newline t)
 
 (setq-default tab-width 4
-              tab-always-indent nil
               indent-tabs-mode nil
+              tab-always-indent nil
               fill-column 80
               word-wrap t
               truncate-lines t)
@@ -165,6 +164,11 @@
   (when (not (server-running-p server-name))
     (server-start)))
 
+(use-package exec-path-from-shell
+  :straight t
+  :init
+  (exec-path-from-shell-initialize))
+
 (use-package dashboard
   :straight t
   :config
@@ -225,6 +229,7 @@
         (append
          '("\\*Messages\\*"
            "\\*scheme\\*"
+           "\\*erlang\\*"
            "\\*eshell\\*"
            "\\*vterm\\*"
            "\\*info\\*"
@@ -1027,14 +1032,26 @@
               ("C-c o i" . my/org-new-inline-heading)
               ("C-c o s" . my/org-new-sub-heading)))
 
-(use-package org-modern
-  :straight (org-modern :host github :repo "minad/org-modern")
-  :defer 3
-  :hook (org-mode . org-modern-mode)
-  :config
-  (setq line-spacing 0.2)
-  :init
-  (org-modern-mode +1))
+(use-package org-superstar
+  :straight (org-superstar-mode :host github :repo "integral-dw/org-superstar-mode")
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-todo-bullet-alist
+   '(("TODO" . 9744)
+     ("DONE" . 9745)))
+  (org-superstar-cycle-headline-bullets t)
+  (org-hide-leading-stars t)
+  (org-superstar-special-todo-items t))
+
+;; 
+;; (use-package org-modern
+;;   :straight (org-modern :host github :repo "minad/org-modern")
+;;   :defer 3
+;;   :hook (org-mode . org-modern-mode)
+;;   :config
+;;   (setq line-spacing 0.2)
+;;   :init
+;;   (org-modern-mode +1))
 
 (use-package all-the-icons-completion
   :straight (all-the-icons-completion :host github :repo "iyefrat/all-the-icons-completion")
@@ -1382,18 +1399,19 @@
 (use-package rustic
   :straight t
   :mode ("\\.rs$" . rustic-mode)
+  :hook (rustic-mode-hook . rustic-lsp-mode-setup)
   :config
   (setq rustic-lsp-server 'rls)
   (setq rustic-lsp-server 'rustfmt)
   (setq rustic-lsp-client 'lsp-mode)
   (setq rustic-indent-method-chain t))
 
-(add-hook 'rustic-mode-hook #'rustic-lsp-mode-setup)
-
 (use-package erlang
   :straight t
   :mode ("\\.erl$" . erlang-mode)
-  :hook (erlang-mode . lsp-deferred))
+  :hook (erlang-mode . lsp-deferred)
+  :bind (:map erlang-mode-map
+              ("C-c C-c" . erlang-compile)))
 
 (use-package tuareg
   :straight t
