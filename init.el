@@ -271,8 +271,12 @@
 
 (use-package corfu
   :straight (corfu :repo "minad/corfu" :branch "main")
+  :hook (lsp-completion-mode . corfu-setup-lsp)
   :bind (:map corfu-map
-              ("<tab>" . corfu-insert))
+              ("<tab>" . corfu-insert)
+              ("M-h" . corfu-show-documentation)
+              ("M-l" . corfu-show-location)
+              ("M-SPC" . corfu-insert-separator))
   :config
   (setq corfu-cycle t
         corfu-auto t
@@ -281,7 +285,13 @@
         corfu-auto-prefix 3
         corfu-auto-delay 0.01
         corfu-quit-at-boundary t
-        corfu-quit-no-match t)
+        corfu-echo-documentation nil
+        corfu-quit-no-match t
+        corfu-min-width 20
+        corfu-max-width 60)
+  (defun corfu-setup-lsp ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless)))
   :init
   (corfu-global-mode))
 
