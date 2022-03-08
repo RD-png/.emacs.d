@@ -301,7 +301,7 @@
   (defun literal-if-equals (pattern _index _total)
     (when (string-prefix-p "=" pattern)
       `(orderless-literal . ,(substring pattern 1))))
-  
+
   (defun without-if-bang (pattern _index _total)
     "Exclude literal when leading punctuation-mark."
     (when (string-prefix-p "!" pattern)
@@ -649,21 +649,21 @@
 
 (use-package tab-bar
   :straight (tab-bar :type built-in)
-  :hook (after-init . (lambda ()
-                        (doom-modeline-def-segment workspace-name
-                          (when doom-modeline-workspace-name
-                            (when-let
-                                ((name (cond
-                                        (t
-                                         (let* ((current-tab (tab-bar--current-tab))
-                                                (tab-index (tab-bar--current-tab-index))
-                                                (explicit-name (alist-get 'name current-tab))
-                                                (tab-name (alist-get 'name current-tab)))
-                                           (if explicit-name tab-name (+ 1 tab-index)))))))
-                              (propertize (format " %s " name) 'face
-                                          (if (doom-modeline--active)
-                                              'doom-modeline-buffer-major-mode
-                                            'mode-line-inactive)))))))
+  ;; :hook (after-init . (lambda ()
+  ;;                       (doom-modeline-def-segment workspace-name
+  ;;                         (when doom-modeline-workspace-name
+  ;;                           (when-let
+  ;;                               ((name (cond
+  ;;                                       (t
+  ;;                                        (let* ((current-tab (tab-bar--current-tab))
+  ;;                                               (tab-index (tab-bar--current-tab-index))
+  ;;                                               (explicit-name (alist-get 'name current-tab))
+  ;;                                               (tab-name (alist-get 'name current-tab)))
+  ;;                                          (if explicit-name tab-name (+ 1 tab-index)))))))
+  ;;                             (propertize (format " %s " name) 'face
+  ;;                                         (if (doom-modeline--active)
+  ;;                                             'doom-modeline-buffer-major-mode
+  ;;                                           'mode-line-inactive)))))))
   :config
   (tab-bar-history-mode 1)
   (setq  tab-bar-close-last-tab-choice 'tab-bar-mode-disable
@@ -671,10 +671,12 @@
          tab-bar-new-tab-choice        'ibuffer
          tab-bar-tab-name-truncated-max 14
          ;; This makes tramp really laggy.
-         tab-bar-tab-name-function #'(lambda nil (let ((path (my/project-current-root)))
-                                                   (if path
-                                                       (f-base path)
-                                                     (f-base default-directory)))))
+
+         ;; tab-bar-tab-name-function #'(lambda nil (let ((path (my/project-current-root)))
+         ;;                                           (if path
+         ;;                                               (f-base path)
+         ;;                                             (f-base default-directory))))
+         )
   (defun my/vertico-tab-source ()
     (setq buffer-names-to-keep
           (append (mapcar #'buffer-name (alist-get 'wc-bl (tab-bar--tab)))
@@ -905,6 +907,7 @@
                             ":PROPERTIES:\n"
                             ":CREATED:    %s\n"
                             ":ID:         %s\n"
+                            ":NOTES:\n"
                             ":END:\n")
                     (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
                     (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
@@ -926,14 +929,19 @@
   :commands (org-capture org-agenda)
   :hook (org-mode . org-mode-setup)
   :config
-  (setq org-ellipsis " ▾")
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.75))
-  (setq org-enforce-todo-dependencies t)
-  (setq org-enforce-todo-checkbox-dependencies t)
-
+  (setq org-special-ctrl-a/e t
+        org-pretty-entities t
+        org-auto-align-tags nil
+        org-tags-column 0
+        org-hide-emphasis-markers t
+        org-insert-heading-respect-content t
+        org-ellipsis " ▾"
+        org-agenda-start-with-log-mode t
+        org-log-done 'time
+        org-log-into-drawer t
+        org-format-latex-options (plist-put org-format-latex-options :scale 1.75)
+        org-enforce-todo-dependencies t
+        org-enforce-todo-checkbox-dependencies t)
   (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
 
   (require 'org-habit)
@@ -1053,7 +1061,7 @@
   (org-hide-leading-stars t)
   (org-superstar-special-todo-items t))
 
-;; 
+
 ;; (use-package org-modern
 ;;   :straight (org-modern :host github :repo "minad/org-modern")
 ;;   :defer 3
@@ -1062,6 +1070,11 @@
 ;;   (setq line-spacing 0.2)
 ;;   :init
 ;;   (org-modern-mode +1))
+
+(use-package org-auctex
+  :disabled t
+  :straight (org-auctex :host github :repo "karthink/org-auctex")
+  :hook (org-mode . org-auctex-mode))
 
 (use-package all-the-icons-completion
   :straight (all-the-icons-completion :host github :repo "iyefrat/all-the-icons-completion")
@@ -1243,7 +1256,7 @@
   :straight t
   :commands vterm-mode
   :config
-  (setq vterm-kill-buffer-on-exit t)    
+  (setq vterm-kill-buffer-on-exit t)
   (setq vterm-max-scrollback 5000)
   (defun set-no-process-query-on-exit ()
     (let ((proc (get-buffer-process (current-buffer))))
@@ -1710,6 +1723,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 ;; Load theme
 (use-package modus-themes
+  :disabled t
   ;; :straight (modus-themes :host github :repo "protesilaos/modus-themes")
   :straight t
   :init
@@ -1745,7 +1759,8 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-scale-title 1.30)
   (setq modus-themes-operandi-color-overrides
         '(
-          (bg-main . "#F5F5F5")
+          ;; (bg-main . "#F5F5F5")
+          (bg-main . "white")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")
           ;; (blue-alt-other . "#0f3d8c")
@@ -1774,7 +1789,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
-  :config  
+  :config
   (ligature-set-ligatures 't '("www"))
   (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
   (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
