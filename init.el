@@ -150,6 +150,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cursor ((t (:background "IndianRed3"))))
+ '(region ((t (:background "#fff29a"))))
  ;; '(mode-line ((t (:underline (:line-width 1)))))
  '(vertico-current ((t (:background "light blue")))))
 (setq x-underline-at-descent-line t)
@@ -538,10 +539,14 @@
               ("C-c o d" . lsp-describe-thing-at-point)
               ("C-c o f" . my/lsp-format-buffer)
               ("C-c o a" . lsp-execute-code-action)
+              ("C-c o R" . lsp-rename)
               ("C-c o r" . lsp-find-references)
               ("C-c o g" . lsp-find-definition))
   :custom
+  (lsp-auto-guess-root t)
+  (lsp-enable-symbol-highlighting nil)
   (lsp-modeline-diagnostics-enable nil)
+  (lsp-enable-on-type-formatting nil)
   (lsp-enable-folding nil)
   (lsp-enable-text-document-color nil)
   (lsp-enable-on-type-formatting nil)
@@ -556,6 +561,7 @@
   (lsp-before-save-edits nil)
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-signature-render-documentation t)
+  (lsp-diagnostics-provider :flymake)
   :init
   (defun my/orderless-dispatch-flex-first (_pattern index _total)
     (and (eq index 0) 'orderless-flex))
@@ -612,6 +618,10 @@
   :straight t
   :init
   (add-hook 'Info-selection-hook 'info-colors-fontify-node))
+
+(use-package markdown-mode
+  :straight t
+  :hook (markdown-mode . display-line-numbers-mode))
 
 (use-package ace-window
   :straight t
@@ -1578,6 +1588,7 @@
   :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package diredfl
+  :disabled t
   :straight t
   :hook (dired-mode . diredfl-mode)
   :init
