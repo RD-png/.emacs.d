@@ -730,7 +730,7 @@
 (use-package avy
   :straight t
   :config
-  (setq avy-background t)
+  ;; (setq avy-background t)
   (setq avy-timeout-seconds 0.35)
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
                       ?v ?b ?n ?. ?, ?/ ?u ?p ?e
@@ -1832,7 +1832,4 @@ If the next line is joined to the current line, kill the extra indent whitespace
   :config
   (setq doom-modeline-buffer-modification-icon nil)
   (setq doom-modeline-hud t)
-  (advice-add #'doom-modeline-lsp-icon :override
-              (defun doom-modeline-lsp-icon+ (text face)
-                (doom-modeline-icon 'fantasque-sans-mono "rocket" "" text
-                                    :face face :height 1.0 :v-adjust -0.0575))))
+  (setq doom-modeline-lsp nil))
