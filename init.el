@@ -527,9 +527,7 @@
   (add-to-list 'completion-at-point-functions #'cape-keyword))
 
 (use-package lsp-mode
-  :straight t
-  :custom
-  (lsp-completion-provider :none)
+  :straight t  
   :preface
   (defun my/lsp-format-buffer ()
     (interactive)
@@ -543,6 +541,7 @@
               ("C-c o r" . lsp-find-references)
               ("C-c o g" . lsp-find-definition))
   :custom
+  (lsp-completion-provider :none)
   (lsp-auto-guess-root t)
   (lsp-enable-symbol-highlighting nil)
   (lsp-modeline-diagnostics-enable nil)
@@ -571,16 +570,12 @@
           '(orderless)))
 
   (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
-
   (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
-  ;; :config
-  ;; (setq lsp-disabled-clients '(eslint vls))
-  ;; (setq lsp-enabled-clients '(lsp-volar))
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
 
-;; (use-package lsp-volar
-;;   :straight (lsp-volar :host github :repo "jadestrong/lsp-volar"))
+(use-package lsp-volar
+  :straight (lsp-volar :host github :repo "jadestrong/lsp-volar"))
 
 (use-package wgrep
   :defer 2
@@ -899,9 +894,9 @@
   (save-excursion
     (insert (format (concat "\n"
                             ":PROPERTIES:\n"
-                            ":CREATED:      %s\n"
+                            ":CREATED: %s\n"
                             ":COOKIE_DATA:  todo recursive\n"
-                            ":ID:           %s\n"
+                            ":ID: %s\n"
                             ":END:\n")
                     (format-time-string (org-time-stamp-format t t))
                     (substring (shell-command-to-string "uuidgen") 0 -1))))
@@ -913,10 +908,10 @@
   (insert "TODO ")
   (save-excursion
     (insert (format (concat "\n"
-                            "DEADLINE:   %s SCHEDULED:  %s\n"
+                            "DEADLINE: %s SCHEDULED: %s\n"
                             ":PROPERTIES:\n"
-                            ":CREATED:    %s\n"
-                            ":ID:         %s\n"
+                            ":CREATED: %s\n"
+                            ":ID: %s\n"
                             ":NOTES:\n"
                             ":END:\n")
                     (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
@@ -1070,7 +1065,6 @@
   (org-superstar-cycle-headline-bullets t)
   (org-hide-leading-stars t)
   (org-superstar-special-todo-items t))
-
 
 ;; (use-package org-modern
 ;;   :straight (org-modern :host github :repo "minad/org-modern")
@@ -1325,7 +1319,7 @@
    "\\.js\\'")
   :hook (typescript-mode . lsp-deferred)
   :config
-  (setq typescript-indent-level 2))
+  (setq typescript-indent-level 4))
 
 (use-package pip-requirements
   :straight t
@@ -1371,7 +1365,9 @@
   :hook (web-mode . lsp-deferred)
   :config
   (setq web-mode-enable-html-entities-fontification t
-        web-mode-auto-close-style 2
+        web-mode-auto-close-style 1
+        web-mode-indent-style 2
+        web-mode-attr-indent-offset 2
         web-mode-code-indent-offset 2
         web-mode-markup-indent-offset 2
         web-mode-css-indent-offset 2
