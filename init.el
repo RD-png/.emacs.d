@@ -100,7 +100,6 @@
 (setq ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(setq straight-check-for-modifications '(check-on-save find-when-checking))
 (setq package-enable-at-startup nil
       straight-use-package-by-default t
       straight-disable-native-compile nil
@@ -1506,6 +1505,8 @@
 (use-package yasnippet
   :straight t
   :defer 2
+  :custom
+  (yas-triggers-in-field t)
   :init
   (yas-global-mode 1)
   :config
@@ -1522,7 +1523,6 @@
               (corfu-insert)
               (yas-next-field))
           (yas-next-field))))
-  (yas-reload-all)
   :bind (:map yas-keymap
               ("<tab>" . tab-complete-or-next-field)))
 
@@ -1699,14 +1699,14 @@
   "When called interactively with no active region, kill a single line instead."
   (interactive
    (if mark-active (list (region-beginning) (region-end))
-     (list (line-beginning-position) (line-end-position)))))
+     (list (save-excursion (back-to-indentation) (point)) (line-end-position)))))
 
 (defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, copy a single line instead."
   (interactive
    (if mark-active (list (region-beginning) (region-end))
      (message "Line Copied")
-     (list (line-beginning-position) (line-end-position)))))
+     (list (save-excursion (back-to-indentation) (point)) (line-end-position)))))
 
 (defadvice kill-line (before kill-line-autoreindent activate)
   "Kill excess whitespace when joining lines.
