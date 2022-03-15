@@ -257,6 +257,13 @@
   :straight (vertico :repo "minad/vertico"
                      :branch "main")
   :demand t
+  :preface
+  (defun consult-vertico-save ()
+    "Cleaner version of vertico-save that works with
+consult based prompts."
+    (interactive)
+    (embark--act #'kill-new (car (embark--targets)))
+    (abort-minibuffers))
   :config
   (setq
    vertico-count 7
@@ -268,7 +275,7 @@
   :custom-face
   (vertico-current ((t (:background "light blue"))))
   :bind (:map vertico-map
-              ("M-w" . vertico-save)
+              ("M-w" . consult-vertico-save)
               ("C-M-a" . vertico-first)
               ("C-M-e" . vertico-last))
   :init
@@ -347,6 +354,16 @@
   :after minibuffer
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
+  :preface
+  (eval-when-compile
+    (defmacro my/embark-ace-action (fn)
+      `(defun ,(intern (concat "my/embark-ace-" (symbol-name fn))) ()
+         (interactive)
+         (with-demoted-errors "%s"
+           (require 'ace-window)
+           (let ((aw-dispatch-always t))
+             (aw-switch-to-window (aw-select nil))
+             (call-interactively (symbol-function ',fn)))))))
   :config
   (define-key embark-file-map (kbd "o") (my/embark-ace-action find-file))
   (define-key embark-buffer-map   (kbd "o") (my/embark-ace-action switch-to-buffer))
@@ -357,16 +374,6 @@
   :bind*
   ("C-o" . embark-act)
   ("C-h h" . embark-bindings))
-
-(eval-when-compile
-  (defmacro my/embark-ace-action (fn)
-    `(defun ,(intern (concat "my/embark-ace-" (symbol-name fn))) ()
-       (interactive)
-       (with-demoted-errors "%s"
-         (require 'ace-window)
-         (let ((aw-dispatch-always t))
-           (aw-switch-to-window (aw-select nil))
-           (call-interactively (symbol-function ',fn)))))))
 
 (defun sudo-file-path (file)
   (let ((host (or (file-remote-p file 'host) "localhost")))
@@ -426,7 +433,19 @@
 (use-package consult
   :straight t
   :demand t
-  :after project
+  :after project  
+  :config
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  (setq consult-project-root-function (lambda () "Return current project root"
+                                        (project-root (project-current))))  
+  (setq consult-narrow-key "<")
+  (setq consult-preview-key (kbd "M-."))   
+  :custom
+  (completion-in-region-function #'consult-completion-in-region)
+  (consult-line-start-from-top nil)
+  (consult-line-point-placement 'match-end)
+  (fset 'multi-occur #'consult-multi-occur)
   :bind (("C-s" . consult-line)
          ("C-M-m" . consult-imenu)
          ("C-M-S-m" . consult-imenu-multi)
@@ -438,18 +457,6 @@
          ([remap popup-kill-ring] . consult-yank-from-kill-ring)
          :map minibuffer-local-map
          ("C-r" . consult-history))
-  :config
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-  (setq consult-project-root-function (lambda () "Return current project root"
-                                        (project-root (project-current))))
-  (setq consult-narrow-key "<")
-  (setq consult-preview-key (kbd "M-."))
-  :custom
-  (completion-in-region-function #'consult-completion-in-region)
-  (consult-line-start-from-top nil)
-  (consult-line-point-placement 'match-end)
-  (fset 'multi-occur #'consult-multi-occur)
   :init
   (setq register-preview-delay 0
         register-preview-function #'consult-register-format)
@@ -1051,7 +1058,7 @@
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)))
 
   (define-key global-map (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "jj")))
+              (lambda () (interactive) (org-capture nil "jj")))
 
   (org-font-setup)
   :bind (:map org-mode-map
