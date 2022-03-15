@@ -198,7 +198,7 @@
   :straight (window :type built-in)
   :config
   (setq display-buffer-alist
-        `(("\\*\\(scheme\\|info\\|eshell\\|vterm\\)\\*"
+        `(("\\*\\(scheme\\|eshell\\|vterm\\)\\*"
            (display-buffer-in-side-window)
            (dedicated . t)
            (side . bottom)
@@ -232,7 +232,6 @@
            "\\*erlang\\*"
            "\\*eshell\\*"
            "\\*vterm\\*"
-           "\\*info\\*"
            "^\\*Warnings\\*$"
            "Output\\*$"
            "^\\*Backtrace\\*"
@@ -516,8 +515,12 @@ consult based prompts."
   :straight t
   :defer 2
   :config
+  (defun affe-orderless-regexp-compiler (input _type _ignorecase)
+    (setq input (orderless-pattern-compiler input))
+    (cons input (lambda (str) (orderless--highlight input str))))
   (setq affe-regexp-function #'orderless-pattern-compiler
-        affe-highlight-function #'orderless--highlight))
+        affe-highlight-function #'orderless--highlight)
+  (setq affe-regexp-compiler #'affe-orderless-regexp-compiler))
 
 (use-package marginalia
   :straight t
@@ -664,6 +667,15 @@ consult based prompts."
   :bind*
   ("C-c p s r" . consult-ripgrep))
 
+;;;###autoload
+(defun tab-create (name)
+  (condition-case nil
+      (unless (equal (alist-get 'name (tab-bar--current-tab))
+                     name)
+        (tab-bar-rename-tab-by-name name name))
+    (error (tab-new)
+           (tab-bar-rename-tab name))))
+
 (use-package tab-bar
   :straight (tab-bar :type built-in)
   ;; :hook (after-init . (lambda ()
@@ -721,6 +733,7 @@ consult based prompts."
                                       :sort nil))
       (unless (cdr buffer)
         (funcall consult--buffer-display (car buffer)))))
+  
   :bind-keymap ("C-c t" . tab-prefix-map)
   :bind
   ("C-c C-'" . tab-bar-switch-to-recent-tab)
@@ -733,7 +746,9 @@ consult based prompts."
   ("C-x C-b" . my/switch-tab-bar-buffer)
   ("C-x C-p" . tab-switch)
   :init
-  (tab-bar-new-tab)
+  (tab-create "Alt")
+  (tab-create "Main")
+  (tab-bar-close-tab 1)
   (tab-bar-mode -1))
 
 (use-package tab-bar-echo-area
@@ -1744,8 +1759,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
 ;; Load theme
 (use-package modus-themes
   :disabled t
-  ;; :straight (modus-themes :host github :repo "protesilaos/modus-themes")
-  :straight t
+  :straight (modus-themes :host github :repo "protesilaos/modus-themes")
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -1754,7 +1768,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-variable-pitch-headings nil
          modus-themes-intense-paren-match t
          modus-themes-diffs 'desaturated
-         modus-themes-syntax '(alt-syntax green-strings yellow-comments)
+         modus-themes-syntax '(green-strings yellow-comments)
          modus-themes-links '(faint neutral-underline)
          modus-themes-hl-line '(intense)
          modus-themes-prompts '(bold background)
