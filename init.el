@@ -351,6 +351,7 @@ consult based prompts."
 
 (use-package embark
   :straight t
+  :demand t
   :after minibuffer
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
