@@ -256,6 +256,7 @@
 (use-package vertico
   :straight (vertico :repo "minad/vertico"
                      :branch "main")
+  :demand t
   :config
   (setq
    vertico-count 7
@@ -266,6 +267,10 @@
         completion-ignore-case t)
   :custom-face
   (vertico-current ((t (:background "light blue"))))
+  :bind (:map vertico-map
+              ("M-w" . vertico-save)
+              ("C-M-a" . vertico-first)
+              ("C-M-e" . vertico-last))
   :init
   (vertico-mode))
 
