@@ -1870,3 +1870,17 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 (use-package fzf
   :straight t)
+
+(use-package pdf-tools
+  :straight t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (pdf-tools-install-noverify)
+  (setq-default pdf-view-display-size 'fit-width)
+  (add-hook 'pdf-annot-list-mode-hook #'hide-mode-line-mode))
+
+(use-package saveplace-pdf-view
+  :straight t
+  :after pdf-view
+  :init
+  (save-place-mode 1))
