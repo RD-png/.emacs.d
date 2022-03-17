@@ -1869,7 +1869,9 @@ If the next line is joined to the current line, kill the extra indent whitespace
   (setq doom-modeline-lsp nil))
 
 (use-package fzf
-  :straight t)
+  :straight t
+  :bind
+  ("C-c z f" . fzf-find-file))
 
 (use-package pdf-tools
   :straight t

@@ -1,0 +1,19 @@
+:PROPERTIES:
+:ID:       beebd382-f480-4840-b6e1-1d4f89be2ba5
+:END:
+#+title: Distributed-Systems
+* Description
+
+A system whose components are not located on one device, components are located on different machines and message passing is used to communicate between the systems components.
+
+* Monolithic or Distributed-Systems
+
+Deciding on using a monolithic or a distributed system can be a hard decision at the beginning of a system development, do you choose to introduce the complexity of a distributed for the benefits it could offer in scalability and efficiency at high request volumes or opt for the simplicity of the monolithic system.
+
+Distributed systems solve the major issue of a monolithic system, which is the monolithic systems reside on one server, therefore there is one point of failure, system failures can result in lengthy down time for your service which could result in massive profit losses for the company.
+
+There are strategies to help aid in reducing the effect of a failure of a monolithic system, for example, RAID can protect the system in the case that a disk dies, as RAID stores system state across multiple discs and stores copies of data from other discs so it is retrievable. There is also the option of replication and backups, which again lessen the blow if a system dies. However there is still down time for the system and there is still data lost between the time the server dies and the time of last backup or replication.
+
+Distributed systems can prevent down time by constantly making copies of state from each machine in the system, therefore if one of the servers in the system does die, the down time is minimal or potentially no existent as state exists as state can be saved in real time by machines in the system dedicated to storing state in the case of a failure.
+
+Companies that operate on a large scale can not use monolithic systems, it simply is not possible, so the complexity of a Distributed system is worth the durability the architecture provides.
