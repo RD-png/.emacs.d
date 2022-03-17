@@ -1867,3 +1867,6 @@ If the next line is joined to the current line, kill the extra indent whitespace
   (setq doom-modeline-buffer-modification-icon nil)
   (setq doom-modeline-hud t)
   (setq doom-modeline-lsp nil))
+
+(use-package fzf
+  :straight t)
