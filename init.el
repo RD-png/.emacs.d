@@ -910,6 +910,7 @@ consult based prompts."
 
 (defun org-mode-setup ()
   (org-indent-mode)
+  (url-handler-mode 1)
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
@@ -922,7 +923,7 @@ consult based prompts."
     (insert (format (concat "\n"
                             ":PROPERTIES:\n"
                             ":CREATED: %s\n"
-                            ":COOKIE_DATA:  todo recursive\n"
+                            ":COOKIE_DATA: todo recursive\n"
                             ":ID: %s\n"
                             ":END:\n")
                     (format-time-string (org-time-stamp-format t t))
@@ -939,7 +940,6 @@ consult based prompts."
                             ":PROPERTIES:\n"
                             ":CREATED: %s\n"
                             ":ID: %s\n"
-                            ":NOTES:\n"
                             ":END:\n")
                     (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
                     (format-time-string "[%Y-%m-%d %a %H:%M]" (org-read-date t 'to-time nil))
@@ -1382,7 +1382,8 @@ consult based prompts."
   :bind (:map python-mode-map
               ([remap lsp-format-buffer] . python-black-buffer))
   :config
-  (setq python-shell-interpreter "python3"))
+  (setq python-shell-interpreter "python3")
+  (setq python-indent-offset 4))
 
 ;; Elpy rebinds delete for some reason
 (add-hook 'python-mode-hook
@@ -1647,7 +1648,9 @@ consult based prompts."
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C-<" . mc/mark-next-like-this)
          ("C->" . mc/mark-previous-like-this)
-         ("C-c m a" . mc/mark-all-like-this)))
+         ("C-c m a" . mc/mark-all-like-this))
+  :config
+  (setq mc/always-repeat-command t))
 
 (defun my/beginning-of-line ()
   (interactive)
