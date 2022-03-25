@@ -1912,3 +1912,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
   :after pdf-view
   :init
   (save-place-mode 1))
+
+(use-package undo-hl
+  :straight (undo-hl :host github :repo "casouri/undo-hl")
+  :hook (prog-mode . undo-hl-mode))
