@@ -141,6 +141,7 @@
 ;; Faces / Theme
 ;; (set-foreground-color "#c5c8c6")
 ;; (set-background-color "#1d1f21")
+(set-background-color "#FFFFE8")
 
 (setq custom-safe-themes t)
 (custom-set-faces
@@ -1552,7 +1553,8 @@ consult based prompts."
   :defer t
   :hook (org-mode
          emacs-lisp-mode
-         typescript-mode))
+         typescript-mode
+         web-mode))
 
 (use-package yasnippet
   :straight t
