@@ -645,9 +645,30 @@ consult based prompts."
          ("C-x O" . ace-swap-window)
          ("C-x M-0" . delete-other-windows)))
 
+(use-package perspective
+  :straight t
+  :hook (after-init . (lambda () (persp-switch "Main") (persp-add-buffer "*Messages*")))
+  :bind (("C-x C-p" . persp-switch)
+         ("C-x p k" . persp-kill)
+         ("C-x p n" . persp-next)
+         ("C-x p p" . persp-prev)
+         ("C-x p r" . persp-rename)
+         ("C-c C-'" . persp-switch-last)
+         ("C-x C-b" . switch-to-buffer))
+  
+  :custom
+  (persp-initial-frame-name "Alt")
+  (persp-show-modestring t)
+  (persp-modestring-short t)
+  (persp-modestring-dividers '("<" ">" ""))
+  (doom-modeline-persp-name t)
+  :init
+  (persp-mode))
+
 (use-package project
   :straight (project :type built-in)
   :demand t
+  :after perspective
   :init
   (global-set-key (kbd "C-c p") project-prefix-map)
   (cl-defgeneric project-root (project) (car project))
@@ -664,7 +685,16 @@ consult based prompts."
           (?v "VC-Dir" project-vc-dir)
           (?k "Kill buffers" project-kill-buffers)
           (?! "Shell command" project-shell-command)
-          (?e "Eshell" consult-recent-file)))
+          (?e "Eshell" project-eshell)))
+  :bind (("C-c p f" . project-find-file)
+         ("C-c p g" . project-find-regexp)
+         ("C-c p d" . project-dired)
+         ("C-c p b" . project-switch-to-buffer)
+         ("C-c p r" . project-query-replace-regexp)
+         ("C-c p v" . project-vc-dir)
+         ("C-c p k" . project-kill-buffers)
+         ("C-c p !" . project-shell-command)
+         ("C-c p e" . project-eshell))
   :bind*
   ("C-c p s r" . consult-ripgrep))
 
@@ -759,26 +789,6 @@ consult based prompts."
 ;;   (defvar tab-bar-format nil "Format for tab-bar-echo-area-mode")
 ;;   :config
 ;;   (tab-bar-echo-area-mode 1))
-
-(use-package perspective
-  :straight t
-  :hook (after-init . (lambda () (persp-switch "Main") (persp-add-buffer "*Messages*")))
-  :bind (("C-x C-p" . persp-switch)
-         ("C-x p k" . persp-kill)
-         ("C-x p n" . persp-next)
-         ("C-x p p" . persp-prev)
-         ("C-x p r" . persp-rename)
-         ("C-c C-'" . persp-switch-last)
-         ("C-x C-b" . switch-to-buffer))
-  
-  :custom
-  (persp-initial-frame-name "Alt")
-  (persp-show-modestring t)
-  (persp-modestring-short t)
-  (persp-modestring-dividers '("<" ">" ""))
-  (doom-modeline-persp-name t)
-  :init
-  (persp-mode))
 
 (use-package avy
   :straight t
@@ -1933,7 +1943,3 @@ If the next line is joined to the current line, kill the extra indent whitespace
   :after pdf-view
   :init
   (save-place-mode 1))
-
-(use-package undo-hl
-  :straight (undo-hl :host github :repo "casouri/undo-hl")
-  :hook (prog-mode . undo-hl-mode))
