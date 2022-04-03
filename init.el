@@ -141,7 +141,7 @@
 ;; Faces / Theme
 ;; (set-foreground-color "#c5c8c6")
 ;; (set-background-color "#1d1f21")
-(set-background-color "#FFFFE8")
+;; (set-background-color "#FFFFE8")
 
 (setq custom-safe-themes t)
 (custom-set-faces
@@ -647,7 +647,7 @@ consult based prompts."
 
 (use-package project
   :straight (project :type built-in)
-  :demand t  
+  :demand t
   :init
   (global-set-key (kbd "C-c p") project-prefix-map)
   (cl-defgeneric project-root (project) (car project))
@@ -687,7 +687,7 @@ consult based prompts."
          ("C-x p r" . persp-rename)
          ("C-c C-'" . persp-switch-last)
          ("C-x C-b" . switch-to-buffer))
-  
+
   :custom
   (persp-initial-frame-name "Alt")
   (persp-show-modestring t)
@@ -791,7 +791,7 @@ consult based prompts."
 
 (use-package avy
   :straight t
-  :config  
+  :config
   (setq avy-timeout-seconds 0.35)
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
                       ?v ?b ?n ?. ?, ?/ ?u ?p ?e
@@ -1129,28 +1129,28 @@ consult based prompts."
   :config
   (setq line-spacing 0.2)
   (setq
- ;; Edit settings
- org-auto-align-tags nil
- org-tags-column 0
- org-catch-invisible-edits 'show-and-error
- org-special-ctrl-a/e t
- org-insert-heading-respect-content t
+   ;; Edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
 
- ;; Org styling, hide markup etc.
- org-hide-emphasis-markers t
- org-pretty-entities t
- org-ellipsis "…"
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities t
+   org-ellipsis "…"
 
- ;; Agenda styling
- org-agenda-block-separator ?─
- org-agenda-time-grid
- '((daily today require-timed)
-   (800 1000 1200 1400 1600 1800 2000)
-   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
- org-agenda-current-time-string
- "⭠ now ─────────────────────────────────────────────────")
+   ;; Agenda styling
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
   (add-hook 'org-mode-hook #'org-modern-mode)
-(add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
   :init
   (org-modern-mode +1))
 
@@ -1814,7 +1814,6 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 ;; Load theme
 (use-package modus-themes
-  :disabled t
   :straight (modus-themes :host github :repo "protesilaos/modus-themes")
   :init
   (setq  modus-themes-intense-hl-line t
@@ -1848,18 +1847,11 @@ If the next line is joined to the current line, kill the extra indent whitespace
          modus-themes-scale-4 1.25
          modus-themes-scale-title 1.30)
   (setq modus-themes-operandi-color-overrides
-        '(
-          ;; (bg-main . "#F5F5F5")
-          (bg-main . "white")
+        '((bg-main . "#FFFFE8")
+          (fg-comment-yellow . "Firebrick")
           (bg-dim . "#F8F8F8")
-          (bg-alt . "#E8E8E8")
-          ;; (blue-alt-other . "#0f3d8c")
-          ;; (blue-alt . "#2544bb")
-          ;; (magenta-alt-other . "#55348e")
-          ;; (magenta-alt . "#752f50")
-          ;; (magenta-intense . "#8f0075")
-          ))
-  (load-theme 'modus-operandi))
+          (bg-alt . "#E8E8E8")))
+  (load-theme 'modus-operandi t))
 
 (use-package savehist
   :defer 2
