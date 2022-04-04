@@ -346,7 +346,6 @@ consult based prompts."
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
   (setq enable-recursive-minibuffers t))
 
 (use-package embark
@@ -1700,16 +1699,19 @@ consult based prompts."
                     (line-end-position)
                     distance)))
 
+;;;###autoload
 (defun shift-right (count)
   (interactive "p")
   (shift-text count))
 
+;;;###autoload
 (defun shift-left (count)
   (interactive "p")
   (shift-text (- count)))
 
-;; Smarter C-Backspace control
+;;;###autoload
 (defun my/backward-kill-word ()
+  "Smarter C-Backspace control"
   (interactive)
   (let* ((cp (point))
          (backword)
@@ -1750,8 +1752,19 @@ consult based prompts."
   (superword-mode -1)
   (global-subword-mode 1))
 
+;;;###autoload
+(defun multi-line-next ()
+  (interactive)
+  (forward-line 10))
+
+;;;###autoload
+(defun multi-line-prev ()
+  (interactive)
+  (forward-line -10))
+
 ;; General binds
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
+(global-set-key (kbd "M-d") (lambda () (interactive) (my/op-thing-at-point 'kill-region 'word)))
 ;; (global-set-key (kbd "C-c i") #'er/change-in-sexp)
 ;; (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
 (global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
@@ -1760,7 +1773,6 @@ consult based prompts."
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
-(global-set-key (kbd "M-d") (lambda () (interactive) (my/op-thing-at-point 'kill-region 'word)))
 (global-set-key (kbd "C-M-<backspace>") #'backward-kill-sexp)
 (global-set-key (kbd "C-M-<return>") #'vterm)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
@@ -1769,7 +1781,12 @@ consult based prompts."
 (global-set-key (kbd "C-c o g")  #'xref-find-definitions)
 (global-set-key (kbd "C-/")  #'undo-only)
 (global-set-key (kbd "C-?")  #'undo-redo)
+(global-set-key (kbd "C-S-n")  #'multi-line-next)
+(global-set-key (kbd "C-S-p")  #'multi-line-prev)
+
 (bind-key* "C-<backspace>" #'my/backward-kill-word)
+
+;; Remaps
 
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))
@@ -1854,6 +1871,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
   (load-theme 'modus-operandi t))
 
 (use-package savehist
+  :straight (:type built-in)
   :defer 2
   :hook (after-init . savehist-mode)
   :config
