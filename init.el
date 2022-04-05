@@ -68,6 +68,7 @@
   (setq confirm-kill-emacs 'yes-or-no-p))
 
 ;; Interface
+(setq indicate-buffer-boundaries t)
 (global-font-lock-mode t)
 (blink-cursor-mode -1)
 (global-subword-mode 1)
@@ -1568,6 +1569,42 @@ consult based prompts."
   :straight t
   :after magit)
 
+(use-package git-gutter
+  :straight t
+  :config
+  (setq git-gutter:disabled-modes '(fundamental-mode image-mode pdf-view-mode))
+  (setq git-gutter:handled-backends
+        (cons 'git (cl-remove-if-not #'executable-find (list 'hg 'svn 'bzr)
+                                     :key #'symbol-name)))
+  (setq git-gutter:update-interval 0.02)
+  (defun git-gutter:start-of-hunk ()
+    "Move to end of current diff hunk"
+    (interactive)
+    (git-gutter:awhen (git-gutter:search-here-diffinfo git-gutter:diffinfos)
+      (let ((lines (- (git-gutter-hunk-start-line it) (line-number-at-pos))))
+        (forward-line lines))))
+  :bind
+  ("C-c C-v t" . git-gutter-mode)
+  ("C-c C-v r" . git-gutter:revert-hunk)
+  ("C-c C-v m" . git-gutter:mark-hunk)
+  ("C-c C-v n" . git-gutter:next-hunk)
+  ("C-c C-v p" . git-gutter:previous-hunk)
+  ("C-c C-v s" . git-gutter:stage-hunk)
+  ("C-c C-v g" . git-gutter:update-all-windows)
+  ("C-c C-v d" . git-gutter:popup-hunk)
+  ("C-c C-v e" . git-gutter:end-of-hunk)
+  ("C-c C-v a" . git-gutter:start-of-hunk))
+
+(use-package git-gutter-fringe
+  :straight t
+  ;; :custom
+  ;; (fringe-mode '5)
+  :config
+  (setq-default fringes-outside-margins t)
+  (define-fringe-bitmap 'git-gutter-fr:added [0] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified [0] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
+
 (use-package evil-nerd-commenter
   :straight t
   :bind ("C-;" . evilnc-comment-or-uncomment-lines))
@@ -1771,7 +1808,6 @@ consult based prompts."
 (global-set-key (kbd "M-d") (lambda () (interactive) (my/op-thing-at-point 'kill-region 'word)))
 ;; (global-set-key (kbd "C-c i") #'er/change-in-sexp)
 ;; (global-set-key (kbd "C-x C-b") #'switch-to-buffer)
-(global-set-key (kbd "C-c C-v") (lambda () (interactive) (switch-to-buffer nil)))
 (define-key prog-mode-map (kbd "C-a") #'my/beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
