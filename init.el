@@ -84,7 +84,8 @@
                 shell-mode-hook
                 eshell-mode-hook
                 dired-mode-hook
-                vterm-mode-hook))
+                vterm-mode-hook
+                Info-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Alias
@@ -144,15 +145,15 @@
 ;; (set-background-color "#FFFFE8")
 
 (setq custom-safe-themes t)
+(setq custom--inhibit-theme-enable nil)
+
+;; Global face overrides
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(cursor ((t (:background "IndianRed3"))))
- '(region ((t (:background "#fff29a"))))
  ;; '(mode-line ((t (:underline (:line-width 1)))))
- '(vertico-current ((t (:background "light blue")))))
+ ;; Default theme override
+ ;; '(region ((t (:background "#fff29a"))))
+ )
 (setq x-underline-at-descent-line t)
 
 ;;;; Packages
@@ -272,8 +273,9 @@ consult based prompts."
   (setq read-file-name-completion-ignore-case t
         read-buffer-completion-ignore-case t
         completion-ignore-case t)
-  :custom-face
-  (vertico-current ((t (:background "light blue"))))
+  ;; :custom-face
+  ;; For all themes
+  ;; (vertico-current ((t (:background "light blue"))))
   :bind (:map vertico-map
               ("M-w" . consult-vertico-save)
               ("C-M-a" . vertico-first)
@@ -984,10 +986,17 @@ consult based prompts."
   (org-insert-subheading (org-current-level))
   (my/org-new-todo-header))
 
+(use-package visual-fill-column
+  :straight t
+  :init
+  (setq visual-fill-column-center-text t
+        visual-fill-column-width 75))
+
 (use-package org
   :straight t
   :commands (org-capture org-agenda)
-  :hook (org-mode . org-mode-setup)
+  :hook ((org-mode . org-mode-setup)
+         (org-mode . visual-fill-column-mode))
   :config
   (setq org-special-ctrl-a/e t
         org-pretty-entities t
@@ -1200,14 +1209,9 @@ consult based prompts."
   :init
   (add-hook 'org-mode-hook 'toc-org-mode))
 
-(defun org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
-
-(use-package visual-fill-column
-  :straight t
-  :hook (org-mode . org-mode-visual-fill))
+(use-package info
+  :straight (info :type built-in)
+  :hook (Info-mode . visual-fill-column-mode))
 
 (with-eval-after-load 'org
   (org-babel-do-load-languages
@@ -1832,6 +1836,11 @@ If the next line is joined to the current line, kill the extra indent whitespace
 ;; Load theme
 (use-package modus-themes
   :straight (modus-themes :host github :repo "protesilaos/modus-themes")
+  :config
+  ;; Override default face
+  (custom-theme-set-faces
+   'modus-operandi
+   '(vertico-current ((t (:background "light blue")))))
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
