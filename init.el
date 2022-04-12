@@ -1226,7 +1226,7 @@ consult based prompts."
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/.config/emacs/org/Notes/Roam")
+  (org-roam-directory "~/.config/emacs/org/Roam")
   (org-roam-completion-everywhere t)
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%I:%M %p>: %?"
@@ -1807,7 +1807,7 @@ consult based prompts."
 (global-set-key (kbd "C-M-<return>") #'vterm)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
-(global-set-key (kbd "C-x c r") (lambda () (interactive) (find-file "~/.config/emacs/org/Notes/Roam/")))
+(global-set-key (kbd "C-x c r") (lambda () (interactive) (find-file "~/.config/emacs/org/Roam/")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
 (global-set-key (kbd "C-c o g")  #'xref-find-definitions)
 (global-set-key (kbd "C-/")  #'undo-only)
