@@ -1,6 +1,0 @@
-:PROPERTIES:
-:ID:       7adcd85d-d562-4158-8a0f-03845e18ade2
-:END:
-#+title: Laravel-Artisan
-* Artisan Commands
-

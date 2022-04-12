@@ -1,6 +1,0 @@
-:PROPERTIES:
-:ID:       d8cc9e17-563a-4278-af80-932d7eb617f7
-:END:
-#+title: CustomerServices
-* 31-08-21
-Liam has said that there can be issues with getting emails back to the customers, so we need to firstly create a test order and find a method of returning an email to the customer via the platforms api, as we will only have the masked email address for the user.

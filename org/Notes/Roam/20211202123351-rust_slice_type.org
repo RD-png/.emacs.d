@@ -1,5 +1,0 @@
-:PROPERTIES:
-:ID:       0f458f1d-1271-43d0-bc8f-083e4c180a6c
-:END:
-#+title: Rust-Slice-Type
-

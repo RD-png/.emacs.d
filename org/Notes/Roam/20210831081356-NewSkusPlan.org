@@ -1,8 +1,0 @@
-:PROPERTIES:
-:ID:       f8f1ea66-64ef-447b-8753-8edc706d074a
-:END:
-#+title: NewSkusPlan
-* Build a method that produces a sku prefix
-- The sku prefix will be one of two parts of the sku, it can be thought of as a name / descriptor, this prefix will need to be relatively short in length but still describe the product.
-- We can prompt the use to add a key term to describe the product, however this can still cause inconsistency in sku titles and as people will likely not remember the descriptor they used for a sku of the same group and therefore we don't have a solid naming convention.
-- Ideally we need to create a database that we store a list of descriptors in which are linked to a parent sku, then we can ask the user to select a group and it will build the name for them without any direct input, with this approach we can have one user create the descriptors for all the skus

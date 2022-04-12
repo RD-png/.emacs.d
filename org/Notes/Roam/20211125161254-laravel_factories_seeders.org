@@ -1,9 +1,0 @@
-:PROPERTIES:
-:ID:       0c26402d-f14f-4f0c-b5cb-405beffc90ba
-:END:
-#+title: Laravel-Factories/Seeders
-Tools to populate database tables with real or test data, generally use seeders to define static values, for example order sources, Amazon, Website, Ebay etc. Where as an order can be generated using laravels faker class to produce fake names and prices etc for order records. Once they are setup we can populate the database using
-#+begin_src bash
-  php artisan migrate:fresh --seed
-#+end_src
-
