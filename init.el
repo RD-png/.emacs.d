@@ -649,6 +649,7 @@ consult based prompts."
 
 (use-package project
   :straight (project :type built-in)
+  :after perspective
   :demand t
   :init
   (global-set-key (kbd "C-c p") project-prefix-map)
@@ -657,27 +658,16 @@ consult based prompts."
     (when-let ((project
                 (project-current nil (or dir default-directory))))
       (project-root project)))
-  (setq project-switch-commands
-        '((?f "Find file" project-find-file)
-          (?g "Find regexp" project-find-regexp)
-          (?d "Dired" project-dired)
-          (?b "Buffer" project-switch-to-buffer)
-          (?r "Query replace" project-query-replace-regexp)
-          (?v "VC-Dir" project-vc-dir)
-          (?k "Kill buffers" project-kill-buffers)
-          (?! "Shell command" project-shell-command)
-          (?e "Eshell" project-eshell)))
-  :bind (("C-c p f" . project-find-file)
-         ("C-c p g" . project-find-regexp)
-         ("C-c p d" . project-dired)
-         ("C-c p b" . project-switch-to-buffer)
-         ("C-c p r" . project-query-replace-regexp)
-         ("C-c p v" . project-vc-dir)
-         ("C-c p k" . project-kill-buffers)
-         ("C-c p !" . project-shell-command)
-         ("C-c p e" . project-eshell))
-  :bind*
-  ("C-c p s r" . consult-ripgrep))
+  :bind* (("C-c p f" . project-find-file)
+          ("C-c p g" . project-find-regexp)
+          ("C-c p d" . project-dired)
+          ("C-c p b" . project-switch-to-buffer)
+          ("C-c p r" . project-query-replace-regexp)
+          ("C-c p v" . project-vc-dir)
+          ("C-c p k" . project-kill-buffers)
+          ("C-c p !" . project-shell-command)
+          ("C-c p e" . project-eshell)
+          ("C-c p s r" . consult-ripgrep)))
 
 (use-package perspective
   :straight t
@@ -1817,6 +1807,7 @@ consult based prompts."
 (global-set-key (kbd "C-M-<return>") #'vterm)
 (global-set-key (kbd "C-S-k") #'kill-whole-line)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
+(global-set-key (kbd "C-x c r") (lambda () (interactive) (find-file "~/.config/emacs/org/Notes/Roam/")))
 (global-set-key (kbd "C-x c e")  #'dashboard-refresh-buffer)
 (global-set-key (kbd "C-c o g")  #'xref-find-definitions)
 (global-set-key (kbd "C-/")  #'undo-only)
