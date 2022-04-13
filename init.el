@@ -59,7 +59,7 @@
 
 (setq-default tab-width 4
               indent-tabs-mode nil
-              tab-always-indent nil
+              tab-always-indent 'complete
               fill-column 80
               word-wrap t
               truncate-lines t)
@@ -307,6 +307,14 @@ consult based prompts."
   (defun corfu-setup-lsp ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
           '(orderless)))
+  
+  (defun corfu-enable-always-in-minibuffer ()
+  "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+  (unless (or (bound-and-true-p mct--active)
+              (bound-and-true-p vertico--input))
+    (corfu-mode 1)))
+  
+(add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
   :init
   (corfu-global-mode))
 
@@ -457,7 +465,7 @@ consult based prompts."
          ("M-g M-g" . consult-goto-line)
          ("C-c f" . consult-flymake)
          ("C-x M-f" . consult-recent-file)
-         ([remap popup-kill-ring] . consult-yank-from-kill-ring)
+         ([remap yank-pop] . consult-yank-pop)
          :map minibuffer-local-map
          ("C-r" . consult-history))
   :init
