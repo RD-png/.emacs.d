@@ -43,7 +43,8 @@
 (push '(vertical-scroll-bars) default-frame-alist)
 (setq menu-bar-mode nil
       tool-bar-mode nil
-      scroll-bar-mode nil)
+      scroll-bar-mode nil
+      tooltip-mode nil)
 
 (setq window-divider-default-places t
       window-divider-default-bottom-width 1
@@ -63,6 +64,7 @@
 
 ;;; Misc.
 (setq inhibit-message nil)
+(when (window-system) (setq confirm-kill-emacs 'yes-or-no-p))
 (advice-add 'display-startup-echo-area-message :override #'ignore)
 
 
@@ -136,7 +138,6 @@
   :config (setq highlight-numbers-generic-regexp "\\_<[[:digit:]]+\\(?:\\.[0-9]*\\)?\\_>"))
 
 (setq image-animate-loop t)
-(setq rainbow-delimiters-max-face-count 4)
 
 (use-package dashboard
   :straight t
@@ -193,7 +194,9 @@
 
 (use-package all-the-icons-dired
   :straight t
-  :hook (dired-mode . all-the-icons-dired-mode))
+  :hook (dired-mode . all-the-icons-dired-mode)
+  :config
+  (setq all-the-icons-dired-monochrome nil))
 
 (use-package diredfl
   :disabled t

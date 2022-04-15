@@ -29,7 +29,8 @@
   :straight t
   :hook (prog-mode . rainbow-delimiters-mode)
   :config
-  (setq show-paren-mode 1))
+  (setq show-paren-mode 1)
+  (setq rainbow-delimiters-max-face-count 4))
 
 ;; Colors for # colors
 (use-package rainbow-mode
@@ -206,6 +207,7 @@
 (global-set-key (kbd "C-S-p")  #'multi-line-prev)
 (global-set-key [remap org-cycle-agenda-files] 'ignore)
 (bind-key* "C-<backspace>" #'my/backward-kill-word)
+
 
 ;; unbind annoying keybinds
 (global-unset-key  (kbd "C-x C-n"))

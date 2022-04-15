@@ -1,4 +1,32 @@
 ;;; my-lsp.el -*- lexical-binding: t; -*-
+;; Borrowed some config from doom here to
+;; avoid lsp restarting so much.
+
+(defvar +lsp-defer-shutdown 3)
+(defvar +lsp--default-read-process-output-max nil)
+(defvar +lsp--default-gcmh-high-cons-threshold nil)
+(defvar +lsp--optimization-init-p nil)
+(defvar +lsp-company-backends '(:separate company-capf company-yasnippet))
+
+(define-minor-mode +lsp-optimization-mode
+  "Deploys universal GC and IPC optimizations for `lsp-mode'."
+  :global t
+  :init-value nil
+  (if (not +lsp-optimization-mode)
+      (setq-default read-process-output-max +lsp--default-read-process-output-max
+                    gcmh-high-cons-threshold +lsp--default-gcmh-high-cons-threshold
+                    +lsp--optimization-init-p nil)    
+    (unless +lsp--optimization-init-p
+      (setq +lsp--default-read-process-output-max
+            (if (boundp 'read-process-output-max)
+                (default-value 'read-process-output-max))
+            +lsp--default-gcmh-high-cons-threshold
+            (default-value 'gcmh-high-cons-threshold))
+      
+      (setq-default read-process-output-max (* 1024 1024))
+      (setq-default gcmh-high-cons-threshold (* 2 +lsp--default-gcmh-high-cons-threshold))
+      (gcmh-set-high-threshold)
+      (setq +lsp--optimization-init-p t))))
 
 (use-package lsp-mode
   :straight t
@@ -19,7 +47,6 @@
   (lsp-auto-guess-root t)
   (lsp-enable-symbol-highlighting nil)
   (lsp-modeline-diagnostics-enable nil)
-  (lsp-enable-on-type-formatting nil)
   (lsp-enable-folding nil)
   (lsp-enable-text-document-color nil)
   (lsp-enable-on-type-formatting nil)
@@ -45,8 +72,54 @@
 
   (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
   (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
+  (setq lsp-session-file (concat user-emacs-directory "lsp-session")
+        lsp-server-install-dir (concat user-emacs-directory "lsp"))
+  (setq lsp-keep-workspace-alive nil)
+
+  (add-hook 'lsp-mode-hook
+    (defun +lsp-display-guessed-project-root-h ()
+      "Log what LSP things is the root of the current project."
+      (when-let (path (buffer-file-name (buffer-base-buffer)))
+        (if-let (root (lsp--calculate-root (lsp-session) path))
+            (lsp--info "Guessed project root is %s" (abbreviate-file-name root))
+          (lsp--info "Could not guess project root."))))
+    #'+lsp-optimization-mode)
+
+   (add-hook 'lsp-completion-mode-hook
+      (defun +lsp-init-company-backends-h ()
+        (when lsp-completion-mode
+          (set (make-local-variable 'company-backends)
+               (cons +lsp-company-backends
+                     (remove +lsp-company-backends
+                             (remq 'company-capf company-backends)))))))  
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
+
+(defvar +lsp--deferred-shutdown-timer nil)
+(defadvice! +lsp-defer-server-shutdown-a (fn &optional restart)
+  "Defer server shutdown for a few seconds.
+This gives the user a chance to open other project files before the server is
+auto-killed (which is a potentially expensive process). It also prevents the
+server getting expensively restarted when reverting buffers."
+  :around #'lsp--shutdown-workspace
+  (if (or lsp-keep-workspace-alive
+          restart
+          (null +lsp-defer-shutdown)
+          (= +lsp-defer-shutdown 0))
+      (prog1 (funcall fn restart)
+        (+lsp-optimization-mode -1))
+    (when (timerp +lsp--deferred-shutdown-timer)
+      (cancel-timer +lsp--deferred-shutdown-timer))
+    (setq +lsp--deferred-shutdown-timer
+          (run-at-time
+           (if (numberp +lsp-defer-shutdown) +lsp-defer-shutdown 3)
+           nil (lambda (workspace)
+                 (with-lsp-workspace workspace
+                   (unless (lsp--workspace-buffers workspace)
+                     (let ((lsp-restart 'ignore))
+                       (funcall fn))
+                     (+lsp-optimization-mode -1))))
+           lsp--cur-workspace))))
 
 (use-package lsp-volar
   :straight (lsp-volar :host github :repo "jadestrong/lsp-volar"))

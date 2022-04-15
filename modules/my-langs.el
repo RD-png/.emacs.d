@@ -60,6 +60,10 @@
   :mode "\\.nix\\'"
   :hook (nix-mode . lsp-deferred))
 
+(use-package nix-update
+  :straight t
+  :commands nix-update-fetch)
+
 (use-package web-mode
   :straight t
   :mode ("\\.vue\\'")

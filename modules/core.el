@@ -11,7 +11,9 @@
 
 
 ;;; Misc.
-(setq undo-limit 80000000
+(setq undo-limit 400000
+      undo-strong-limit 3000000
+      undo-outer-limit 48000000
       system-uses-terminfo nil
       backup-inhibited t
       auto-save-default nil
@@ -35,9 +37,11 @@
 (setq inhibit-startup-screen t
       inhibit-startup-echo-area-message user-login-name
       inhibit-default-init t
-      initial-scratch-message nil)
+      initial-scratch-message nil
+      initial-major-mode 'fundamental-mode)
 
 (setq inhibit-compacting-font-caches t)
+(setq pgtk-wait-for-event-timeout 0.001)
 
 (setq read-process-output-max (* 64 1024))
 
@@ -65,7 +69,7 @@
 
 ;;; Formatting.
 (setq-default indent-tabs-mode nil
-              tab-always-indent nil
+              tab-always-indent 'complete
               tab-width 4)
 (setq tabify-regexp "^\t* [ \t]+")
 (setq-default fill-column 80)
@@ -97,11 +101,12 @@
   (setf dired-kill-when-opening-new-dired-buffer t)
   (setq dired-recursive-copies 'always
         dired-recursive-deletes 'always
-        delete-by-moving-to-trash t))
+        delete-by-moving-to-trash t
+        dired-hide-details-hide-symlink-targets nil))
 
 (use-package recentf
   :straight (recentf :type built-in)
-  :hook (after-init-hook . recentf-mode)
+  :hook (after-init . recentf-mode)
   :commands recentf-open-files
   :custom (recentf-save-file (concat user-emacs-directory "recentf"))
   :config
@@ -121,9 +126,10 @@
 
 (use-package savehist
   :straight (savehist :type built-in)
-  :hook (after-init-hook . savehist-mode)
-  :custom (savehist-file (concat user-emacs-directory "savehist"))
+  :defer 2
+  :hook (after-init . savehist-mode)
   :config
+  (setq savehist-file (locate-user-emacs-file "var/savehist.el"))
   (setq savehist-save-minibuffer-history t
         savehist-autosave-interval nil
         savehist-additional-variables

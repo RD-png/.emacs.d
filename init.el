@@ -1,29 +1,10 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
-;;; Garbage Collector Config.
-(setq gc-cons-threshold 16777216
-      gc-cons-percentage 0.1)
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
-(setq read-process-output-max 1048576)
-
-(custom-set-variables
- '(warning-suppress-log-types '((org-element-cache))))
-
-(defun my/defer-garbage-collection ()
-  (setq gc-cons-threshold most-positive-fixnum))
-
-(defun my/restore-garbage-collection ()
-  (run-at-time 1 nil (lambda () (setq gc-cons-threshold 16777216))))
-
-(add-hook 'minibuffer-setup-hook 'my/defer-garbage-collection)
-(add-hook 'minibuffer-exit-hook 'my/restore-garbage-collection)
-(add-hook 'emacs-startup-hook #'emacs-init-time)
-
 (add-to-list 'load-path (expand-file-name "modules" user-emacs-directory))
 
-
 ;;; Native Comp.
+(custom-set-variables
+ '(warning-suppress-log-types '((org-element-cache))))
 (when (and (fboundp 'native-comp-available-p)
            (native-comp-available-p))
   (progn
@@ -67,6 +48,7 @@
 ;;; Core Modules.
 (require 'core)
 (require 'ui)
+(require 'my-doom)
 (require 'my-tree-sitter)
 (require 'my-vertico)
 ;; (require 'my-corfu)

@@ -99,6 +99,7 @@
   :straight t
   :custom
   (doom-modeline-height 10)
+  (doom-modeline-width 3)
   (doom-modeline-bar-width 1)
   (doom-modeline-icon t)
   (doom-modeline-major-mode-icon t)
@@ -115,6 +116,7 @@
   (doom-modeline-irc-stylize 'identity)
   (doom-modeline-github-timer nil)
   (doom-modeline-gnus-timer nil)
+  (doom-modeline-buffer-encoding 'nondefault)
   :config
   (setq doom-modeline-buffer-modification-icon nil)
   (setq doom-modeline-hud t)
