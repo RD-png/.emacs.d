@@ -60,6 +60,7 @@
 (require 'my-navigation)
 (require 'my-lsp)
 (require 'my-langs)
+(require 'my-perspective)
 (require 'my-workflow)
 ;; (require 'my-tabs)
 (require 'my-editing)
