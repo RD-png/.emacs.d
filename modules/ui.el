@@ -104,6 +104,18 @@
   (setq window-sides-vertical nil)
   (setq window-combination-resize t))
 
+(use-package winner
+  :straight (winner :type built-in)
+  :hook (after-init . winner-mode)
+  :preface (defvar winner-dont-bind-my-keys t)
+  :bind
+  ("C-x /" . winner-undo)
+  ("C-x ?" . winner-redo)
+  :config
+  (setq winner-boring-buffers '("*Completions*" "*Compile-Log*" "*inferior-lisp*" "*Fuzzy Completions*"
+              "*Apropos*" "*Help*" "*cvs*" "*Buffer List*" "*Ibuffer*"
+              "*esh command on file*")))
+
 (use-package ediff
   :straight (ediff :type built-in)
   :config
