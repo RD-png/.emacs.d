@@ -2,7 +2,7 @@
 
 (use-package embark
   :straight t
-  :demand t
+  :demand t  
   :after minibuffer
   :init
   (setq prefix-help-command #'embark-prefix-help-command)

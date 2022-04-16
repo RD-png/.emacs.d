@@ -66,6 +66,52 @@
       backup-directory-alist (list (cons "." (concat user-emacs-directory "backup/")))
       tramp-backup-directory-alist backup-directory-alist)
 
+(defvar doom-inhibit-large-file-detection nil
+  "If non-nil, inhibit large/long file detection when opening files.")
+
+(defvar doom-large-file-p nil)
+(put 'doom-large-file-p 'permanent-local t)
+
+(defvar doom-large-file-size-alist '(("." . 1.0))
+  "An alist mapping regexps (like `auto-mode-alist') to filesize thresholds.
+If a file is opened and discovered to be larger than the threshold, Doom
+performs emergency optimizations to prevent Emacs from hanging, crashing or
+becoming unusably slow.
+These thresholds are in MB, and is used by `doom--optimize-for-large-files-a'.")
+
+(defvar doom-large-file-excluded-modes
+  '(so-long-mode special-mode archive-mode tar-mode jka-compr
+    git-commit-mode image-mode doc-view-mode doc-view-mode-maybe
+    ebrowse-tree-mode pdf-view-mode tags-table-mode)
+  "Major modes that `doom-check-large-file-h' will ignore.")
+
+(defadvice! doom--prepare-for-large-files-a (size _ filename &rest _)
+  "Sets `doom-large-file-p' if the file is considered large.
+Uses `doom-large-file-size-alist' to determine when a file is too large. When
+`doom-large-file-p' is set, other plugins can detect this and reduce their
+runtime costs (or disable themselves) to ensure the buffer is as fast as
+possible."
+  :before #'abort-if-file-too-large
+  (and (numberp size)
+       (null doom-inhibit-large-file-detection)
+       (ignore-errors
+         (> size
+            (* 1024 1024
+               (assoc-default filename doom-large-file-size-alist
+                              #'string-match-p))))
+       (setq-local doom-large-file-p size)))
+
+(add-hook 'find-file-hook
+  (defun doom-optimize-for-large-files-h ()
+    "Trigger `so-long-minor-mode' if the file is large."
+    (when (and doom-large-file-p buffer-file-name)
+      (if (or doom-inhibit-large-file-detection
+              (memq major-mode doom-large-file-excluded-modes))
+          (kill-local-variable 'doom-large-file-p)
+        (when (fboundp 'so-long-minor-mode) ; in case the user disabled it
+          (so-long-minor-mode +1))
+        (message "Large file detected! Cutting a few corners to improve performance...")))))
+
 
 ;;; Formatting.
 (setq-default indent-tabs-mode nil
@@ -108,7 +154,7 @@
   :straight (recentf :type built-in)
   :hook (after-init . recentf-mode)
   :commands recentf-open-files
-  :custom (recentf-save-file (concat user-emacs-directory "recentf"))
+  :custom (recentf-save-file (concat user-emacs-directory "var/recentf"))
   :config
   (setq recentf-auto-cleanup nil
         recentf-max-saved-items 200)

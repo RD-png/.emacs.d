@@ -72,8 +72,8 @@
 
   (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
   (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
-  (setq lsp-session-file (concat user-emacs-directory "lsp-session")
-        lsp-server-install-dir (concat user-emacs-directory "lsp"))
+  (setq lsp-session-file (concat user-emacs-directory "var/lsp-session")
+        lsp-server-install-dir (concat user-emacs-directory "var/lsp"))
   (setq lsp-keep-workspace-alive nil)
 
   (add-hook 'lsp-mode-hook

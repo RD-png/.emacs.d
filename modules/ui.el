@@ -159,7 +159,8 @@
          ("C-c C-/" . popper-cycle)
          ("C-c C-;" . popper-toggle-type))
   :init
-  (setq popper-window-height 15)
+  (setq popper-window-height 15
+        popper-mode-line nil)
   (setq even-window-sizes nil)
   (setq display-buffer-base-action
         '(display-buffer-reuse-mode-window
@@ -184,6 +185,30 @@
            "*helpful variable: *.*$"
            help-mode
            compilation-mode)))
+  
+  (defun popper-message-shorten (name)
+    (cond
+     ((string-match "^\\*[hH]elpful.*?: \\(.*\\)\\*$" name)
+      (concat (match-string 1 name)
+              "(H)"))
+     ((string-match "^\\*Help:?\\(.*\\)\\*$" name)
+      (concat (match-string 1 name)
+              "(H)"))
+     ((string-match "^\\*eshell:? ?\\(.*\\)\\*$" name)
+      (concat (match-string 1 name)
+              (if (string-empty-p (match-string 1 name)) "shell(E)" "(E)")))
+     ((string-match "^\\*\\(.*?\\)\\(?:Output\\|Command\\)\\*$" name)
+      (concat (match-string 1 name)
+              "(O)"))
+     ((string-match "^\\*\\(.*?\\)[ -][Ll]og\\*$" name)
+      (concat (match-string 1 name)
+              "(L)"))
+     ((string-match "^\\*[Cc]ompil\\(?:e\\|ation\\)\\(.*\\)\\*$" name)
+      (concat (match-string 1 name)
+              "(C)"))
+     (t name)))
+
+  (setq popper-echo-transform-function #'popper-message-shorten)
   (popper-mode +1)
   (popper-echo-mode +1))
 
@@ -212,5 +237,10 @@
   :init
   (setq visual-fill-column-center-text t
         visual-fill-column-width 75))
+
+(use-package hide-mode-line
+  :straight t
+  :hook (vterm-mode . hide-mode-line-mode)
+  :hook (Info-mode . hide-mode-line-mode))
 
 (provide 'ui)

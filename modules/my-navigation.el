@@ -29,6 +29,7 @@
   :straight t
   :config
   (setq aw-dispatch-always t)
+  (setq aw-scope 'frame)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   :bind (("C-x o" . ace-window)
          ("M-o" . other-window)

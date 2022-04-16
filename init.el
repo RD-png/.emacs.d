@@ -46,9 +46,9 @@
 
 
 ;;; Core Modules.
+(require 'my-doom)
 (require 'core)
 (require 'ui)
-(require 'my-doom)
 (require 'my-tree-sitter)
 (require 'my-vertico)
 ;; (require 'my-corfu)
