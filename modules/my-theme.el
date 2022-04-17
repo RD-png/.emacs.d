@@ -1,8 +1,8 @@
 ;;; my-theme.el -*- lexical-binding: t; -*-
 
 ;;; Font.
-(defvar default-font-size 130)
-(defvar default-variable-font-size 130)
+(defvar default-font-size 120)
+(defvar default-variable-font-size 120)
 (set-face-attribute 'default nil
                     :font "Fantasque Sans Mono"
                     :foundry "PfEd"
