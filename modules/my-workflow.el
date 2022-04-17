@@ -35,7 +35,7 @@
 
 (use-package git-gutter
   :straight t
-  :defer 5
+  :hook (prog-mode . git-gutter-mode)
   :config
   (setq git-gutter:disabled-modes '(fundamental-mode image-mode pdf-view-mode))
   (setq git-gutter:handled-backends
@@ -62,7 +62,6 @@
 
 (use-package git-gutter-fringe
   :straight t
-  :defer 5
   :config
   (setq-default fringes-outside-margins t)
   (define-fringe-bitmap 'git-gutter-fr:added [0] nil nil '(center repeated))
