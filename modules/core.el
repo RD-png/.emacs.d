@@ -115,7 +115,6 @@ possible."
 
 ;;; Formatting.
 (setq-default indent-tabs-mode nil
-              tab-always-indent 'complete
               tab-width 4)
 (setq tabify-regexp "^\t* [ \t]+")
 (setq-default fill-column 80)
