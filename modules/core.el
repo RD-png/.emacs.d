@@ -187,7 +187,6 @@ possible."
   :straight t
   :when (display-graphic-p)
   :custom (server-auth-dir (concat user-emacs-directory "server/"))
-  :defer 1
   :init
   (when-let (name (getenv "EMACS_SERVER_NAME"))
     (setq server-name name))

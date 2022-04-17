@@ -13,12 +13,10 @@
     (setq warning-minimum-level :error)
     (setq package-native-compile t)
     (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))))
-(setq load-prefer-newer t)
 
 
 ;;; Straight.
-(setq package-enable-at-startup nil
-      straight-use-package-by-default t
+(setq straight-use-package-by-default t
       straight-disable-native-compile nil
       straight-check-for-modifications nil
       straight-vc-git-default-clone-depth 1

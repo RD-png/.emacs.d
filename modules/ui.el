@@ -10,7 +10,7 @@
 (setq hscroll-margin 2
       hscroll-step 1
       scroll-conservatively 101
-      scroll-margin 0
+      scroll-margin 8
       scroll-preserve-screen-position t
       auto-window-vscroll nil
       mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
@@ -38,9 +38,6 @@
 (setq frame-resize-pixelwise t)
 (setq window-resize-pixelwise nil)
 
-(push '(menu-bar-lines . 0)   default-frame-alist)
-(push '(tool-bar-lines . 0)   default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
 (setq menu-bar-mode nil
       tool-bar-mode nil
       scroll-bar-mode nil
@@ -63,7 +60,6 @@
 
 
 ;;; Misc.
-(setq inhibit-message nil)
 (when (window-system) (setq confirm-kill-emacs 'yes-or-no-p))
 (advice-add 'display-startup-echo-area-message :override #'ignore)
 

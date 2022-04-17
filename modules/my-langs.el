@@ -13,15 +13,9 @@
   :straight t)
 
 (use-package htmlize
-  :defer 2
   :straight (htmlize :host github :repo "hniksic/emacs-htmlize")
   :config
   (setq org-html-htmlize-output-type 'css))
-
-(use-package php-mode
-  :straight t
-  :mode "\\.php\\'"
-  :hook (php-mode . lsp-deferred))
 
 (use-package pip-requirements
   :straight t
@@ -45,15 +39,14 @@
   :after python-mode)
 
 (use-package pyvenv
-  :straight t
+  :straight
   :defer 5
-  :after python
   :config
   (setq pyvenv-menu t))
 
 (use-package python-black
   :straight t
-  :after python)
+  :defer 5)
 
 (use-package nix-mode
   :straight t
@@ -164,8 +157,8 @@
   :hook (tuareg-mode . lsp-deferred))
 
 (use-package latex
-  :defer 5
   :straight (latex :type built-in)
+  :defer 5
   :after tex
   :mode ("\\.tex\\'" . LaTeX-mode))
 
@@ -187,8 +180,8 @@
   (eldoc-echo-area-display-truncation-message nil))
 
 (use-package devdocs
-  :defer 2
   :straight t
+  :defer 2
   :config
   (defun my/devdocs-lookup ()
     (interactive)
