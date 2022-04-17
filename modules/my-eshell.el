@@ -77,18 +77,20 @@
 
 (use-package eshell
   :straight (eshell :type built-in)
+  :defer t
   :hook (eshell-first-time-mode . eshell-configure)
   :config
   (with-eval-after-load 'esh-opt
     (setq eshell-destroy-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "zsh"))))
 
+(use-package eshell-syntax-highlighting
+  :straight t
+  :defer t
+  :hook (eshell-mode . eshell-syntax-highlighting-mode))
+
 (use-package capf-autosuggest
   :straight (capf-autosuggest :host github :repo "emacs-straight/capf-autosuggest")
   :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))
-
-(use-package eshell-syntax-highlighting
-  :straight t
-  :hook (eshell-mode . eshell-syntax-highlighting-mode))
 
 (provide 'my-eshell)

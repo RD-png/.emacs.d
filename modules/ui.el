@@ -113,8 +113,8 @@
   ("C-x ?" . winner-redo)
   :config
   (setq winner-boring-buffers '("*Completions*" "*Compile-Log*" "*inferior-lisp*" "*Fuzzy Completions*"
-              "*Apropos*" "*Help*" "*cvs*" "*Buffer List*" "*Ibuffer*"
-              "*esh command on file*")))
+                                "*Apropos*" "*Help*" "*cvs*" "*Buffer List*" "*Ibuffer*"
+                                "*esh command on file*")))
 
 (use-package ediff
   :straight (ediff :type built-in)
@@ -136,7 +136,7 @@
 (setq whitespace-line-column nil
       whitespace-style
       '(face indentation tabs tab-mark spaces space-mark newline newline-mark
-        trailing lines-tail)
+             trailing lines-tail)
       whitespace-display-mappings
       '((tab-mark ?\t [?› ?\t])
         (newline-mark ?\n [?¬ ?\n])
@@ -197,7 +197,7 @@
            "*helpful variable: *.*$"
            help-mode
            compilation-mode)))
-  
+
   (defun popper-message-shorten (name)
     (cond
      ((string-match "^\\*[hH]elpful.*?: \\(.*\\)\\*$" name)
@@ -236,8 +236,8 @@
   (setq all-the-icons-dired-monochrome nil))
 
 (use-package diredfl
-  :disabled t
   :straight t
+  :disabled t
   :hook (dired-mode . diredfl-mode)
   :init
   (setq diredfl-ignore-compressed-flag nil)

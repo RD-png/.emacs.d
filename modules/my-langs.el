@@ -37,8 +37,8 @@
   (setq python-shell-interpreter "python3")
   (setq python-indent-offset 4)
   (add-hook 'python-mode-hook
-          (lambda()
-            (local-unset-key (kbd "DEL")))))
+            (lambda()
+              (local-unset-key (kbd "DEL")))))
 
 (use-package pyimport
   :straight t

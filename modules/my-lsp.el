@@ -15,14 +15,14 @@
   (if (not +lsp-optimization-mode)
       (setq-default read-process-output-max +lsp--default-read-process-output-max
                     gcmh-high-cons-threshold +lsp--default-gcmh-high-cons-threshold
-                    +lsp--optimization-init-p nil)    
+                    +lsp--optimization-init-p nil)
     (unless +lsp--optimization-init-p
       (setq +lsp--default-read-process-output-max
             (if (boundp 'read-process-output-max)
                 (default-value 'read-process-output-max))
             +lsp--default-gcmh-high-cons-threshold
             (default-value 'gcmh-high-cons-threshold))
-      
+
       (setq-default read-process-output-max (* 1024 1024))
       (setq-default gcmh-high-cons-threshold (* 2 +lsp--default-gcmh-high-cons-threshold))
       (gcmh-set-high-threshold)
@@ -77,21 +77,21 @@
   (setq lsp-keep-workspace-alive nil)
 
   (add-hook 'lsp-mode-hook
-    (defun +lsp-display-guessed-project-root-h ()
-      "Log what LSP things is the root of the current project."
-      (when-let (path (buffer-file-name (buffer-base-buffer)))
-        (if-let (root (lsp--calculate-root (lsp-session) path))
-            (lsp--info "Guessed project root is %s" (abbreviate-file-name root))
-          (lsp--info "Could not guess project root."))))
-    #'+lsp-optimization-mode)
+            (defun +lsp-display-guessed-project-root-h ()
+              "Log what LSP things is the root of the current project."
+              (when-let (path (buffer-file-name (buffer-base-buffer)))
+                (if-let (root (lsp--calculate-root (lsp-session) path))
+                    (lsp--info "Guessed project root is %s" (abbreviate-file-name root))
+                  (lsp--info "Could not guess project root."))))
+            #'+lsp-optimization-mode)
 
-   (add-hook 'lsp-completion-mode-hook
-      (defun +lsp-init-company-backends-h ()
-        (when lsp-completion-mode
-          (set (make-local-variable 'company-backends)
-               (cons +lsp-company-backends
-                     (remove +lsp-company-backends
-                             (remq 'company-capf company-backends)))))))  
+  (add-hook 'lsp-completion-mode-hook
+            (defun +lsp-init-company-backends-h ()
+              (when lsp-completion-mode
+                (set (make-local-variable 'company-backends)
+                     (cons +lsp-company-backends
+                           (remove +lsp-company-backends
+                                   (remq 'company-capf company-backends)))))))
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
 
@@ -115,14 +115,15 @@ server getting expensively restarted when reverting buffers."
            (if (numberp +lsp-defer-shutdown) +lsp-defer-shutdown 3)
            nil (lambda (workspace)
                  (with-lsp-workspace workspace
-                   (unless (lsp--workspace-buffers workspace)
-                     (let ((lsp-restart 'ignore))
-                       (funcall fn))
-                     (+lsp-optimization-mode -1))))
+                                     (unless (lsp--workspace-buffers workspace)
+                                       (let ((lsp-restart 'ignore))
+                                         (funcall fn))
+                                       (+lsp-optimization-mode -1))))
            lsp--cur-workspace))))
 
 (use-package lsp-volar
-  :straight (lsp-volar :host github :repo "jadestrong/lsp-volar"))
+  :straight (lsp-volar :host github :repo "jadestrong/lsp-volar")
+  :disabled t)
 
 (use-package lsp-haskell
   :straight t

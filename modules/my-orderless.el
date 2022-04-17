@@ -7,7 +7,7 @@
     (let ((orderless-match-faces [completions-common-part]))
       (apply fn args)))
   (advice-add 'company-capf--candidates :around #'just-one-face)
-  
+
   (defun +vertico-orderless-dispatch (pattern _index _total)
     (cond
      ;; Ensure $ works with Consult commands, which add disambiguation suffixes
@@ -29,7 +29,7 @@
      ;; Flex matching
      ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
      ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1)))))
-  
+
   (setq orderless-matching-styles '(orderless-regexp)
         orderless-style-dispatchers '(+vertico-orderless-dispatch)
         orderless-component-separator "[ &]")

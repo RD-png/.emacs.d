@@ -81,8 +81,8 @@ These thresholds are in MB, and is used by `doom--optimize-for-large-files-a'.")
 
 (defvar doom-large-file-excluded-modes
   '(so-long-mode special-mode archive-mode tar-mode jka-compr
-    git-commit-mode image-mode doc-view-mode doc-view-mode-maybe
-    ebrowse-tree-mode pdf-view-mode tags-table-mode)
+                 git-commit-mode image-mode doc-view-mode doc-view-mode-maybe
+                 ebrowse-tree-mode pdf-view-mode tags-table-mode)
   "Major modes that `doom-check-large-file-h' will ignore.")
 
 (defadvice! doom--prepare-for-large-files-a (size _ filename &rest _)
@@ -102,15 +102,15 @@ possible."
        (setq-local doom-large-file-p size)))
 
 (add-hook 'find-file-hook
-  (defun doom-optimize-for-large-files-h ()
-    "Trigger `so-long-minor-mode' if the file is large."
-    (when (and doom-large-file-p buffer-file-name)
-      (if (or doom-inhibit-large-file-detection
-              (memq major-mode doom-large-file-excluded-modes))
-          (kill-local-variable 'doom-large-file-p)
-        (when (fboundp 'so-long-minor-mode) ; in case the user disabled it
-          (so-long-minor-mode +1))
-        (message "Large file detected! Cutting a few corners to improve performance...")))))
+          (defun doom-optimize-for-large-files-h ()
+            "Trigger `so-long-minor-mode' if the file is large."
+            (when (and doom-large-file-p buffer-file-name)
+              (if (or doom-inhibit-large-file-detection
+                      (memq major-mode doom-large-file-excluded-modes))
+                  (kill-local-variable 'doom-large-file-p)
+                (when (fboundp 'so-long-minor-mode) ; in case the user disabled it
+                  (so-long-minor-mode +1))
+                (message "Large file detected! Cutting a few corners to improve performance...")))))
 
 
 ;;; Formatting.
@@ -197,6 +197,7 @@ possible."
 
 (use-package tramp
   :straight (tramp :type built-in)
+  :defer 2
   :custom
   (tramp-default-method "ssh")
   :config

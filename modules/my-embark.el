@@ -2,7 +2,7 @@
 
 (use-package embark
   :straight t
-  :demand t  
+  :demand t
   :after minibuffer
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -30,7 +30,7 @@
 (use-package embark-consult
   :straight '(embark-consult :host github
                              :repo "oantolin/embark"
-                             :files ("embark-consult.el"))  
+                             :files ("embark-consult.el"))
   :demand t
   :hook
   (embark-collect-mode . embark-consult-preview-minor-mode))

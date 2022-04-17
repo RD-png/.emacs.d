@@ -4,6 +4,7 @@
 (setq native-comp-deferred-compilation nil)
 (setq package-enable-at-startup nil)
 (setq load-prefer-newer noninteractive)
+(setq inhibit-x-resources t)
 
 (unless (or (daemonp)
             noninteractive
@@ -15,10 +16,12 @@
       (setq file-name-handler-alist
             (delete-dups (append file-name-handler-alist
                                  old-file-name-handler-alist))))
+    
     (add-hook 'emacs-startup-hook #'reset-file-handler 101))
 
   (setq-default inhibit-redisplay t
                 inhibit-message t)
+  
   (add-hook 'window-setup-hook
             (lambda ()
               (setq-default inhibit-redisplay nil
@@ -41,3 +44,5 @@
 
 (set-language-environment "UTF-8")
 (setq default-input-method nil)
+
+;; (advice-add #'x-apply-session-resources :override #'ignore)

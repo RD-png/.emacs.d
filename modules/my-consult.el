@@ -2,8 +2,8 @@
 
 (use-package consult
   :straight t
-  :demand t
   :after project
+  :demand t
   :config
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
@@ -25,7 +25,7 @@
          ([remap load-theme] . consult-theme)
          ([remap man] . consult-man)
          ([remap recentf-open-files] . consult-recent-file)
-         ([remap switch-to-buffer] . consult-buffer)         
+         ([remap switch-to-buffer] . consult-buffer)
          ("C-M-m" . imenu)
          ("C-M-S-m" . consult-imenu-multi)
          ("C-M-s" . consult-multi-occur)

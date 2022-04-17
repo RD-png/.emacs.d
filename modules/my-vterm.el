@@ -2,7 +2,7 @@
 
 (use-package vterm
   :straight t
-  :commands vterm-mode  
+  :commands vterm-mode
   :config
   (setq vterm-kill-buffer-on-exit t)
   (setq vterm-max-scrollback 5000)

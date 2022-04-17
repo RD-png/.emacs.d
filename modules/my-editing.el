@@ -52,7 +52,7 @@
   ;; (defun do-yas-expand ()
   ;;   (let ((yas/fallback-behavior 'return-nil))
   ;;     (yas/expand)))
-  ;; 
+  ;;
   ;; (defun tab-complete-or-next-field ()
   ;;   (interactive)
   ;;   (if (or (not yas/minor-mode)
@@ -68,7 +68,6 @@
 
 (use-package flymake
   :straight (flymake :type built-in)
-  :defer 3
   :init
   (setq-default flymake-diagnostic-functions nil)
   (with-eval-after-load 'flymake-proc

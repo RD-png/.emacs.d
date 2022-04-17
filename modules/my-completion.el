@@ -9,7 +9,6 @@
 
 (use-package affe
   :straight t
-  :after orderless
   :defer 2
   :config
   (defun affe-orderless-regexp-compiler (input _type _ignorecase)
@@ -21,7 +20,6 @@
 
 (use-package marginalia
   :straight t
-  :after vertico
   :init
   (marginalia-mode)
   :custom

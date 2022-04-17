@@ -1,44 +1,5 @@
 ;;; my-org.el -*- lexical-binding: t; -*-
 
-;; (defun org-font-setup ()
-;;   ;; Replace list hyphen with dot
-;;   (font-lock-add-keywords 'org-mode
-;;                           '(("^ *\\([-]\\) "
-;;                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-
-;;   (defun org-archive-done-tasks ()
-;;     (interactive)
-;;     (org-map-entries
-;;      (lambda ()
-;;        (org-archive-subtree)
-;;        (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
-;;      "/DONE" 'tree))
-
-;;   ;; Set faces for heading levels
-;;   (dolist (face '((org-level-1 . 1.2)
-;;                   (org-level-2 . 1.1)
-;;                   (org-level-3 . 1.05)
-;;                   (org-level-4 . 1.0)
-;;                   (org-level-5 . 1.1)
-;;                   (org-level-6 . 1.1)
-;;                   (org-level-7 . 1.1)
-;;                   (org-level-8 . 1.1)))
-;;     (set-face-attribute (car face) nil :font "Fantasque Sans Mono" :weight 'regular :height (cdr face)))
-
-;;   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-;;   (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
-;;   (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
-;;   (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-;;   (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
-;;   (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
-;;   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-;;   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-;;   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-;;   (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
-;;   (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-;;   (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
-
 ;;;###autoload
 (defun my/org-new-project ()
   (interactive)
@@ -98,13 +59,13 @@
          (org-mode . visual-fill-column-mode))
   :config
   (with-eval-after-load 'org
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)))
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (python . t)))
 
-  (push '("conf-unix" . conf-unix) org-src-lang-modes))
-  
+    (push '("conf-unix" . conf-unix) org-src-lang-modes))
+
   (setq org-special-ctrl-a/e t
         org-pretty-entities t
         org-auto-align-tags nil
@@ -228,7 +189,6 @@
 
 (use-package org-modern
   :straight (org-modern :host github :repo "minad/org-modern")
-  :defer 3
   :hook (org-mode . org-modern-mode)
   :config
   (setq line-spacing 0.2)
@@ -259,7 +219,6 @@
   (org-modern-mode +1))
 
 (use-package org-roam
-  :defer 3
   :straight t
   :init
   (setq org-roam-v2-ack t)
@@ -285,8 +244,8 @@
   (org-roam-db-autosync-mode))
 
 (use-package org-auctex
-  :disabled t
   :straight (org-auctex :host github :repo "karthink/org-auctex")
+  :disabled t
   :hook (org-mode . org-auctex-mode))
 
 (use-package toc-org

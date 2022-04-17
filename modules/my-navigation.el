@@ -12,7 +12,6 @@
   (better-jumper-mode +1))
 
 (use-package wgrep
-  :defer 2
   :straight t
   :config
   (defun custom-wgrep-apply-save ()
@@ -113,13 +112,12 @@
 
 (use-package dumb-jump
   :straight t
-  :defer 5
   :init
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package rg
-  :defer 3
-  :straight t)
+  :straight t
+  :defer 3)
 
 (use-package fzf
   :straight t
