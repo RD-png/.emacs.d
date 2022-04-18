@@ -236,6 +236,7 @@ possible."
   (setq sp-show-pair-from-inside t)
   (setq sp-cancel-autoskip-on-backward-movement nil)
   (sp-local-pair '(emacs-lisp-mode scheme-mode) "'" "'" :actions nil)
+  (sp-local-pair '(emacs-lisp-mode scheme-mode) "`" "`" :actions nil)
   :init
   (smartparens-global-mode +1))
 
