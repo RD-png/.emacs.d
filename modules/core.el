@@ -49,10 +49,11 @@
 ;;; GC.
 (use-package gcmh
   :straight t
+  :defer 2
   :config
-  (setq gcmh-idle-delay 'auto
-        gcmh-auto-idle-delay-factor 10
-        gcmh-high-cons-threshold (* 16 1024 1024))
+  (setq gcmh-auto-idle-delay-factor 10
+        gcmh-high-cons-threshold (* 32 1024 1024)
+        gcmh-verbose t)
   (gcmh-mode 1))
 
 

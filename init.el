@@ -2,6 +2,22 @@
 
 (add-to-list 'load-path (expand-file-name "modules" user-emacs-directory))
 
+;; GC alternative.
+;; (add-hook 'emacs-startup-hook
+;;           (defun emacs-startup-reset-defaults+ ()
+;;             (setq default-gc-cons-threshold 16777216
+;;                   gc-cons-percentage 0.1)))
+
+;; (defun my/defer-garbage-collection ()
+;;   (setq gc-cons-threshold most-positive-fixnum))
+
+;; (defun my/restore-garbage-collection ()
+;;   (run-at-time 1 nil (lambda () (setq gc-cons-threshold 16777216))))
+
+;; (add-hook 'minibuffer-setup-hook 'my/defer-garbage-collection)
+;; (add-hook 'minibuffer-exit-hook 'my/restore-garbage-collection)
+
+
 ;;; Native Comp.
 (custom-set-variables
  '(warning-suppress-log-types '((org-element-cache))))

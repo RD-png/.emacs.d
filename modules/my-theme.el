@@ -103,22 +103,7 @@
   (setq doom-modeline-buffer-modification-icon nil)
   (setq doom-modeline-hud t)
   (setq doom-modeline-lsp nil)
-  (doom-modeline-def-segment buffer-name
-    "Display the current buffer's name, without any other information."
-    (concat
-     (doom-modeline-spc)
-     (doom-modeline--buffer-name)))
-
-  (doom-modeline-def-segment pdf-icon
-    "PDF icon from all-the-icons."
-    (concat
-     (doom-modeline-spc)
-     (doom-modeline-icon 'octicon "file-pdf" nil nil
-                         :face (if (doom-modeline--active)
-                                   'all-the-icons-red
-                                 'mode-line-inactive)
-                         :v-adjust 0.02)))
-
+  
   (defun doom-modeline-update-pdf-pages ()
     "Update PDF pages."
     (setq doom-modeline--pdf-pages
@@ -137,7 +122,7 @@
       (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
 
   (doom-modeline-def-modeline 'pdf
-    '(bar window-number pdf-pages pdf-icon buffer-name)
+    '(bar window-number pdf-pages buffer-info)
     '(misc-info matches major-mode process vcs))
   :init
   (doom-modeline-mode +1))
