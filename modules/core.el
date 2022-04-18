@@ -30,10 +30,6 @@
 (setq frame-inhibit-implied-resize t)
 (setq idle-update-delay 1.0)
 
-(setq gcmh-idle-delay 'auto
-      gcmh-auto-idle-delay-factor 10
-      gcmh-high-cons-threshold (* 16 1024 1024))
-
 (setq inhibit-startup-screen t
       inhibit-startup-echo-area-message user-login-name
       inhibit-default-init t
@@ -48,6 +44,16 @@
 
 ;;; Font.
 (setq redisplay-skip-fontification-on-input t)
+
+
+;;; GC.
+(use-package gcmh
+  :straight t
+  :config
+  (setq gcmh-idle-delay 'auto
+        gcmh-auto-idle-delay-factor 10
+        gcmh-high-cons-threshold (* 16 1024 1024))
+  (gcmh-mode 1))
 
 
 ;;; Files.
