@@ -36,7 +36,7 @@
   (add-to-list 'completion-at-point-functions #'cape-keyword))
 
 (use-package all-the-icons-completion
-  :straight (all-the-icons-completion :host github :repo "iyefrat/all-the-icons-completion")
+  :straight t
   :hook (marginalia-mode-hook . all-the-icons-completion-marginalia-setup)
   :init
   (all-the-icons-completion-mode +1))

@@ -28,9 +28,7 @@
   ("C-h h" . embark-bindings))
 
 (use-package embark-consult
-  :straight '(embark-consult :host github
-                             :repo "oantolin/embark"
-                             :files ("embark-consult.el"))
+  :straight t
   :demand t
   :hook
   (embark-collect-mode . embark-consult-preview-minor-mode))

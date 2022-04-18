@@ -188,7 +188,7 @@
               ("C-c o s" . my/org-new-sub-heading)))
 
 (use-package org-modern
-  :straight (org-modern :host github :repo "minad/org-modern")
+  :straight t
   :hook (org-mode . org-modern-mode)
   :config
   (setq line-spacing 0.2)

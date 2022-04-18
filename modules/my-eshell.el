@@ -91,6 +91,7 @@
 
 (use-package capf-autosuggest
   :straight (capf-autosuggest :host github :repo "emacs-straight/capf-autosuggest")
+  :disabled t
   :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))
 
 (provide 'my-eshell)

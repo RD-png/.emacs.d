@@ -13,7 +13,7 @@
   :straight t)
 
 (use-package htmlize
-  :straight (htmlize :host github :repo "hniksic/emacs-htmlize")
+  :straight t
   :config
   (setq org-html-htmlize-output-type 'css))
 

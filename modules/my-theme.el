@@ -29,7 +29,7 @@
 (set-face-attribute 'cursor nil :background "IndianRed3")
 
 (use-package modus-themes
-  :straight (modus-themes :host github :repo "protesilaos/modus-themes")
+  :straight t
   :config
   ;; Override default face
   (custom-theme-set-faces
