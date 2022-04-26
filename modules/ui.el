@@ -153,6 +153,7 @@
   ("C-x c e" . dashboard-refresh-buffer)
   :config
   (setq dashboard-startup-banner 'official)
+  (setq dashboard-set-footer nil)
   (setq dashboard-items '((recents  . 10)
                           (bookmarks . 5)))
   (setq dashboard-banner-logo-title "")
