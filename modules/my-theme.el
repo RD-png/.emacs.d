@@ -67,8 +67,8 @@
          modus-themes-scale-4 1.25
          modus-themes-scale-title 1.30)
   (setq modus-themes-operandi-color-overrides
-        '((bg-main . "#FFFFE8")
-          (fg-comment-yellow . "Firebrick")
+        '((fg-comment-yellow . "Firebrick")
+          ;; (bg-main . "#FFFFE8")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
   (load-theme 'modus-operandi t))
