@@ -11,7 +11,7 @@
                 (project-current nil (or dir default-directory))))
       (project-root project)))
   :bind* (("C-c p f" . project-find-file)
-          ("C-c p g" . project-find-regexp)
+          ("C-c p s r" . project-find-regexp)
           ("C-c p d" . project-dired)
           ("C-c p b" . project-switch-to-buffer)
           ("C-c p r" . project-query-replace-regexp)
@@ -19,7 +19,7 @@
           ("C-c p k" . project-kill-buffers)
           ("C-c p !" . project-shell-command)
           ("C-c p e" . project-eshell)
-          ("C-c p s r" . consult-ripgrep)))
+          ("C-c p g" . consult-ripgrep)))
 
 
 (use-package magit

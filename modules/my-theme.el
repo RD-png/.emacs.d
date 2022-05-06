@@ -97,13 +97,14 @@
 
 (use-package doom-modeline
   :straight t
+  :disabled t
   :custom
   (doom-modeline-height 10)
   :config
   (setq doom-modeline-buffer-modification-icon nil)
   (setq doom-modeline-hud t)
   (setq doom-modeline-lsp nil)
-  
+
   (defun doom-modeline-update-pdf-pages ()
     "Update PDF pages."
     (setq doom-modeline--pdf-pages
@@ -124,7 +125,72 @@
   (doom-modeline-def-modeline 'pdf
     '(bar window-number pdf-pages buffer-info)
     '(misc-info matches major-mode process vcs))
-  :init
+  :init  
   (doom-modeline-mode +1))
+
+(use-package nano-modeline
+  :straight t
+  ;; :disabled t
+  :config
+  (setq nano-modeline-prefix 'status)
+  (setq nano-modeline-prefix-padding 1)
+
+  (defun my/thin-modeline ()
+  "Transform the modeline in a thin faded line"
+
+  (nano-modeline-face-clear 'mode-line)
+  (nano-modeline-face-clear 'mode-line-inactive)
+  (setq mode-line-format (list ""))
+  (setq-default mode-line-format (list ""))
+  (set-face-attribute 'mode-line nil
+                      :inherit 'nano-modeline-inactive
+                      :height 0.1)
+  (set-face-attribute 'mode-line-inactive nil
+                      :inherit 'nano-modeline-inactive
+                      :height 0.1))
+
+  (add-hook 'nano-modeline-mode-hook #'my/thin-modeline)
+
+  (set-face-attribute 'header-line nil)
+  (set-face-attribute 'nano-modeline-active-name nil
+                      :foreground "black"
+                      :inherit '(nano-modeline-active nano-strong))
+  (set-face-attribute 'nano-modeline-active-primary nil
+                      :inherit '(nano-modeline-active))
+  (set-face-attribute 'nano-modeline-active-secondary nil
+                      :inherit '(nano-faded nano-modeline-active))
+
+  (set-face-attribute 'nano-modeline-active-status-RW nil
+                      :inherit '(nano-faded-i nano-strong nano-modeline-active))
+  (set-face-attribute 'nano-modeline-active-status-** nil
+                      :inherit '(nano-popout-i nano-strong nano-modeline-active))
+  (set-face-attribute 'nano-modeline-active-status-RO nil
+                      :inherit '(nano-default-i nano-strong nano-modeline-active))
+
+  (set-face-attribute 'nano-modeline-inactive-name nil
+                      :inherit '(nano-faded nano-strong
+                                            nano-modeline-inactive))
+  (set-face-attribute 'nano-modeline-inactive-primary nil
+                      :inherit '(nano-faded nano-modeline-inactive))
+
+  (set-face-attribute 'nano-modeline-inactive-secondary nil
+                      :inherit '(nano-faded nano-modeline-inactive))
+  (set-face-attribute 'nano-modeline-inactive-status-RW nil
+                      :inherit '(nano-modeline-inactive-secondary))
+  (set-face-attribute 'nano-modeline-inactive-status-** nil
+                      :inherit '(nano-modeline-inactive-secondary))
+  (set-face-attribute 'nano-modeline-inactive-status-RO nil
+                      :inherit '(nano-modeline-inactive-secondary))
+  
+  ;; (set-face-attribute 'window-divider nil
+  ;;                     :foreground (face-background 'default))
+  
+  ;; (set-face-attribute 'window-divider-first-pixel nil
+  ;;                     :foreground (face-background 'default))
+  
+  ;; (set-face-attribute 'window-divider-last-pixel nil
+  ;;                     :foreground (face-background 'default))
+  :init
+  (nano-modeline-mode 1))
 
 (provide 'my-theme)

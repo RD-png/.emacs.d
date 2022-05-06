@@ -68,6 +68,7 @@
 
 (use-package flymake
   :straight (flymake :type built-in)
+  :hook (prog-mode . flymake-mode)
   :init
   (setq-default flymake-diagnostic-functions nil)
   (with-eval-after-load 'flymake-proc
