@@ -144,7 +144,8 @@
   :mode ("/\\(?:app\\|sys\\)\\.config\\'" . erlang-mode)
   :hook (erlang-mode . lsp-deferred)
   :config
-  ;; (setq inferior-erlang-machine "rebar3")
+  (setq erlang-indent-level 2)
+  (setq inferior-erlang-machine "rebar3")
   ;; (setq inferior-erlang-machine-options '("shell"))
   ;; (setq inferior-erlang-shell-type nil)
   (setq lsp-lens-enable nil)

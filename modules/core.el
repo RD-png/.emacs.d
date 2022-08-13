@@ -52,8 +52,7 @@
   :defer 2
   :config
   (setq gcmh-auto-idle-delay-factor 10
-        gcmh-high-cons-threshold (* 32 1024 1024)
-        gcmh-verbose t)
+        gcmh-high-cons-threshold (* 32 1024 1024))
   (gcmh-mode 1))
 
 
