@@ -1,5 +1,9 @@
 ;;; my-langs.el -*- lexical-binding: t; -*-
 
+(use-package prog-mode
+  :straight (prog-mode :type built-in)
+  :hook (prog-mode . display-fill-column-indicator-mode))
+
 (use-package php-mode
   :straight t
   :mode "\\.php\\'"
@@ -99,8 +103,9 @@
   :straight (emacs-lisp-mode :type built-in)
   :hook (lisp-mode . emacs-lisp-mode)
   :init
-  (set-company-backend! 'emacs-lisp-mode
-    '(company-elisp :with company-yasnippet company-files)))
+  (if (package-installed-p 'company-mode)
+      (set-company-backend! 'emacs-lisp-mode
+                            '(company-elisp :with company-yasnippet company-files))))
 
 (use-package scheme-mode
   :straight (scheme-mode :type built-in)

@@ -73,7 +73,6 @@
           (bg-alt . "#E8E8E8")))
   (load-theme 'modus-operandi t))
 
-
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
   :config
@@ -97,7 +96,7 @@
 
 (use-package doom-modeline
   :straight t
-  ;; :disabled t
+  :disabled t
   :custom
   (doom-modeline-height 10)
   :config
@@ -130,7 +129,7 @@
 
 (use-package nano-modeline
   :straight t
-  :disabled t
+  ;; :disabled t
   :config
   (setq nano-modeline-prefix 'status)
   (setq nano-modeline-prefix-padding 1)

@@ -33,6 +33,6 @@
 
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
   :init
-  (corfu-global-mode))
+  (global-corfu-mode))
 
 (provide 'my-corfu)
