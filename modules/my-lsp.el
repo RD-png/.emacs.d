@@ -85,13 +85,14 @@
                   (lsp--info "Could not guess project root."))))
             #'+lsp-optimization-mode)
 
-  (add-hook 'lsp-completion-mode-hook
+  (if (package-installed-p 'company-mode)
+      (add-hook 'lsp-completion-mode-hook
             (defun +lsp-init-company-backends-h ()
               (when lsp-completion-mode
                 (set (make-local-variable 'company-backends)
                      (cons +lsp-company-backends
                            (remove +lsp-company-backends
-                                   (remq 'company-capf company-backends)))))))
+                                   (remq 'company-capf company-backends))))))))
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
 

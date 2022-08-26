@@ -30,11 +30,10 @@
 
 (use-package modus-themes
   :straight t
-  :config
-  ;; Override default face
-  (custom-theme-set-faces
-   'modus-operandi
-   '(vertico-current ((t (:background "light blue")))))
+  ;; :config
+  ;; (custom-theme-set-faces
+  ;;  'modus-operandi
+  ;;  '(vertico-current ((t (:background "light blue")))))
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -71,7 +70,7 @@
           ;; (bg-main . "#FFFFE8")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
-  (load-theme 'modus-operandi t))
+  (load-theme 'modus-vivendi t))
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
@@ -124,7 +123,7 @@
   (doom-modeline-def-modeline 'pdf
     '(bar window-number pdf-pages buffer-info)
     '(misc-info matches major-mode process vcs))
-  :init  
+  :init
   (doom-modeline-mode +1))
 
 (use-package nano-modeline
@@ -180,13 +179,13 @@
                       :inherit '(nano-modeline-inactive-secondary))
   (set-face-attribute 'nano-modeline-inactive-status-RO nil
                       :inherit '(nano-modeline-inactive-secondary))
-  
+
   ;; (set-face-attribute 'window-divider nil
   ;;                     :foreground (face-background 'default))
-  
+
   ;; (set-face-attribute 'window-divider-first-pixel nil
   ;;                     :foreground (face-background 'default))
-  
+
   ;; (set-face-attribute 'window-divider-last-pixel nil
   ;;                     :foreground (face-background 'default))
   :init

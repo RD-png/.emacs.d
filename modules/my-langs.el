@@ -2,7 +2,8 @@
 
 (use-package prog-mode
   :straight (prog-mode :type built-in)
-  :hook (prog-mode . display-fill-column-indicator-mode))
+  :hook (prog-mode . display-fill-column-indicator-mode)
+  :hook (before-save . delete-trailing-whitespace))
 
 (use-package php-mode
   :straight t
