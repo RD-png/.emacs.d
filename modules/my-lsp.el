@@ -6,7 +6,6 @@
 (defvar +lsp--default-read-process-output-max nil)
 (defvar +lsp--default-gcmh-high-cons-threshold nil)
 (defvar +lsp--optimization-init-p nil)
-(defvar +lsp-company-backends '(:separate company-capf company-yasnippet))
 
 (define-minor-mode +lsp-optimization-mode
   "Deploys universal GC and IPC optimizations for `lsp-mode'."
@@ -84,15 +83,6 @@
                     (lsp--info "Guessed project root is %s" (abbreviate-file-name root))
                   (lsp--info "Could not guess project root."))))
             #'+lsp-optimization-mode)
-
-  (if (package-installed-p 'company-mode)
-      (add-hook 'lsp-completion-mode-hook
-            (defun +lsp-init-company-backends-h ()
-              (when lsp-completion-mode
-                (set (make-local-variable 'company-backends)
-                     (cons +lsp-company-backends
-                           (remove +lsp-company-backends
-                                   (remq 'company-capf company-backends))))))))
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
 

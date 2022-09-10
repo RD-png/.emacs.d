@@ -103,10 +103,8 @@
 (use-package emacs-lisp-mode
   :straight (emacs-lisp-mode :type built-in)
   :hook (lisp-mode . emacs-lisp-mode)
-  :init
-  (if (package-installed-p 'company-mode)
-      (set-company-backend! 'emacs-lisp-mode
-                            '(company-elisp :with company-yasnippet company-files))))
+  :hook (company-mode . (lambda () (set-company-backend! 'emacs-lisp-mode
+                                                         '(company-elisp :with company-yasnippet company-files)))))
 
 (use-package scheme-mode
   :straight (scheme-mode :type built-in)

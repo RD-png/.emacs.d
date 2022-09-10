@@ -1,6 +1,8 @@
 ;;; my-company.el -*- lexical-binding: t; -*-
 ;; Borrow dooms company config.
 
+(defvar +lsp-company-backends '(:separate company-capf company-yasnippet))
+
 (defvar +company-backend-alist
   '((text-mode (:separate company-dabbrev company-yasnippet company-ispell))
     (prog-mode company-capf company-yasnippet)
@@ -61,6 +63,14 @@ Examples:
   :straight t
   :bind (:map company-active-map
               ("<tab>" . company-complete-selection))
+  :config
+  (add-hook 'lsp-completion-mode-hook
+            (defun +lsp-init-company-backends-h ()
+              (when lsp-completion-mode
+                (set (make-local-variable 'company-backends)
+                     (cons +lsp-company-backends
+                           (remove +lsp-company-backends
+                                   (remq 'company-capf company-backends)))))))
   :init
   (setq company-minimum-prefix-length 2
         company-idle-delay 0.01
