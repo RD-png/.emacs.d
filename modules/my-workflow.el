@@ -61,14 +61,6 @@
   :init
   (global-git-gutter-mode +1))
 
-(use-package git-gutter-fringe
-  :straight t
-  :config
-  (setq-default fringes-outside-margins t)
-  (define-fringe-bitmap 'git-gutter-fr:added [0] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [0] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
-
 (use-package pdf-tools
   :straight t
   :mode ("\\.pdf\\'" . pdf-view-mode)

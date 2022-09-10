@@ -28,8 +28,8 @@
 
 
 ;;; Line Numbers.
-(setq-default display-line-numbers-width 3)
-(setq-default display-line-numbers-widen t)
+;; (setq-default display-line-numbers-width 1)
+;; (setq-default display-line-numbers-widen t)
 (dolist (mode '(prog-mode-hook conf-mode-hook))
   (add-hook mode #'display-line-numbers-mode))
 
