@@ -40,7 +40,8 @@
   :init
   (setq register-preview-delay 0
         register-preview-function #'consult-register-format)
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
+  ;; (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+  )
 
 (use-package consult-dir
   :straight t
