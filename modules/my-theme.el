@@ -30,7 +30,6 @@
 
 (use-package modus-themes
   :straight t
-  :disabled t
   ;; :config
   ;; (custom-theme-set-faces
   ;;  'modus-operandi
@@ -71,17 +70,7 @@
           ;; (bg-main . "#FFFFE8")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
-  (load-theme 'modus-vivendi t))
-
-(use-package base16-theme
-  :straight t
-  :config
-  (custom-theme-set-faces
-   'base16-gruvbox-dark-hard
-   '(fringe ((t (:background "#1d2021"))))
-   '(line-number ((t (:background "#1d2021")))))
-  :init
-  (load-theme 'base16-gruvbox-dark-hard t))
+  (load-theme 'modus-operandi t))
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
@@ -139,7 +128,6 @@
 
 (use-package nano-modeline
   :straight t
-  ;; :disabled t
   :config
   (setq nano-modeline-prefix 'status)
   (setq nano-modeline-prefix-padding 1)
