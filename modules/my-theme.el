@@ -30,10 +30,10 @@
 
 (use-package modus-themes
   :straight t
-  ;; :config
-  ;; (custom-theme-set-faces
-  ;;  'modus-operandi
-  ;;  '(vertico-current ((t (:background "light blue")))))
+  :config
+  (custom-theme-set-faces
+   'modus-operandi
+   '(vertico-current ((t (:background "light blue")))))
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -95,7 +95,7 @@
 
 (use-package doom-modeline
   :straight t
-  :disabled t
+  ;; :disabled t
   :custom
   (doom-modeline-height 10)
   :config
@@ -128,6 +128,7 @@
 
 (use-package nano-modeline
   :straight t
+  :disabled t
   :config
   (setq nano-modeline-prefix 'status)
   (setq nano-modeline-prefix-padding 1)

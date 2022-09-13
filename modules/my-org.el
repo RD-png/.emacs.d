@@ -205,6 +205,8 @@
    org-pretty-entities t
    org-ellipsis "…"
 
+   org-modern-block-fringe nil
+
    ;; Agenda styling
    org-agenda-block-separator ?─
    org-agenda-time-grid

@@ -35,6 +35,7 @@
 
 (use-package git-gutter
   :straight t
+  :hook (prog-mode . git-gutter-mode)
   :config
   (setq git-gutter:disabled-modes '(fundamental-mode image-mode pdf-view-mode))
   (setq git-gutter:handled-backends
@@ -57,9 +58,7 @@
   ("C-c C-v g" . git-gutter:update-all-windows)
   ("C-c C-v d" . git-gutter:popup-hunk)
   ("C-c C-v e" . git-gutter:end-of-hunk)
-  ("C-c C-v a" . git-gutter:start-of-hunk)
-  :init
-  (global-git-gutter-mode +1))
+  ("C-c C-v a" . git-gutter:start-of-hunk))
 
 (use-package pdf-tools
   :straight t
