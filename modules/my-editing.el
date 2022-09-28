@@ -77,10 +77,12 @@
   (setq flymake-start-on-flymake-mode t
         flymake-start-on-save-buffer t))
 
-(use-package flymake-diagnostic-at-point
+(use-package flymake-popon
   :straight t
   :after flymake
-  :hook (flymake-mode . flymake-diagnostic-at-point-mode))
+  :config
+  (setq flymake-popon-delay 0.66)
+  :hook (flymake-mode . flymake-popon-mode))
 
 (use-package flyspell
   :straight (flyspell :type built-in)
