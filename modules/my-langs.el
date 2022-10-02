@@ -88,8 +88,34 @@
   :straight t
   :mode ("\\.hs\\'")
   :hook (haskell-mode . lsp-deferred)
+  :hook (haskell-mode . dumb-jump-mode)
+  :bind (:map haskell-mode-map
+              ("C-c C-c" . haskell-compile))
   :config
-  (setq haskell-process-type 'cabal-repl))
+   (setq haskell-process-suggest-remove-import-lines t
+         haskell-process-auto-import-loaded-modules t
+         haskell-process-type 'cabal-repl)
+  :preface
+  (defconst haskell-unicode-conversions
+  '(("[ (]\\(\\.\\)[) ]"       . ?∘)
+    ("[ (]\\(\\\\\\)[(_a-z]"   . ?λ)
+    ("[ (]\\(\\<not\\>\\)[ )]" . ?¬)))
+  (defun haskell-setup-unicode-conversions ()
+  (mapc (lambda (mode)
+            (font-lock-add-keywords
+             mode
+             (append (mapcar (lambda (chars)
+                               `(,(car chars)
+                                 ,(if (characterp (cdr chars))
+                                      `(0 (ignore
+                                           (compose-region (match-beginning 1)
+                                                           (match-end 1)
+                                                           ,(cdr chars))))
+                                    `(0 ,(cdr chars)))))
+                             haskell-unicode-conversions))))
+          '(haskell-mode literate-haskell-mode)))
+  :init
+  (haskell-setup-unicode-conversions))
 
 (use-package typescript-mode
   :straight t
@@ -150,8 +176,6 @@
   :config
   (setq erlang-indent-level 2)
   (setq inferior-erlang-machine "rebar3")
-  ;; (setq inferior-erlang-machine-options '("shell"))
-  ;; (setq inferior-erlang-shell-type nil)
   (setq lsp-lens-enable nil)
   :bind (:map erlang-mode-map
               ("C-c C-c" . erlang-compile)))
@@ -160,6 +184,10 @@
   :straight t
   :mode ("\\.ml$" . tuareg-mode)
   :hook (tuareg-mode . lsp-deferred))
+
+(use-package yaml-mode
+  :straight t
+  :mode ("\\.yaml$" . yaml-mode))
 
 (use-package latex
   :straight (latex :type built-in)

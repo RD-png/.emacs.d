@@ -112,13 +112,11 @@ server getting expensively restarted when reverting buffers."
                                        (+lsp-optimization-mode -1))))
            lsp--cur-workspace))))
 
-(use-package lsp-volar
-  :straight (lsp-volar :host github :repo "jadestrong/lsp-volar")
-  :disabled t)
-
 (use-package lsp-haskell
   :straight t
   :hook (haskell-mode . lsp-deferred)
+  :bind (:map haskell-mode-map
+              ([remap my/lsp-format-buffer] . haskell-mode-stylish-buffer))
   :config
   (setq lsp-haskell-plugin-ghcide-type-lenses-global-on nil)
   :custom
