@@ -2,8 +2,13 @@
 
 (use-package prog-mode
   :straight (prog-mode :type built-in)
+  :hook (prog-mode . display-line-numbers-mode)
   :hook (prog-mode . display-fill-column-indicator-mode)
   :hook (before-save . delete-trailing-whitespace))
+
+(use-package conf-mode
+  :straight (conf-mode :type built-in)
+  :hook (conf-mode . display-line-numbers-mode))
 
 (use-package php-mode
   :straight t
