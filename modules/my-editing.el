@@ -181,12 +181,12 @@
 ;;;###autoload
 (defun multi-line-next ()
   (interactive)
-  (forward-line 10))
+  (forward-line 5))
 
 ;;;###autoload
 (defun multi-line-prev ()
   (interactive)
-  (forward-line -10))
+  (forward-line -5))
 
 ;; General binds
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))

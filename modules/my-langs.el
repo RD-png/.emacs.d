@@ -95,7 +95,8 @@
   :hook (haskell-mode . lsp-deferred)
   :hook (haskell-mode . dumb-jump-mode)
   :bind (:map haskell-mode-map
-              ("C-c C-c" . haskell-compile))
+              ("C-c C-c" . haskell-compile)
+              ([remap my/lsp-format-buffer] . haskell-mode-stylish-buffer))
   :config
    (setq haskell-process-suggest-remove-import-lines t
          haskell-process-auto-import-loaded-modules t
@@ -180,6 +181,7 @@
   :hook (erlang-mode . lsp-deferred)
   :config
   (setq erlang-indent-level 2)
+  (setq erlang-indent-guard 0)
   (setq inferior-erlang-machine "rebar3")
   (setq lsp-lens-enable nil)
   :bind (:map erlang-mode-map
