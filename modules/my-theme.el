@@ -42,7 +42,7 @@
          modus-themes-variable-pitch-headings nil
          modus-themes-intense-paren-match t
          modus-themes-diffs 'desaturated
-         modus-themes-syntax '(alt-syntax green-strings yellow-comments)
+         modus-themes-syntax '(green-strings yellow-comments)
          modus-themes-links '(faint neutral-underline)
          modus-themes-hl-line '(intense)
          modus-themes-prompts '(bold background)
@@ -68,7 +68,7 @@
   (setq modus-themes-operandi-color-overrides
         '((fg-comment-yellow . "Firebrick")
           ;; (bg-main . "#FFFFE8")
-          (bg-main . "#FDF6E3")
+          (bg-main . "#f4f0ec")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
   (load-theme 'modus-operandi t))
