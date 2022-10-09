@@ -1,5 +1,21 @@
 ;;; my-langs.el -*- lexical-binding: t; -*-
 
+;;;###autoload
+(defun mode-unicode-conversions (modes unicode-chars)
+  (mapc (lambda (mode)
+            (font-lock-add-keywords
+             mode
+             (append (mapcar (lambda (chars)
+                               `(,(car chars)
+                                 ,(if (characterp (cdr chars))
+                                      `(0 (ignore
+                                           (compose-region (match-beginning 1)
+                                                           (match-end 1)
+                                                           ,(cdr chars))))
+                                    `(0 ,(cdr chars)))))
+                             unicode-chars))))
+        modes))
+
 (use-package prog-mode
   :straight (prog-mode :type built-in)
   :hook (prog-mode . display-line-numbers-mode)
@@ -106,22 +122,8 @@
   '(("[ (]\\(\\.\\)[) ]"       . ?∘)
     ("[ (]\\(\\\\\\)[(_a-z]"   . ?λ)
     ("[ (]\\(\\<not\\>\\)[ )]" . ?¬)))
-  (defun haskell-setup-unicode-conversions ()
-  (mapc (lambda (mode)
-            (font-lock-add-keywords
-             mode
-             (append (mapcar (lambda (chars)
-                               `(,(car chars)
-                                 ,(if (characterp (cdr chars))
-                                      `(0 (ignore
-                                           (compose-region (match-beginning 1)
-                                                           (match-end 1)
-                                                           ,(cdr chars))))
-                                    `(0 ,(cdr chars)))))
-                             haskell-unicode-conversions))))
-          '(haskell-mode literate-haskell-mode)))
   :init
-  (haskell-setup-unicode-conversions))
+  (mode-unicode-conversions '(haskell-mode haskell-literate-mode) haskell-unicode-conversions))
 
 (use-package typescript-mode
   :straight t
