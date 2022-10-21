@@ -183,7 +183,8 @@
   :hook (erlang-mode . lsp-deferred)
   :config
   (setq erlang-indent-level 2)
-  (setq erlang-indent-guard 0)
+  (setq erlang-indent-guard 2)
+  (setq erlang-icr-indent 0)
   (setq inferior-erlang-machine "rebar3")
   (setq lsp-lens-enable nil)
   :bind (:map erlang-mode-map
