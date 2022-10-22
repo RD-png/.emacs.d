@@ -123,7 +123,7 @@ possible."
 (setq-default indent-tabs-mode nil
               tab-width 4)
 (setq tabify-regexp "^\t* [ \t]+")
-(setq-default fill-column 80)
+(setq-default fill-column 77)
 (setq-default word-wrap t)
 (setq-default truncate-lines t)
 (setq truncate-partial-width-windows nil)
