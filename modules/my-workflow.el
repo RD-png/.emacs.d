@@ -41,13 +41,15 @@
   (setq git-gutter:handled-backends
         (cons 'git (cl-remove-if-not #'executable-find (list 'hg 'svn 'bzr)
                                      :key #'symbol-name)))
-  (setq git-gutter:update-interval 0.02)
   (defun git-gutter:start-of-hunk ()
     "Move to end of current diff hunk"
     (interactive)
     (git-gutter:awhen (git-gutter:search-here-diffinfo git-gutter:diffinfos)
       (let ((lines (- (git-gutter-hunk-start-line it) (line-number-at-pos))))
         (forward-line lines))))
+  (setq git-gutter:added-sign " ")
+  (setq git-gutter:deleted-sign " ")
+  (setq git-gutter:modified-sign " ")
   :bind
   ("C-c C-v t" . git-gutter-mode)
   ("C-c C-v r" . git-gutter:revert-hunk)
