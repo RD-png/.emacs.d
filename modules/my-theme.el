@@ -42,16 +42,20 @@
          modus-themes-variable-pitch-headings nil
          modus-themes-intense-paren-match t
          modus-themes-diffs 'desaturated
+         modus-themes-lang-checkers '(straight-underline)
          modus-themes-syntax '(green-strings yellow-comments)
          modus-themes-links '(faint neutral-underline)
          modus-themes-hl-line '(intense)
          modus-themes-prompts '(bold background)
-         modus-themes-mode-line '(accented borderless)
+         modus-themes-mode-line '(3d accented borderless)
          modus-themes-subtle-line-numbers t
          modus-themes-tabs-accented t
          modus-themes-inhibit-reload t
-         modus-themes-paren-match '(underline)
+         modus-themes-paren-match '(underline intense)
          modus-themes-region '(no-extend accented bg-only)
+         modus-themes-completions '((matches . (extrabold))
+                                    (selection . (semibold accented))
+                                    (popup . (accented faint)))
          modus-themes-org-agenda
          '((header-block . (variable-pitch scale-title))
            (header-date . (bold-today grayscale scale))

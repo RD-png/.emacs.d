@@ -63,7 +63,7 @@
 (require 'my-doom)
 (require 'core)
 (require 'ui)
-(require 'my-tree-sitter)
+;; (require 'my-tree-sitter)
 (require 'my-vertico)
 (require 'my-corfu)
 ;; (require 'my-company)
