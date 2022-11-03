@@ -151,11 +151,6 @@
           (save-excursion
             (setq backword (buffer-substring (point) (progn (forward-word -1) (point)))))
           (save-excursion
-            (message (thing-at-point 'no-properties))
-            (when (and backword
-                       (string-match-p " " backword))
-              (setq space-pos (ignore-errors (search-backward " ")))))
-          (save-excursion
             (let* ((pos (ignore-errors (search-backward-regexp "\n")))
                    (substr (when pos (buffer-substring pos cp))))
               (when (or (and substr (string-blank-p (string-trim substr)))
