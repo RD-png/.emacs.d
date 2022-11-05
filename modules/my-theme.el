@@ -25,7 +25,6 @@
 (setq custom-safe-themes t)
 (setq custom--inhibit-theme-enable nil)
 (setq x-underline-at-descent-line t)
-
 (set-face-attribute 'cursor nil :background "IndianRed3")
 
 (use-package modus-themes
@@ -33,7 +32,8 @@
   :config
   (custom-theme-set-faces
    'modus-operandi
-   '(vertico-current ((t (:background "light blue")))))
+   '(vertico-current ((t (:background "light blue"))))
+   '(fill-column-indicator ((t (:foreground "light blue")))))
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale

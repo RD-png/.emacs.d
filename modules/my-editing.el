@@ -184,6 +184,7 @@
   (forward-line -5))
 
 ;; General binds
+(global-set-key (kbd "C-x f") #'find-file)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
 (global-set-key (kbd "C-x c r") (lambda () (interactive) (find-file "~/.config/emacs/org/Roam/")))
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
