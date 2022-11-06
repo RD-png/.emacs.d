@@ -16,6 +16,7 @@
   (persp-modestring-short t)
   (persp-modestring-dividers '("<" ">" ""))
   (doom-modeline-persp-name t)
+  (persp-suppress-no-prefix-key-warning t)
   :init
   (persp-mode))
 

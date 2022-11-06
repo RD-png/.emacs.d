@@ -29,11 +29,6 @@
 
 (use-package modus-themes
   :straight t
-  :config
-  (custom-theme-set-faces
-   'modus-operandi
-   '(vertico-current ((t (:background "light blue"))))
-   '(fill-column-indicator ((t (:foreground "light blue")))))
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -184,15 +179,6 @@
                       :inherit '(nano-modeline-inactive-secondary))
   (set-face-attribute 'nano-modeline-inactive-status-RO nil
                       :inherit '(nano-modeline-inactive-secondary))
-
-  ;; (set-face-attribute 'window-divider nil
-  ;;                     :foreground (face-background 'default))
-
-  ;; (set-face-attribute 'window-divider-first-pixel nil
-  ;;                     :foreground (face-background 'default))
-
-  ;; (set-face-attribute 'window-divider-last-pixel nil
-  ;;                     :foreground (face-background 'default))
   :init
   (nano-modeline-mode 1))
 

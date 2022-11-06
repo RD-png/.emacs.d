@@ -65,6 +65,13 @@
 ;;; Built-in.
 (setq ansi-color-for-comint-mode t)
 
+(use-package display-fill-column-indicator
+  :straight (display-fill-column-indicator :type built-in)
+  :config
+  (setq-default fill-column 77)
+  :custom-face
+  (fill-column-indicator ((t (:background "light blue")))))
+
 (use-package comint
   :straight (comint :type built-in)
   :config
