@@ -190,7 +190,8 @@
   (setq inferior-erlang-machine "rebar3")
   (setq lsp-lens-enable nil)
   :bind (:map erlang-mode-map
-              ("C-c C-c" . erlang-compile)))
+              ("C-c C-c" . erlang-compile)
+              ([remap erlang-electric-newline] . newline-and-indent)))
 
 (use-package tuareg
   :straight t
