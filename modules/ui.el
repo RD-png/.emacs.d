@@ -68,7 +68,7 @@
 (use-package display-fill-column-indicator
   :straight (display-fill-column-indicator :type built-in)
   :config
-  (setq-default fill-column 77)
+  (setq-default fill-column 78)
   :custom-face
   (fill-column-indicator ((t (:background "light blue")))))
 
