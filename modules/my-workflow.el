@@ -36,6 +36,10 @@
 (use-package git-gutter
   :straight t
   :hook (prog-mode . git-gutter-mode)
+  ;; :custom-face
+  ;; (git-gutter:added ((t (:background "green4"))))
+  ;; (git-gutter:modified ((t (:background "goldenrod3"))))
+  ;; (git-gutter:deleted ((t (:background "salmon3"))))
   :config
   (setq git-gutter:disabled-modes '(fundamental-mode image-mode pdf-view-mode))
   (setq git-gutter:handled-backends

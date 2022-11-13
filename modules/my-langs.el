@@ -77,9 +77,7 @@
 (use-package nix-mode
   :straight t
   :mode "\\.nix\\'"
-  :hook (nix-mode . lsp-deferred)
-  :config
-  (setq lsp-nix-server-path "nil"))
+  :hook (nix-mode . lsp-deferred))
 
 (use-package nix-update
   :straight t

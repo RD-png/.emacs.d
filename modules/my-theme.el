@@ -1,13 +1,13 @@
 ;;; my-theme.el -*- lexical-binding: t; -*-
 
 ;;; Font.
-(defvar default-font-size 120)
-(defvar default-variable-font-size 120)
+(defvar default-font-size 110)
+(defvar default-variable-font-size 110)
 (set-face-attribute 'default nil
                     :font "Fantasque Sans Mono"
+
                     :foundry "PfEd"
                     :slant 'normal
-                    :weight 'normal
                     :width 'normal
                     :height default-font-size)
 
@@ -29,6 +29,7 @@
 
 (use-package modus-themes
   :straight t
+  ;; :disabled t
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -70,7 +71,7 @@
           (bg-main . "#f4f0ec")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
-  (load-theme 'modus-vivendi t))
+  (load-theme 'modus-operandi t))
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
