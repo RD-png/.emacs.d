@@ -232,6 +232,9 @@ possible."
 
 (use-package smartparens
   :straight t
+  :bind
+  ("C-M-w" . sp-copy-sexp)
+  ("C-M-k" . sp-kill-sexp)
   :config
   (setq sp-highlight-pair-overlay nil
         sp-highlight-wrap-overlay nil

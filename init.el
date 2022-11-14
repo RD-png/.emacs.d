@@ -58,15 +58,14 @@
 (require 'use-package)
 (require 'straight-x)
 
-
 ;;; Core Modules.
 (require 'my-doom)
 (require 'core)
 (require 'ui)
 ;; (require 'my-tree-sitter)
 (require 'my-vertico)
-(require 'my-corfu)
-;; (require 'my-company)
+;; (require 'my-corfu)
+(require 'my-company)
 (require 'my-orderless)
 (require 'my-completion)
 (require 'my-consult)
