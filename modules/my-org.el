@@ -58,6 +58,10 @@
   :hook ((org-mode . org-mode-setup)
          (org-mode . visual-fill-column-mode))
   :config
+  (setq org-edit-src-content-indentation 0
+        org-src-tab-acts-natively t
+        org-src-preserve-indentation t)
+
   (with-eval-after-load 'org
     (org-babel-do-load-languages
      'org-babel-load-languages
