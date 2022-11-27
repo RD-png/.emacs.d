@@ -71,7 +71,7 @@
           (bg-main . "#f4f0ec")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
-  (load-theme 'modus-operandi t))
+  (load-theme 'modus-vivendi t))
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
@@ -96,7 +96,7 @@
 
 (use-package doom-modeline
   :straight t
-  ;; :disabled t
+  :disabled t
   :custom
   (doom-modeline-height 10)
   :config
@@ -182,5 +182,19 @@
                       :inherit '(nano-modeline-inactive-secondary))
   :init
   (nano-modeline-mode 1))
+
+(use-package smart-mode-line
+  :straight t
+  :commands sml/setup
+  :init
+  (setq sml/theme nil)
+  (sml/setup)
+  :config
+  (setq mode-line-default-help-echo nil
+        show-help-function nil)
+  (use-package minions
+    :init
+    (minions-mode +1))
+  (add-to-list 'sml/replacer-regexp-list '("^~/[dD]ocuments/[rR]oam.*/" ":ROAM:")))
 
 (provide 'my-theme)

@@ -1,15 +1,22 @@
 ;;; my-navigation.el -*- lexical-binding: t; -*-
 
-(use-package better-jumper
-  :straight t
-  :preface
-  (defvar  better-jumper-local-mode nil)
+(use-package point-history
+  :straight (point-history :host github :repo "blue0513/point-history")
   :bind
-  ("C-c h r" . better-jumper-set-jump)
-  ("C-c h f" . better-jumper-jump-forward)
-  ("C-c h b" . better-jumper-jump-backward)
+  ("C-c h" . point-history-show)
+  (:map point-history-show-mode-map
+        ("q" . point-history-close))
+  :config
+  (setq point-history-save-timer 5)
+  (setq point-history-show-buffer-height 20)
+  (setq point-history-ignore-buffer "\\*.*\\*")
+  (defun point-history-set-point ()
+    (interactive)
+    (point-history--update-list!))
+  (advice-add 'consult-ripgrep :before 'point-history-set-point)
+  (advice-add 'consult-line :before 'point-history-set-point)
   :init
-  (better-jumper-mode +1))
+  (point-history-mode t))
 
 (use-package wgrep
   :straight t

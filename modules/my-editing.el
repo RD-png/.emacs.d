@@ -3,9 +3,18 @@
 (use-package embrace
   :straight t
   :bind
-  ("M-s a" . embrace-add)
-  ("M-s c" . embrace-change)
-  ("M-s d" . embrace-delete))
+  ("C-c c a" . embrace-add)
+  ("C-c c c" . embrace-change)
+  ("C-c c d" . embrace-delete))
+
+(use-package isearch
+  :straight (isearch :type built-in)
+  :bind
+  ("M-s" . isearch-forward-thing-at-point)
+  ("M-r" . isearch-forward-thing-at-point)
+  :config
+  (define-key isearch-mode-map (kbd "M-s") 'isearch-repeat-forward)
+  (define-key isearch-mode-map (kbd "M-r") 'isearch-repeat-backward))
 
 (use-package expand-region
   :straight t
@@ -240,9 +249,5 @@ If the next line is joined to the current line, kill the extra indent whitespace
 
 (advice-add 'split-window-below :after #'pils-follow)
 (advice-add 'split-window-right :after #'pils-follow)
-
-(advice-add 'find-function :before 'better-jumper-set-jump)
-(advice-add 'consult-ripgrep :before 'better-jumper-set-jump)
-(advice-add 'consult-line :before 'better-jumper-set-jump)
 
 (provide 'my-editing)

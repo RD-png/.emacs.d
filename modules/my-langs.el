@@ -181,11 +181,12 @@
   :mode ("/rebar\\.config\\(?:\\.script\\)?\\'" . erlang-mode)
   :mode ("/\\(?:app\\|sys\\)\\.config\\'" . erlang-mode)
   :hook (erlang-mode . lsp-deferred)
+  :hook (erlang-mode . erlang-edoc-mode)
   :config
   (setq erlang-indent-level 2)
   (setq erlang-indent-guard 2)
   (setq erlang-icr-indent 2)
-  (setq inferior-erlang-machine "rebar3")
+  ;; (setq inferior-erlang-machine "rebar3")
   (setq lsp-lens-enable nil)
   :bind (:map erlang-mode-map
               ("C-c C-c" . erlang-compile)
