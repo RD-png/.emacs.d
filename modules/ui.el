@@ -168,10 +168,10 @@
 
 (use-package popper
   :straight t
-  :bind (("C-c C-." . popper-toggle-latest)
-         ("C-c M-." . popper-kill-latest-popup)
-         ("C-c C-/" . popper-cycle)
-         ("C-c C-;" . popper-toggle-type))
+  :bind (("C-x C-." . popper-toggle-latest)
+         ("C-x M-." . popper-kill-latest-popup)
+         ("C-x C-/" . popper-cycle)
+         ("C-x C-;" . popper-toggle-type))
   :init
   (setq popper-window-height 15
         popper-mode-line nil)

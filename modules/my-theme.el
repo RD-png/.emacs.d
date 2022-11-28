@@ -71,7 +71,7 @@
           (bg-main . "#f4f0ec")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
-  (load-theme 'modus-vivendi t))
+  (load-theme 'modus-operandi t))
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
