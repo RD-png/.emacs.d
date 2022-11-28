@@ -190,9 +190,12 @@
   (setq sml/theme nil)
   (sml/setup)
   :config
+  (setq sml/show-file-name nil)
   (setq mode-line-default-help-echo nil
         show-help-function nil)
   (use-package minions
+    :custom
+    (minions-prominent-modes '(flymake-mode))
     :init
     (minions-mode +1))
   (add-to-list 'sml/replacer-regexp-list '("^~/[dD]ocuments/[rR]oam.*/" ":ROAM:")))
