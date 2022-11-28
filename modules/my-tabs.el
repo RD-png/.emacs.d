@@ -69,7 +69,7 @@
 
   :bind-keymap ("C-c t" . tab-prefix-map)
   :bind
-  ("C-c C-'" . tab-bar-switch-to-recent-tab)
+  ("C-x C-'" . tab-bar-switch-to-recent-tab)
   (:map tab-prefix-map
         ("n" . tab-bar-switch-to-next-tab)
         ("p" . tab-bar-switch-to-prev-tab)

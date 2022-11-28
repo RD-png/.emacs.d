@@ -8,7 +8,7 @@
          ("C-x p n" . persp-next)
          ("C-x p p" . persp-prev)
          ("C-x p r" . persp-rename)
-         ("C-c C-'" . persp-switch-last)
+         ("C-x C-'" . persp-switch-last)
          ("C-x C-b" . persp-switch-to-buffer))
   :custom
   (persp-initial-frame-name "Alt")
