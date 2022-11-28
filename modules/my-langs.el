@@ -138,7 +138,12 @@
   :straight (emacs-lisp-mode :type built-in)
   :hook (lisp-mode . emacs-lisp-mode)
   :hook (company-mode . (lambda () (set-company-backend! 'emacs-lisp-mode
-                                                         '(company-elisp :with company-yasnippet company-files)))))
+                                     '(company-elisp :with company-yasnippet company-files))))
+  :preface
+  (defconst elisp-unicode-conversions
+  '(("[ (]\\(\\lambda\\)[) ]"       . ?λ)))
+  :init
+  (mode-unicode-conversions '(emacs-lisp-mode) elisp-unicode-conversions))
 
 (use-package scheme-mode
   :straight (scheme-mode :type built-in)
