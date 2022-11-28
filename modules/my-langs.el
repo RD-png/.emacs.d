@@ -182,15 +182,15 @@
   :mode ("/\\(?:app\\|sys\\)\\.config\\'" . erlang-mode)
   :hook (erlang-mode . lsp-deferred)
   :hook (erlang-mode . erlang-edoc-mode)
+  :bind (:map erlang-mode-map
+              ("C-c m s" . erlang-shell)
+              ("C-c C-c" . recompile)
+              ([remap erlang-electric-newline] . newline-and-indent))
   :config
   (setq erlang-indent-level 2)
   (setq erlang-indent-guard 2)
   (setq erlang-icr-indent 2)
-  ;; (setq inferior-erlang-machine "rebar3")
-  (setq lsp-lens-enable nil)
-  :bind (:map erlang-mode-map
-              ("C-c C-c" . erlang-compile)
-              ([remap erlang-electric-newline] . newline-and-indent)))
+  (setq lsp-lens-enable nil))
 
 (use-package tuareg
   :straight t

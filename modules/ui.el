@@ -85,6 +85,7 @@
         compilation-ask-about-save nil
         compilation-scroll-output 'first-error)
   (autoload 'comint-truncate-buffer "comint" nil t)
+  (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
   (add-hook 'compilation-filter-hook #'comint-truncate-buffer))
 
 (use-package window
