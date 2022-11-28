@@ -183,13 +183,18 @@
   :hook (erlang-mode . lsp-deferred)
   :hook (erlang-mode . erlang-edoc-mode)
   :bind (:map erlang-mode-map
-              ("C-c m s" . erlang-shell)
+              ("C-c m s" . erlang-shell-rebar)
               ("C-c C-c" . recompile)
               ([remap erlang-electric-newline] . newline-and-indent))
   :config
+  (defun erlang-shell-rebar ()
+    (interactive)
+    (let ((default-directory (project-root (project-current t))))
+      (inferior-erlang "make dev")))
   (setq erlang-indent-level 2)
   (setq erlang-indent-guard 2)
   (setq erlang-icr-indent 2)
+  (setq inferior-erlang-machine-options '("-sname" "emacs"))
   (setq lsp-lens-enable nil))
 
 (use-package tuareg
