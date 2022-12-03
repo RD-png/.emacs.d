@@ -29,7 +29,7 @@
 
 (use-package modus-themes
   :straight t
-  ;; :disabled t
+  :disabled t
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -72,6 +72,13 @@
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
   (load-theme 'modus-operandi t))
+
+(use-package standard-themes
+  :straight (standard-themes :host github :repo "protesilaos/standard-themes")
+  :custom-face
+  (default ((t (:background "#f4f0ec"))))
+  :init
+  (load-theme 'standard-light t))
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")

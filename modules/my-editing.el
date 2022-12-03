@@ -192,6 +192,18 @@
   (interactive)
   (forward-line -5))
 
+;;;###autoload
+(defun my/scroll-up ()
+  (interactive)
+  (scroll-up-command)
+  (recenter))
+
+;;;###autoload
+(defun my/scroll-down ()
+  (interactive)
+  (scroll-down-command)
+  (recenter))
+
 ;; General binds
 (global-set-key (kbd "C-x f") #'find-file)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
@@ -213,6 +225,8 @@
 (global-set-key (kbd "C-S-n")  #'multi-line-next)
 (global-set-key (kbd "C-S-p")  #'multi-line-prev)
 (global-set-key [remap org-cycle-agenda-files] 'ignore)
+(global-set-key (kbd "C-v") #'my/scroll-up)
+(global-set-key (kbd "M-v") #'my/scroll-down)
 (bind-key* "C-<backspace>" #'my/backward-kill-word)
 
 
