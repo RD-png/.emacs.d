@@ -59,7 +59,7 @@ server getting expensively restarted when reverting buffers."
 (use-package eldoc
   :straight (eldoc :type built-in)
   :bind
-  ("C-c o d" . eldoc)
+  ("C-c o d" . eldoc-doc-buffer)
   :init
   (global-eldoc-mode))
 
