@@ -64,6 +64,7 @@ server getting expensively restarted when reverting buffers."
   (global-eldoc-mode))
 
 (use-package consult-eglot
-  :straight t)
+  :straight t
+  :defer t)
 
 (provide 'my-eglot)
