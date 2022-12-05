@@ -77,6 +77,7 @@
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
   :custom-face
   (default ((t (:background "#f4f0ec"))))
+  (fringe ((t (:background "#f4f0ec"))))
   :init
   (load-theme 'standard-light t))
 

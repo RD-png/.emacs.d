@@ -195,6 +195,8 @@
            "\\*Completions\\*"
            "\\*devdocs\\*"
            "[Oo]utput\\*"
+           "*eldoc*"
+           "*eldoc *.*$"
            "*helpful command: *.*$"
            "*helpful function: *.*$"
            "*helpful variable: *.*$"

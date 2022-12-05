@@ -26,7 +26,7 @@
          ([remap man] . consult-man)
          ([remap recentf-open-files] . consult-recent-file)
          ([remap switch-to-buffer] . consult-buffer)
-         ("C-M-m" . imenu)
+         ("C-M-m" . consult-imenu)
          ("C-M-S-m" . consult-imenu-multi)
          ("C-M-s" . consult-multi-occur)
          ("C-M-l" . consult-outline)
@@ -48,9 +48,5 @@
   :bind (("C-x C-d" . consult-dir)
          :map minibuffer-local-map
          ("C-x j" . consult-dir-jump-file)))
-
-(use-package consult-lsp
-  :straight t
-  :bind (("C-c o l" . consult-lsp-symbols)))
 
 (provide 'my-consult)

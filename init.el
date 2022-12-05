@@ -72,6 +72,8 @@
 (require 'my-embark)
 (require 'my-navigation)
 (require 'my-lsp)
+;; (require 'my-lsp-mode)
+(require 'my-eglot)
 (require 'my-langs)
 (require 'my-perspective)
 (require 'my-workflow)

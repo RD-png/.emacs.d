@@ -29,7 +29,7 @@
 (use-package php-mode
   :straight t
   :mode "\\.php\\'"
-  :hook (php-mode . lsp-deferred))
+  :hook (php-mode . my/lsp-hook))
 
 (use-package markdown-mode
   :straight t
@@ -50,7 +50,7 @@
 
 (use-package python-mode
   :straight t
-  :hook (python-mode . lsp-deferred)
+  :hook (python-mode . my/lsp-hook)
   :bind (:map python-mode-map
               ([remap lsp-format-buffer] . python-black-buffer))
   :config
@@ -77,7 +77,7 @@
 (use-package nix-mode
   :straight t
   :mode "\\.nix\\'"
-  :hook (nix-mode . lsp-deferred))
+  :hook (nix-mode . my/lsp-hook))
 
 (use-package nix-update
   :straight t
@@ -86,7 +86,7 @@
 (use-package web-mode
   :straight t
   :mode ("\\.vue\\'")
-  :hook (web-mode . lsp-deferred)
+  :hook (web-mode . my/lsp-hook)
   :config
   (setq web-mode-enable-html-entities-fontification t
         web-mode-auto-close-style 1
@@ -108,7 +108,7 @@
 (use-package haskell-mode
   :straight t
   :mode ("\\.hs\\'")
-  :hook (haskell-mode . lsp-deferred)
+  :hook (haskell-mode . my/lsp-hook)
   :hook (haskell-mode . dumb-jump-mode)
   :bind (:map haskell-mode-map
               ("C-c C-c" . haskell-compile)
@@ -130,7 +130,7 @@
   :mode
   ("\\.ts\\'"
    "\\.js\\'")
-  :hook (typescript-mode . lsp-deferred)
+  :hook (typescript-mode . my/lsp-hook)
   :config
   (setq typescript-indent-level 4))
 
@@ -138,7 +138,7 @@
   :straight (emacs-lisp-mode :type built-in)
   :hook (lisp-mode . emacs-lisp-mode)
   :hook (company-mode . (lambda () (set-company-backend! 'emacs-lisp-mode
-                                     '(company-elisp :with company-yasnippet company-files))))
+                                '(company-elisp :with company-yasnippet company-files))))
   :preface
   (defconst elisp-unicode-conversions
   '(("[ (]\\(\\lambda\\)[) ]"       . ?λ)))
@@ -156,7 +156,7 @@
 (use-package go-mode
   :straight t
   :mode ("\\.go\\'")
-  :hook(go-mode . lsp-deferred)
+  :hook(go-mode . my/lsp-hook)
   :config
   (setq lsp-go-analyses
         '((fieldalignment . t)
@@ -185,11 +185,12 @@
   :mode ("\\.erlang\\'" . erlang-mode)
   :mode ("/rebar\\.config\\(?:\\.script\\)?\\'" . erlang-mode)
   :mode ("/\\(?:app\\|sys\\)\\.config\\'" . erlang-mode)
-  :hook (erlang-mode . lsp-deferred)
+  :hook (erlang-mode . my/lsp-hook)
   :hook (erlang-mode . erlang-edoc-mode)
   :bind (:map erlang-mode-map
               ("C-c m s" . erlang-shell-rebar)
               ("C-c C-c" . recompile)
+              ([remap consult-eglot-symbols] . consult-imenu)
               ([remap erlang-electric-newline] . newline-and-indent))
   :config
   (defun erlang-shell-rebar ()
@@ -205,7 +206,7 @@
 (use-package tuareg
   :straight t
   :mode ("\\.ml$" . tuareg-mode)
-  :hook (tuareg-mode . lsp-deferred))
+  :hook (tuareg-mode . my/lsp-hook))
 
 (use-package yaml-mode
   :straight t

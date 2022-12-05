@@ -5,11 +5,11 @@
   :demand t
   :init
   (global-set-key (kbd "C-c p") project-prefix-map)
-  (cl-defgeneric project-root (project) (car project))
-  (defun my/project-current-root (&optional dir)
-    (when-let ((project
-                (project-current nil (or dir default-directory))))
-      (project-root project)))
+  ;; (cl-defgeneric project-root (project) (car project))
+  ;; (defun my/project-current-root (&optional dir)
+  ;;   (when-let ((project
+  ;;               (project-current nil (or dir default-directory))))
+  ;;     (project-root project)))
   :bind* (("C-c p f" . project-find-file)
           ("C-c p s r" . project-find-regexp)
           ("C-c p d" . project-dired)
@@ -20,7 +20,6 @@
           ("C-c p !" . project-shell-command)
           ("C-c p e" . project-eshell)
           ("C-c p g" . consult-ripgrep)))
-
 
 (use-package magit
   :straight t
@@ -36,10 +35,10 @@
 (use-package git-gutter
   :straight t
   :hook (prog-mode . git-gutter-mode)
-  ;; :custom-face
-  ;; (git-gutter:added ((t (:background "green4"))))
-  ;; (git-gutter:modified ((t (:background "goldenrod3"))))
-  ;; (git-gutter:deleted ((t (:background "salmon3"))))
+  :custom-face
+  (git-gutter:added ((t (:background "green4"))))
+  (git-gutter:modified ((t (:background "goldenrod3"))))
+  (git-gutter:deleted ((t (:background "salmon3"))))
   :config
   (setq git-gutter:disabled-modes '(fundamental-mode image-mode pdf-view-mode))
   (setq git-gutter:handled-backends
