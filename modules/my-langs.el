@@ -187,16 +187,24 @@
   :mode ("/\\(?:app\\|sys\\)\\.config\\'" . erlang-mode)
   :hook (erlang-mode . my/lsp-hook)
   :hook (erlang-mode . erlang-edoc-mode)
-  :bind (:map erlang-mode-map
+  :bind ((:map erlang-mode-map
               ("C-c m s" . erlang-shell-rebar)
               ("C-c C-c" . recompile)
               ([remap consult-eglot-symbols] . consult-imenu)
               ([remap erlang-electric-newline] . newline-and-indent))
+         :map erlang-shell-mode-map
+         ("C-c C-g" . comint-interrupt-subjob)
+         ("C-c C-c" . erlang-shell-rebar-reload))
   :config
   (defun erlang-shell-rebar ()
     (interactive)
     (let ((default-directory (project-root (project-current t))))
       (inferior-erlang "make dev")))
+  (defun erlang-shell-rebar-reload ()
+    (interactive)
+    (comint-interrupt-subjob)
+    (kill-buffer)
+    (erlang-shell-rebar))
   (setq erlang-indent-level 2)
   (setq erlang-indent-guard 2)
   (setq erlang-icr-indent 2)
