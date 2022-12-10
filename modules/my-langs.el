@@ -194,7 +194,8 @@
               ([remap erlang-electric-newline] . newline-and-indent))
          :map erlang-shell-mode-map
          ("C-c C-g" . comint-interrupt-subjob)
-         ("C-c C-c" . erlang-shell-rebar-reload))
+         ("C-c C-c" . erlang-shell-rebar-reload)
+         ("C-c m s" . erlang-shell-rebar))
   :config
   (defun erlang-shell-rebar ()
     (interactive)

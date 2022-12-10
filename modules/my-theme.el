@@ -29,7 +29,6 @@
 
 (use-package modus-themes
   :straight t
-  :disabled t
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -71,10 +70,11 @@
           (bg-main . "#f4f0ec")
           (bg-dim . "#F8F8F8")
           (bg-alt . "#E8E8E8")))
-  (load-theme 'modus-operandi t))
+  (load-theme 'modus-vivendi t))
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
+  :disabled t
   :custom-face
   (default ((t (:background "#f4f0ec"))))
   (fringe ((t (:background "#f4f0ec"))))
