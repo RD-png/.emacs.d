@@ -29,6 +29,7 @@
 
 (use-package modus-themes
   :straight t
+  :disabled t
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -74,7 +75,6 @@
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
-  :disabled t
   :custom-face
   (default ((t (:background "#f4f0ec"))))
   (fringe ((t (:background "#f4f0ec"))))
@@ -193,6 +193,7 @@
 
 (use-package smart-mode-line
   :straight t
+  :disabled t
   :commands sml/setup
   :init
   (setq sml/theme nil)
@@ -201,11 +202,12 @@
   (setq sml/show-file-name nil)
   (setq mode-line-default-help-echo nil
         show-help-function nil)
-  (use-package minions
+  (add-to-list 'sml/replacer-regexp-list '("^~/[dD]ocuments/[rR]oam.*/" ":ROAM:")))
+
+(use-package minions
     :custom
     (minions-prominent-modes '(flymake-mode))
     :init
     (minions-mode +1))
-  (add-to-list 'sml/replacer-regexp-list '("^~/[dD]ocuments/[rR]oam.*/" ":ROAM:")))
 
 (provide 'my-theme)
