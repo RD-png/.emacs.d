@@ -29,7 +29,6 @@
 
 (use-package modus-themes
   :straight t
-  :disabled t
   :init
   (setq  modus-themes-intense-hl-line t
          modus-themes-org-blocks 'grayscale
@@ -75,6 +74,7 @@
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
+  :disabled t
   :custom-face
   (default ((t (:background "#f4f0ec"))))
   (fringe ((t (:background "#f4f0ec"))))
