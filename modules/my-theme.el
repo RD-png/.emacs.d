@@ -28,49 +28,27 @@
 (set-face-attribute 'cursor nil :background "IndianRed3")
 
 (use-package modus-themes
-  :straight t
+  :straight (modus-themes :host github :repo "protesilaos/modus-themes" :branch "version-4")
   :init
-  (setq  modus-themes-intense-hl-line t
-         modus-themes-org-blocks 'grayscale
-         modus-themes-scale-headings t
-         modus-themes-section-headings nil
-         modus-themes-variable-pitch-headings nil
-         modus-themes-intense-paren-match t
-         modus-themes-diffs 'desaturated
-         modus-themes-lang-checkers '(straight-underline)
-         modus-themes-syntax '(green-strings yellow-comments)
-         modus-themes-links '(faint neutral-underline)
-         modus-themes-hl-line '(intense)
-         modus-themes-prompts '(bold background)
-         modus-themes-mode-line '(3d accented borderless)
-         modus-themes-subtle-line-numbers t
-         modus-themes-tabs-accented t
-         modus-themes-inhibit-reload t
-         modus-themes-paren-match '(underline intense)
-         modus-themes-region '(no-extend accented bg-only)
-         modus-themes-completions '((matches . (extrabold))
-                                    (selection . (semibold accented))
-                                    (popup . (accented faint)))
-         modus-themes-org-agenda
-         '((header-block . (variable-pitch scale-title))
-           (header-date . (bold-today grayscale scale))
-           (scheduled . rainbow)
-           (habit . traffic-light-deuteranopia))
-         modus-themes-headings  '((t . (background overline rainbow)))
-         modus-themes-variable-pitch-ui nil
-         modus-themes-scale-vheadings t
-         modus-themes-scale-1 1.1
-         modus-themes-scale-2 1.15
-         modus-themes-scale-3 1.20
-         modus-themes-scale-4 1.25
-         modus-themes-scale-title 1.30)
-  (setq modus-themes-operandi-color-overrides
-        '((fg-comment-yellow . "Firebrick")
-          ;; (bg-main . "#FFFFE8")
-          (bg-main . "#f4f0ec")
-          (bg-dim . "#F8F8F8")
-          (bg-alt . "#E8E8E8")))
-  (load-theme 'modus-vivendi t))
+  (setq modus-themes-mixed-fonts t
+        modus-themes-variable-pitch-ui t
+        modus-themes-org-blocks 'gray-background
+        modus-themes-fringes 'nil
+        modus-themes-prompts '(bold background)
+        modus-themes-headings
+        '((1 . (variable-pitch 1.15))
+          (2 . (rainbow 1.1))
+          (t . (semibold)))
+        modus-themes-subtle-line-numbers t
+        modus-themes-links '(faint neutral-underline)
+        modus-themes-region '(no-extend accented bg-only))
+  ;; (setq modus-themes-operandi-color-overrides
+  ;;       '((fg-comment-yellow . "Firebrick")
+  ;;         ;; (bg-main . "#FFFFE8")
+  ;;         (bg-main . "#f4f0ec")
+  ;;         (bg-dim . "#F8F8F8")
+  ;;         (bg-alt . "#E8E8E8")))
+  (load-theme 'modus-operandi-tinted t))
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")

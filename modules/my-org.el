@@ -251,7 +251,6 @@
 
 (use-package org-auctex
   :straight (org-auctex :host github :repo "karthink/org-auctex")
-  :disabled t
   :hook (org-mode . org-auctex-mode))
 
 (use-package toc-org
