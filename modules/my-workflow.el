@@ -34,12 +34,15 @@
 
 (use-package git-gutter
   :straight t
+  :disabled t
   :hook (prog-mode . git-gutter-mode)
   :custom-face
   (git-gutter:added ((t (:background "green4"))))
   (git-gutter:modified ((t (:background "goldenrod3"))))
   (git-gutter:deleted ((t (:background "salmon3"))))
   :config
+  (add-to-list 'git-gutter:update-hooks 'focus-in-hook)
+  ;; (setq git-gutter:update-interval 10)
   (setq git-gutter:disabled-modes '(fundamental-mode image-mode pdf-view-mode))
   (setq git-gutter:handled-backends
         (cons 'git (cl-remove-if-not #'executable-find (list 'hg 'svn 'bzr)
@@ -64,6 +67,41 @@
   ("C-c C-v d" . git-gutter:popup-hunk)
   ("C-c C-v e" . git-gutter:end-of-hunk)
   ("C-c C-v a" . git-gutter:start-of-hunk))
+
+(use-package diff-hl
+  :straight t
+  :hook (after-init . global-diff-hl-mode)
+  :hook (global-diff-hl-mode . diff-hl-margin-mode)
+  :hook (global-diff-hl-mode . diff-hl-flydiff-mode)
+  :hook (dired-mode . diff-hl-dired-mode)
+  :bind
+  ("C-c C-v t" . global-diff-hl-mode)
+  ("C-c C-v r" . diff-hl-revert-hunk)
+  ("C-c C-v m" . diff-hl-mark-hunk)
+  ("C-c C-v n" . diff-hl-next-hunk)
+  ("C-c C-v p" . diff-hl-previous-hunk)
+  ("C-c C-v s" . diff-hl-stage-current-hunk)
+  ("C-c C-v d" . diff-hl-show-hunk)
+  :config
+  (setq vc-git-diff-switches '("--histogram"))
+  (setq diff-hl-flydiff-delay 0.5
+        diff-hl-show-staged-changes nil)
+  (setq diff-hl-margin-symbols-alist '((insert . " ")
+                                       (delete . " ")
+                                       (change . " ")
+                                       (unknown . " ")
+                                       (ignored . " ")))
+  (advice-add 'diff-hl-next-hunk :after
+              (defun my/diff-hl-recenter
+                  (&optional _) (recenter)))
+  (defadvice! +vc-gutter--save-excursion-a (fn &rest args)
+    "Suppresses unexpected cursor movement by `diff-hl-revert-hunk'."
+    :around #'diff-hl-revert-hunk
+    (let ((pt (point)))
+      (prog1 (apply fn args)
+        (goto-char pt))))
+  (with-eval-after-load 'magit
+    (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
 
 (use-package pdf-tools
   :straight t

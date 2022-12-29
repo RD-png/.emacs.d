@@ -33,15 +33,16 @@
   (setq modus-themes-mixed-fonts t
         modus-themes-variable-pitch-ui t
         modus-themes-org-blocks 'gray-background
-        modus-themes-fringes 'nil
         modus-themes-prompts '(bold background)
         modus-themes-headings
         '((1 . (variable-pitch 1.15))
           (2 . (rainbow 1.1))
           (t . (semibold)))
-        modus-themes-subtle-line-numbers t
-        modus-themes-links '(faint neutral-underline)
         modus-themes-region '(no-extend accented bg-only))
+  (setq modus-themes-common-palette-overrides '((fringe (face-background 'default))
+                                                (bg-line-number-active (face-background 'default))
+                                                (bg-line-number-inactive (face-background 'default))
+                                                (fg-line-number-active "#0000b0")))
   ;; (setq modus-themes-operandi-color-overrides
   ;;       '((fg-comment-yellow . "Firebrick")
   ;;         ;; (bg-main . "#FFFFE8")
