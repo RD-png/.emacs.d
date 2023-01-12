@@ -53,7 +53,7 @@
   (visual-line-mode 1))
 
 (use-package org
-  :straight t
+  :straight (org :type built-in)
   :commands (org-capture org-agenda)
   :hook ((org-mode . org-mode-setup)
          (org-mode . visual-fill-column-mode))
