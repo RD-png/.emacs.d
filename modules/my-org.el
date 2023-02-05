@@ -71,7 +71,6 @@
     (push '("conf-unix" . conf-unix) org-src-lang-modes))
 
   (setq org-special-ctrl-a/e t
-        org-pretty-entities t
         org-auto-align-tags nil
         org-tags-column 0
         org-hide-emphasis-markers t
@@ -206,7 +205,6 @@
 
    ;; Org styling, hide markup etc.
    org-hide-emphasis-markers t
-   org-pretty-entities t
    org-ellipsis "…"
 
    org-modern-block-fringe nil
