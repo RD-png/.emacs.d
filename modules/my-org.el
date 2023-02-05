@@ -80,7 +80,7 @@
         org-agenda-start-with-log-mode t
         org-log-done 'time
         org-log-into-drawer t
-        org-format-latex-options (plist-put org-format-latex-options :scale 1.25)
+        org-format-latex-options (plist-put org-format-latex-options :scale 1.75)
         org-enforce-todo-dependencies t
         org-enforce-todo-checkbox-dependencies t)
   (setq org-agenda-files (directory-files-recursively "~/.config/emacs/org/" "\\.org$"))
@@ -251,12 +251,16 @@
 
 (use-package org-auctex
   :straight (org-auctex :host github :repo "karthink/org-auctex")
+  :disabled t
   :hook (org-mode . org-auctex-mode))
 
 (use-package toc-org
   :straight t
   :defer 5
-  :init
-  (add-hook 'org-mode-hook 'toc-org-mode))
+  :hook (org-mode . toc-org-mode))
+
+(use-package org-fragtog
+  :straight t
+  :hook (org-mode . org-fragtog-mode))
 
 (provide 'my-org)

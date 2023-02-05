@@ -70,9 +70,9 @@
 
 (use-package diff-hl
   :straight t
-  :hook (after-init . global-diff-hl-mode)
-  :hook (global-diff-hl-mode . diff-hl-margin-mode)
-  :hook (global-diff-hl-mode . diff-hl-flydiff-mode)
+  :hook (prog-mode . diff-hl-mode)
+  :hook (diff-hl-mode . diff-hl-margin-mode)
+  :hook (diff-hl-mode . diff-hl-flydiff-mode)
   :hook (dired-mode . diff-hl-dired-mode)
   :bind
   ("C-c C-v t" . global-diff-hl-mode)
