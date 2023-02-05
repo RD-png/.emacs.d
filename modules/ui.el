@@ -186,6 +186,7 @@
          '("\\*Messages\\*"
            "\\*scheme\\*"
            "\\*erlang\\*"
+           "\\*ielm\\*"
            "\\*eshell\\*"
            "\\*vterm\\*"
            "^\\*Warnings\\*$"
