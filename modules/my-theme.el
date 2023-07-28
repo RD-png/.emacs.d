@@ -46,8 +46,10 @@
                                                 (border-mode-line-active unspecified)
                                                 (border-mode-line-inactive unspecified)
 
-                                                (underline-paren-match fg-main)))
-  (load-theme 'modus-operandi-tinted t))
+                                                (underline-paren-match fg-main))
+        modus-vivendi-deuteranopia-palette-overrides '((bg-main "#1d2021")
+                                                       (fg-line-number-active "#79a8ff")))
+  (load-theme 'modus-vivendi-deuteranopia t))
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
