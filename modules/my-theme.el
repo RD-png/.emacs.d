@@ -83,12 +83,13 @@
 
 (use-package doom-modeline
   :straight t
-  :disabled t
+  ;; :disabled t
   :custom
   (doom-modeline-height 10)
   :config
   (setq doom-modeline-buffer-modification-icon nil)
   (setq doom-modeline-hud t)
+  (setq doom-modeline-icon t)
   (setq doom-modeline-lsp nil)
 
   (defun doom-modeline-update-pdf-pages ()

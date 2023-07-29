@@ -14,17 +14,17 @@
 (unless (or (daemonp) noninteractive)
   (let ((old-file-name-handler-alist file-name-handler-alist))
     (setq-default file-name-handler-alist nil)
-    
+
     (defun reset-file-handler ()
       (setq file-name-handler-alist
             (delete-dups (append file-name-handler-alist
                                  old-file-name-handler-alist))))
-    
+
     (add-hook 'emacs-startup-hook #'reset-file-handler 101))
 
   (setq-default inhibit-redisplay t
                 inhibit-message t)
-  
+
   (add-hook 'window-setup-hook
             (lambda ()
               (setq-default inhibit-redisplay nil
@@ -33,7 +33,7 @@
 
   (define-advice load-file (:override (file) silence)
     (load file nil 'nomessage))
-  
+
   (define-advice startup--load-user-init-file (:before (&rest _) nomessage-remove)
     (advice-remove #'load-file #'load-file@silence)))
 

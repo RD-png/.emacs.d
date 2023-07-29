@@ -10,7 +10,7 @@
   (setq consult-project-root-function (lambda () "Return current project root"
                                         (project-root (project-current))))
   (setq consult-narrow-key "<")
-  (setq consult-preview-key (kbd "M-."))
+  (setq consult-preview-key "M-.")
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   (consult-line-start-from-top nil)

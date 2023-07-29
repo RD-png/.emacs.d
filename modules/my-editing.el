@@ -95,7 +95,7 @@
   (setq flymake-diagnostic-at-point-timer-delay 0.66))
 
 (use-package flymake-popon
-  :straight (flymake-popon :type git :repo "akib/emacs-flymake-popon")
+  :straight t
   :after flymake
   :hook (flymake-mode . flymake-popon-mode)
   :config

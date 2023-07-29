@@ -148,7 +148,7 @@ possible."
   ((dired-listing-switches "-AGFhlv --group-directories-first")
    (dired-recursive-copies t))
   :config
-  (setf dired-kill-when-opening-new-dired-buffer t)
+  ;; (setf dired-kill-when-opening-new-dired-buffer t)
   (setq dired-recursive-copies 'always
         dired-recursive-deletes 'always
         delete-by-moving-to-trash t
