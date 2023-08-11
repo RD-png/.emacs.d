@@ -212,12 +212,12 @@
   (setq erlang-indent-level 2)
   (setq erlang-indent-guard 2)
   (setq erlang-icr-indent 2)
-  (setq inferior-erlang-machine-options '("-sname" "emacs"))
-  (setq lsp-lens-enable nil))
+  (setq inferior-erlang-machine-options '("-sname" "emacs")))
 
 (use-package tuareg
   :straight t
   :mode ("\\.ml$" . tuareg-mode)
+  :bind (("C-c m s" . tuareg-run-ocaml))
   :hook (tuareg-mode . my/lsp-hook))
 
 (use-package yaml-mode

@@ -63,6 +63,7 @@
             #'+lsp-optimization-mode)
   :config
   (defvar +lsp--deferred-shutdown-timer nil)
+  (setq lsp-lens-enable nil)
   (defadvice! +lsp-defer-server-shutdown-a (fn &optional restart)
   "Defer server shutdown for a few seconds.
 This gives the user a chance to open other project files before the server is
