@@ -26,6 +26,7 @@
          ([remap man] . consult-man)
          ([remap recentf-open-files] . consult-recent-file)
          ([remap switch-to-buffer] . consult-buffer)
+         ([remap list-buffers] . consult-buffer)
          ("C-c o l" . consult-imenu)
          ("C-c o L" . consult-imenu-multi)
          ("C-M-s" . consult-multi-occur)
