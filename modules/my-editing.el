@@ -212,6 +212,19 @@
   (scroll-down-command)
   (recenter))
 
+(defun move-line-up ()
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
+
 ;; General binds
 (global-set-key (kbd "C-x f") #'find-file)
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
@@ -232,6 +245,8 @@
 (global-set-key (kbd "C-?")  #'undo-redo)
 (global-set-key (kbd "C-S-n")  #'multi-line-next)
 (global-set-key (kbd "C-S-p")  #'multi-line-prev)
+(global-set-key (kbd "C-M-S-n")  #'move-line-down)
+(global-set-key (kbd "C-M-S-p")  #'move-line-up)
 (global-set-key [remap org-cycle-agenda-files] 'ignore)
 (global-set-key (kbd "C-v") #'my/scroll-up)
 (global-set-key (kbd "M-v") #'my/scroll-down)
