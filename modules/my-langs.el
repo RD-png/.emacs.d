@@ -217,8 +217,11 @@
 (use-package tuareg
   :straight t
   :mode ("\\.ml$" . tuareg-mode)
-  :bind (("C-c m s" . tuareg-run-ocaml))
+  :bind (("C-c m s" . utop))
   :hook (tuareg-mode . my/lsp-hook))
+
+(use-package utop
+  :straight t)
 
 (use-package yaml-mode
   :straight t

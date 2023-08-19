@@ -99,7 +99,8 @@
   :after flymake
   :hook (flymake-mode . flymake-popon-mode)
   :config
-  (setq flymake-popon-delay 0.66))
+  (setq flymake-popon-method 'posframe
+        flymake-popon-delay 0.66))
 
 (use-package flyspell
   :straight (flyspell :type built-in)
