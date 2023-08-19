@@ -47,7 +47,7 @@
                                                 (border-mode-line-inactive unspecified)
 
                                                 (underline-paren-match fg-main))
-        modus-vivendi-deuteranopia-palette-overrides '((bg-main "#1d2021")
+        modus-vivendi-deuteranopia-palette-overrides '((bg-main "#1e1e1e")
                                                        (fg-line-number-active "#79a8ff")))
   (load-theme 'modus-vivendi-deuteranopia t))
 
