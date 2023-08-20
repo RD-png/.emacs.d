@@ -29,7 +29,13 @@
 
 (use-package modus-themes
   :straight (modus-themes :host github :repo "protesilaos/modus-themes")
-  :init
+  :config
+  (setq modus-themes-common-palette-overrides '((fringe unspecified)
+                                                (bg-line-number-active unspecified)
+                                                (bg-line-number-inactive unspecified)
+                                                (border-mode-line-active unspecified)
+                                                (border-mode-line-inactive unspecified)
+                                                (underline-paren-match fg-main)))
   (setq modus-themes-mixed-fonts t
         modus-themes-variable-pitch-ui t
         modus-themes-org-blocks 'gray-background
@@ -38,16 +44,16 @@
                                 (2 . (rainbow 1.1))
                                 (t . (semibold)))
         modus-themes-region '(no-extend accented bg-only)
-        modus-themes-common-palette-overrides '((fringe unspecified)
-                                                (bg-line-number-active unspecified)
-                                                (bg-line-number-inactive unspecified)
-                                                (fg-line-number-active "#0000b0")
 
-                                                (border-mode-line-active unspecified)
-                                                (border-mode-line-inactive unspecified)
-
-                                                (underline-paren-match fg-main))
-        modus-vivendi-deuteranopia-palette-overrides '((bg-main "#1e1e1e")
+        modus-operandi-tinted-palette-overrides '((fg-line-number-active "#0000b0"))
+        modus-vivendi-deuteranopia-palette-overrides '((bg-main "#1d2021")
+                                                       (fg-main "#dfdfdf")
+                                                       (string olive)
+                                                       (comment red-faint)
+                                                       (magenta-cooler magenta-faint)
+                                                       (magenta-warmer pink)
+                                                       (cyan slate)
+                                                       (blue-cooler blue-warmer)
                                                        (fg-line-number-active "#79a8ff")))
   (load-theme 'modus-vivendi-deuteranopia t))
 
