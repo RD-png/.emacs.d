@@ -105,6 +105,6 @@ server getting expensively restarted when reverting buffers."
   (setq lsp-haskell-plugin-import-lens-code-actions-on nil)
   (setq lsp-haskell-plugin-ghcide-type-lenses-config-mode nil)
   :custom
-  (lsp-haskell-server-path "haskell-language-server"))
+  (lsp-haskell-server-path "haskell-language-server-9.2.8"))
 
 (provide 'my-lsp-mode)
