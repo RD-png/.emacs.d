@@ -231,7 +231,7 @@
 (global-set-key (kbd "C-x c f") (lambda () (interactive) (find-file "~/.config/emacs/init.el")))
 (global-set-key (kbd "C-x c r") (lambda () (interactive) (find-file "~/.config/emacs/org/Roam/")))
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
-(global-set-key (kbd "M-d") (lambda () (interactive) (my/op-thing-at-point 'kill-region 'word)))
+(global-set-key (kbd "M-d") (lambda () (interactive) (my/op-thing-at-point 'delete-region 'word)))
 (define-key prog-mode-map (kbd "C-a") #'my/beginning-of-line)
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)

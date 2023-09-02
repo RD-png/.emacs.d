@@ -8,11 +8,6 @@
 (use-package tree-sitter-langs
   :straight (tree-sitter-langs :branch "master")
   :after tree-sitter
-  :demand t
-  :config
-  (push '(typescript-react-mode . typescript)
-        tree-sitter-major-mode-language-alist)
-  (push '(web-mode . html)
-        tree-sitter-major-mode-language-alist))
+  :demand t)
 
 (provide 'my-tree-sitter)
