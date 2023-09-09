@@ -1,5 +1,7 @@
 ;;; my-langs.el -*- lexical-binding: t; -*-
 
+(setq font-lock-maximum-decoration '((t . t)))
+
 ;;;###autoload
 (defun mode-unicode-conversions (modes unicode-chars)
   (mapc (lambda (mode)
@@ -15,6 +17,12 @@
                                     `(0 ,(cdr chars)))))
                              unicode-chars))))
         modes))
+
+
+(defun set-font-decoration (mode level)
+  (setq font-lock-maximum-decoration (cons
+                                      (cons mode level)
+                                      font-lock-maximum-decoration)))
 
 (use-package prog-mode
   :straight (prog-mode :type built-in)
@@ -199,6 +207,7 @@
          ("C-c C-c" . erlang-shell-rebar-reload)
          ("C-c m s" . erlang-shell-rebar))
   :config
+  (set-font-decoration 'erlang-mode 3)
   (defun erlang-shell-rebar ()
     (interactive)
     (let ((default-directory (project-root (project-current t))))

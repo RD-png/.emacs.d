@@ -61,10 +61,15 @@
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
   :disabled t
   :custom-face
-  (default ((t (:background "#f4f0ec"))))
-  (fringe ((t (:background "#f4f0ec"))))
+  ;; Light
+  ;; (default ((t (:background "#f4f0ec"))))
+  ;; (fringe ((t (:background "#f4f0ec"))))
+
+  ;; Dark
+  (default ((t (:background "#1d2021"))))
+  (fringe ((t (:background "#1d2021"))))
   :init
-  (load-theme 'standard-light t))
+  (load-theme 'standard-dark t))
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
