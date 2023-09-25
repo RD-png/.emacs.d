@@ -30,13 +30,22 @@
 (use-package modus-themes
   :straight (modus-themes :host github :repo "protesilaos/modus-themes")
   :config
-  (setq modus-themes-common-palette-overrides '((fringe unspecified)
-                                                (bg-line-number-active unspecified)
-                                                (bg-line-number-inactive unspecified)
-                                                (border-mode-line-active unspecified)
-                                                (border-mode-line-inactive unspecified)
-                                                (underline-paren-match fg-main)))
-  (setq modus-themes-mixed-fonts t
+  (setq modus-themes-common-palette-overrides
+        `((fringe unspecified)
+          (underline-paren-match fg-main)
+          (bg-region bg-ochre)
+          (fg-region unspecified)
+          (bg-paren-match bg-blue-intense)
+          (bg-mode-line-active bg-lavender)
+          (bg-line-number-active unspecified)
+          (bg-line-number-inactive unspecified)
+          (border-mode-line-active unspecified)
+          (border-mode-line-inactive unspecified)
+          (bg-line-number-inactive unspecified)
+          (bg-prompt bg-blue-nuanced)
+          (fg-prompt blue-warmer)))
+  (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-deuteranopia)
+        modus-themes-mixed-fonts t
         modus-themes-variable-pitch-ui t
         modus-themes-org-blocks 'gray-background
         modus-themes-prompts '(bold background)
@@ -45,7 +54,10 @@
                                 (t . (semibold)))
         modus-themes-region '(no-extend accented bg-only)
 
-        modus-operandi-tinted-palette-overrides '((fg-line-number-active "#0000b0"))
+        modus-operandi-tinted-palette-overrides `((bg-main "#fdf6e3")
+                                                  (fg-line-number-active "#0000b0")
+                                                  ,@modus-themes-preset-overrides-warmer)
+
         modus-vivendi-deuteranopia-palette-overrides '((bg-main "#1d2021")
                                                        (fg-main "#dfdfdf")
                                                        (string olive)
@@ -55,7 +67,7 @@
                                                        (cyan slate)
                                                        (blue-cooler blue-warmer)
                                                        (fg-line-number-active "#79a8ff")))
-  (load-theme 'modus-vivendi-deuteranopia t))
+  (load-theme 'modus-operandi-tinted t))
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
@@ -94,7 +106,7 @@
 
 (use-package doom-modeline
   :straight t
-  ;; :disabled t
+  :disabled t
   :custom
   (doom-modeline-height 10)
   :config
@@ -196,9 +208,10 @@
   (add-to-list 'sml/replacer-regexp-list '("^~/[dD]ocuments/[rR]oam.*/" ":ROAM:")))
 
 (use-package minions
-    :custom
-    (minions-prominent-modes '(flymake-mode))
-    :init
-    (minions-mode +1))
+  :straight t
+  :custom
+  (minions-prominent-modes '(flymake-mode))
+  :init
+  (minions-mode +1))
 
 (provide 'my-theme)
