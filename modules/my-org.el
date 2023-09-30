@@ -195,6 +195,7 @@
   :hook (org-mode . org-modern-mode)
   :config
   (setq line-spacing 0.2)
+  (setq org-modern-star '("◉" "✳"))
   (setq
    ;; Edit settings
    org-auto-align-tags nil

@@ -43,19 +43,23 @@
           (border-mode-line-inactive unspecified)
           (bg-line-number-inactive unspecified)
           (bg-prompt bg-blue-nuanced)
-          (fg-prompt blue-warmer)))
+          (fg-prompt blue-warmer)
+          (fg-heading-1 blue-faint)
+          (fg-heading-2 indigo)
+          (fg-heading-3 magenta-faint)))
   (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-deuteranopia)
         modus-themes-mixed-fonts t
         modus-themes-variable-pitch-ui t
         modus-themes-org-blocks 'gray-background
         modus-themes-prompts '(bold background)
-        modus-themes-headings '((1 . (variable-pitch 1.15))
-                                (2 . (rainbow 1.1))
-                                (t . (semibold)))
+        modus-themes-headings '((1 . (variable-pitch light 1.25))
+                                (2 . (variable-pitch light 1.20))
+                                (t . (regular 1.15)))
         modus-themes-region '(no-extend accented bg-only)
 
-        modus-operandi-tinted-palette-overrides `((bg-main "#fdf6e3")
+        modus-operandi-tinted-palette-overrides `((bg-main "#f4f0ec")
                                                   (fg-line-number-active "#0000b0")
+                                                  (string olive)
                                                   ,@modus-themes-preset-overrides-warmer)
 
         modus-vivendi-deuteranopia-palette-overrides '((bg-main "#1d2021")
