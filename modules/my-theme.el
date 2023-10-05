@@ -71,7 +71,7 @@
                                                        (cyan slate)
                                                        (blue-cooler blue-warmer)
                                                        (fg-line-number-active "#79a8ff")))
-  (load-theme 'modus-operandi-tinted t))
+  (load-theme 'modus-vivendi-deuteranopia t))
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")

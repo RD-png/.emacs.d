@@ -226,6 +226,8 @@
   :straight t
   :mode ("\\.ml$" . tuareg-mode)
   :bind (("C-c m s" . utop))
+  :custom-face
+  (tuareg-font-lock-governing-face ((t (:foreground nil :bold nil))))
   :hook (tuareg-mode . my/lsp-hook)
   :hook (tuareg-mode . lsp-lens-mode))
 
