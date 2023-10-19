@@ -45,8 +45,8 @@
           (bg-prompt bg-blue-nuanced)
           (fg-prompt blue-warmer)
           (fg-heading-1 blue-faint)
-          (fg-heading-2 indigo)
-          (fg-heading-3 magenta-faint)))
+          (fg-heading-2 "DarkGoldenrod2")
+          (fg-heading-3 "PaleVioletRed1")))
   (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-deuteranopia)
         modus-themes-mixed-fonts t
         modus-themes-variable-pitch-ui t
@@ -72,6 +72,13 @@
                                                        (blue-cooler blue-warmer)
                                                        (fg-line-number-active "#79a8ff")))
   (load-theme 'modus-vivendi-deuteranopia t))
+
+(use-package circadian
+  :straight t
+  :config
+  (setq circadian-themes '(("8:00" . modus-operandi-tinted)
+                           ("18:00" . modus-vivendi-deuteranopia)))
+  (circadian-setup))
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
