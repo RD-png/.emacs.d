@@ -226,9 +226,16 @@
   :mode ("\\.ml$" . tuareg-mode)
   :bind (("C-c m s" . utop))
   :custom-face
-  (tuareg-font-lock-governing-face ((t (:foreground nil :bold nil))))
-  :hook (tuareg-mode . my/lsp-hook)
-  :hook (tuareg-mode . lsp-lens-mode))
+  (tuareg-font-lock-governing-face ((t (:foreground unspecified :bold unspecified))))
+  :hook (tuareg-mode . lsp-lens-mode)
+  :hook (tuareg-mode . merlin-mode))
+
+(use-package merlin
+  :straight t
+  :bind (:map merlin-mode-map
+              ("C-c o g" . merlin-locate)
+              ("C-c o l" . merlin-use-merlin-imenu)
+              ("C-c o r" . merlin-occurrences)))
 
 (use-package utop
   :straight t)
