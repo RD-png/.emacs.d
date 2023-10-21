@@ -224,7 +224,8 @@
 (use-package tuareg
   :straight t
   :mode ("\\.ml$" . tuareg-mode)
-  :bind (("C-c m s" . utop))
+  :bind ((:map tuareg-mode-map
+               ("C-c m s" . utop)))
   :custom-face
   (tuareg-font-lock-governing-face ((t (:foreground unspecified :bold unspecified))))
   :hook (tuareg-mode . lsp-lens-mode)
