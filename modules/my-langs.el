@@ -228,11 +228,14 @@
                ("C-c m s" . utop)))
   :custom-face
   (tuareg-font-lock-governing-face ((t (:foreground unspecified :bold unspecified))))
+  ;; :hook (tuareg-mode . merlin-mode)
   :hook (tuareg-mode . lsp-lens-mode)
-  :hook (tuareg-mode . merlin-mode))
+  :hook (tuareg-mode . my/lsp-hook)
+  )
 
 (use-package merlin
   :straight t
+  :disabled t
   :bind (:map merlin-mode-map
               ("C-c o g" . merlin-locate)
               ("C-c o l" . merlin-use-merlin-imenu)

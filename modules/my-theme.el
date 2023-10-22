@@ -46,7 +46,8 @@
           (fg-prompt blue-warmer)
           (fg-heading-1 blue-faint)
           (fg-heading-2 "DarkGoldenrod2")
-          (fg-heading-3 "PaleVioletRed1")))
+          (fg-heading-3 "PaleVioletRed1")
+          (cursor "IndianRed3")))
   (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-deuteranopia)
         modus-themes-mixed-fonts t
         modus-themes-variable-pitch-ui t
@@ -57,10 +58,12 @@
                                 (t . (regular 1.15)))
         modus-themes-region '(no-extend accented bg-only)
 
-        modus-operandi-tinted-palette-overrides `((bg-main "#f4f0ec")
-                                                  (fg-line-number-active "#0000b0")
-                                                  (string olive)
-                                                  ,@modus-themes-preset-overrides-warmer)
+        modus-operandi-palette-overrides `((bg-main "#f4f0ec")
+                                           (fg-line-number-active "#0000b0")
+                                           (comment red-faint)
+                                           (string olive)
+                                           ;; ,@modus-themes-preset-overrides-warmer
+                                           )
 
         modus-vivendi-deuteranopia-palette-overrides '((bg-main "#1d2021")
                                                        (fg-main "#dfdfdf")
@@ -76,7 +79,7 @@
 (use-package circadian
   :straight t
   :config
-  (setq circadian-themes '(("8:00" . modus-operandi-tinted)
+  (setq circadian-themes '(("8:00" . modus-operandi)
                            ("18:00" . modus-vivendi-deuteranopia)))
   (circadian-setup))
 

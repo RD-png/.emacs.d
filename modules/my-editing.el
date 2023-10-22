@@ -232,7 +232,7 @@
 (global-set-key (kbd "C-x c r") (lambda () (interactive) (find-file "~/.config/emacs/org/Roam/")))
 (global-set-key (kbd "C-c w") (lambda () (interactive) (my/op-thing-at-point 'copy-region-as-kill 'word)))
 (global-set-key (kbd "M-d") (lambda () (interactive) (my/op-thing-at-point 'delete-region 'word)))
-(define-key prog-mode-map (kbd "C-a") #'my/beginning-of-line)
+
 (global-set-key (kbd "M-]") #'shift-right)
 (global-set-key (kbd "M-[") #'shift-left)
 (global-set-key (kbd "M-n") 'forward-paragraph)
@@ -251,6 +251,7 @@
 (global-set-key [remap org-cycle-agenda-files] 'ignore)
 (global-set-key (kbd "C-v") #'my/scroll-up)
 (global-set-key (kbd "M-v") #'my/scroll-down)
+(bind-key* "C-a" #'my/beginning-of-line)
 (bind-key* "C-<backspace>" #'my/backward-kill-word)
 
 
