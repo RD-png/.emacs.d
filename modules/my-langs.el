@@ -28,7 +28,9 @@
   :straight (prog-mode :type built-in)
   :hook (prog-mode . display-line-numbers-mode)
   :hook (prog-mode . display-fill-column-indicator-mode)
-  :hook (before-save . delete-trailing-whitespace))
+  :hook (before-save . delete-trailing-whitespace)
+  :bind (:map prog-mode-map
+              ("C-a" . my/beginning-of-line)))
 
 (use-package conf-mode
   :straight (conf-mode :type built-in)
@@ -120,6 +122,7 @@
   :hook (haskell-mode . dumb-jump-mode)
   :bind (:map haskell-mode-map
               ("C-c C-c" . haskell-compile)
+              ("C-c m s" . run-haskell)
               ([remap my/lsp-format-buffer] . haskell-mode-stylish-buffer))
   :config
    (setq haskell-process-suggest-remove-import-lines t
@@ -132,6 +135,15 @@
     ("[ (]\\(\\<not\\>\\)[ )]" . ?¬)))
   :init
   (mode-unicode-conversions '(haskell-mode haskell-literate-mode) haskell-unicode-conversions))
+
+(use-package lsp-haskell
+  :straight t
+  ;; :config
+  ;; (setq lsp-haskell-plugin-ghcide-type-lenses-global-on nil)
+  ;; (setq lsp-haskell-plugin-import-lens-code-lens-on nil)
+  ;; (setq lsp-haskell-plugin-import-lens-code-actions-on nil)
+  ;; (setq lsp-haskell-plugin-ghcide-type-lenses-config-mode nil)
+  )
 
 (use-package typescript-mode
   :straight t

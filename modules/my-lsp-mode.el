@@ -97,13 +97,4 @@ server getting expensively restarted when reverting buffers."
   :bind (:map lsp-mode-map
               ("C-c o l" . consult-lsp-symbols)))
 
-(use-package lsp-haskell
-  :straight t
-  :hook (haskell-mode . my/lsp-hook)
-  :config
-  (setq lsp-haskell-plugin-ghcide-type-lenses-global-on nil)
-  (setq lsp-haskell-plugin-import-lens-code-lens-on nil)
-  (setq lsp-haskell-plugin-import-lens-code-actions-on nil)
-  (setq lsp-haskell-plugin-ghcide-type-lenses-config-mode nil))
-
 (provide 'my-lsp-mode)
