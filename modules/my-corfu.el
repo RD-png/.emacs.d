@@ -5,7 +5,6 @@
   :hook (lsp-completion-mode . corfu-setup-lsp)
   :bind (:map corfu-map
               ("<tab>" . corfu-insert)
-              ("M-." . corfu-show-documentation)
               ("M-l" . corfu-show-location)
               ("M-SPC" . corfu-insert-separator))
   :config

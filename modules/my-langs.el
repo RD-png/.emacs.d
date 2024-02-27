@@ -231,6 +231,7 @@
   (setq erlang-indent-level 2)
   (setq erlang-indent-guard 2)
   (setq erlang-icr-indent 2)
+  (setq erlang-electric-commands nil)
   (setq inferior-erlang-machine-options '("-sname" "emacs")))
 
 (use-package tuareg

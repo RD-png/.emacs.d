@@ -192,7 +192,6 @@
 
 (use-package org-modern
   :straight t
-  :hook (org-mode . org-modern-mode)
   :config
   (setq line-spacing 0.2)
   (setq org-modern-star '("◉" "✳"))
@@ -221,7 +220,7 @@
   (add-hook 'org-mode-hook #'org-modern-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
   :init
-  (org-modern-mode +1))
+  (global-org-modern-mode))
 
 (use-package org-roam
   :straight t
