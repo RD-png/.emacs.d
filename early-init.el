@@ -43,4 +43,5 @@
 (push '(right-fringe . 0) default-frame-alist)
 (setq frame-inhibit-implied-resize t)
 
+(setenv "LSP_USE_PLISTS" "true")
 (set-language-environment "UTF-8")

@@ -243,8 +243,7 @@
   (tuareg-font-lock-governing-face ((t (:foreground unspecified :bold unspecified))))
   ;; :hook (tuareg-mode . merlin-mode)
   :hook (tuareg-mode . lsp-lens-mode)
-  :hook (tuareg-mode . my/lsp-hook)
-  )
+  :hook (tuareg-mode . my/lsp-hook))
 
 (use-package merlin
   :straight t

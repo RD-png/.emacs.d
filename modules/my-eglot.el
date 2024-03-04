@@ -26,6 +26,7 @@
         eglot-auto-display-help-buffer nil
         eglot-ignored-server-capabilites '(:documentHighlightProvider))
    :config
+   (fset #'jsonrpc--log-event #'ignore)
    (defadvice! +lsp--defer-server-shutdown-a (fn &optional server)
      "Defer server shutdown for a few seconds.
 This gives the user a chance to open other project files before the server is
