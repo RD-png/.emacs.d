@@ -256,6 +256,7 @@ possible."
 (use-package direnv
   :straight t
   :config
+  (setq direnv-always-show-summary nil)
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
   (direnv-mode))
 

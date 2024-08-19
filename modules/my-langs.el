@@ -171,6 +171,18 @@
   :straight (scheme-mode :type built-in)
   :mode ("\\.sld\\'"))
 
+(use-package geiser
+  :straight t
+  :config
+  (setq geiser-scheme-implementation 'guile)
+  (setq geiser-active-implementations '(guile))
+  (setq geiser-implementations-alist '(((regexp "\\.scm$") guile))))
+
+(use-package geiser-guile
+  :straight t
+  :after geiser)
+
+
 (use-package racket-mode
   :straight t
   :mode ("\\.rkt\\'"))
