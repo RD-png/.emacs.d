@@ -187,6 +187,14 @@
   :straight t
   :mode ("\\.rkt\\'"))
 
+(use-package clojure-mode
+  :straight t
+  :mode ("\\.clj\\'")
+  :hook (clojure-mode . my/lsp-hook))
+
+(use-package cider
+  :straight t)
+
 (use-package go-mode
   :straight t
   :mode ("\\.go\\'")

@@ -106,10 +106,11 @@
 (use-package pdf-tools
   :straight t
   :mode ("\\.pdf\\'" . pdf-view-mode)
+  :hook (pdf-view-mode . pdf-view-midnight-minor-mode)
+  :hook (pdf-annot-list-mode . hide-mode-line-mode)
   :config
   (pdf-tools-install-noverify)
-  (setq-default pdf-view-display-size 'fit-width)
-  (add-hook 'pdf-annot-list-mode-hook #'hide-mode-line-mode))
+  (setq-default pdf-view-display-size 'fit-width))
 
 (use-package saveplace-pdf-view
   :straight t

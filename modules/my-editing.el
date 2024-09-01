@@ -30,6 +30,9 @@
   :config
   (global-anzu-mode +1))
 
+(use-package paredit
+  :straight t)
+
 (use-package evil-nerd-commenter
   :straight t
   :bind ("C-;" . evilnc-comment-or-uncomment-lines))
