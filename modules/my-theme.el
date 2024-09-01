@@ -120,7 +120,6 @@
 
 (use-package doom-modeline
   :straight t
-  :disabled t
   :custom
   (doom-modeline-height 10)
   :config
