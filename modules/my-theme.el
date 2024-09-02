@@ -76,8 +76,20 @@
                                                        (fg-line-number-active "#79a8ff")))
   (load-theme 'modus-vivendi-deuteranopia t))
 
+(use-package ef-themes
+  :straight t
+  :disabled t
+  :config
+  (set-face-attribute 'bold nil :weight 'regular)
+   (setq ef-themes-common-palette-overrides
+         '((bg-main "#1d2021")
+           (comment red-faint)))
+  (load-theme 'ef-dream))
+
+
 (use-package circadian
   :straight t
+  :disabled t
   :config
   (setq circadian-themes '(("8:00" . modus-operandi)
                            ("18:00" . modus-vivendi-deuteranopia)))

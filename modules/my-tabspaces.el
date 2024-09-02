@@ -2,6 +2,7 @@
 
 (use-package tab-bar
   :straight (tab-bar :type built-in)
+  :bind (("C-x C-'" . tab-bar-switch-to-recent-tab))
   :config
   (setq tab-bar-show nil))
 

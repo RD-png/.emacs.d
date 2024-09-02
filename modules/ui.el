@@ -165,8 +165,9 @@
                           (bookmarks . 5)))
   (setq dashboard-banner-logo-title "")
   (setq dashboard-set-file-icons t)
-  :init
-  (dashboard-setup-startup-hook))
+  ;; :init
+  ;; (dashboard-setup-startup-hook)
+  )
 
 (use-package popper
   :straight t
