@@ -23,7 +23,7 @@
          ("C-c s K" . tabspaces-kill-buffers-close-workspace)
          ("C-c s c" . tabspaces-clear-buffers)
          ("C-c s b" . tabspaces-switch-to-buffer)
-         ("C-c s o" . tabspaces-open-or-create-project-and-workspace)
+         ("C-c s p" . tabspaces-open-or-create-project-and-workspace)
          ("C-c s r" . tabspaces-restore-session))
   :commands (tabspaces-switch-or-create-workspace
              tabspaces-open-or-create-project-and-workspace)
