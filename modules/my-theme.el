@@ -29,6 +29,7 @@
 
 (use-package modus-themes
   :straight (modus-themes :host github :repo "protesilaos/modus-themes")
+  :disabled t
   :config
   (setq modus-themes-common-palette-overrides
         `((fringe unspecified)
@@ -97,17 +98,17 @@
 
 (use-package standard-themes
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
-  :disabled t
   :custom-face
   ;; Light
-  ;; (default ((t (:background "#f4f0ec"))))
-  ;; (fringe ((t (:background "#f4f0ec"))))
+  (default ((t (:background "#f4f0ec"))))
+  (fringe ((t (:background "#f4f0ec"))))
+  (font-lock-string-face ((t (:foreground "#316500"))))
 
   ;; Dark
-  (default ((t (:background "#1d2021"))))
-  (fringe ((t (:background "#1d2021"))))
+  ;; (default ((t (:background "#1d2021"))))
+  ;; (fringe ((t (:background "#1d2021"))))
   :init
-  (load-theme 'standard-dark t))
+  (load-theme 'standard-light t))
 
 (use-package ligature
   :straight (ligature :host github :repo "mickeynp/ligature.el")
