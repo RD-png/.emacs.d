@@ -57,7 +57,6 @@
               ("C-c o g" . lsp-find-definition))
   :custom
   (lsp-completion-provider :none)
-  (lsp-auto-guess-root t)
   (lsp-enable-symbol-highlighting nil)
   (lsp-modeline-diagnostics-enable nil)
   (lsp-enable-folding nil)
