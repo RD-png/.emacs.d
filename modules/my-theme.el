@@ -100,8 +100,8 @@
   :straight (standard-themes :host github :repo "protesilaos/standard-themes")
   :custom-face
   ;; Light
-  (default ((t (:background "#f4f0ec"))))
-  (fringe ((t (:background "#f4f0ec"))))
+  (default ((t (:background "#fff5ee"))))
+  (fringe ((t (:background "#fff5ee"))))
   (font-lock-string-face ((t (:foreground "#316500"))))
 
   ;; Dark
