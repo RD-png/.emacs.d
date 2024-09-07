@@ -36,7 +36,7 @@
 
 (defun eshell-configure ()
   (use-package xterm-color
-    :straight t)
+    :ensure t)
 
   (push 'eshell-tramp eshell-modules-list)
   (push 'xterm-color-filter eshell-preoutput-filter-functions)
@@ -76,7 +76,7 @@
   (generate-new-buffer eshell-buffer-name))
 
 (use-package eshell
-  :straight (eshell :type built-in)
+  :ensure nil
   :defer t
   :hook (eshell-first-time-mode . eshell-configure)
   :config
@@ -85,12 +85,12 @@
     (setq eshell-visual-commands '("htop" "zsh"))))
 
 (use-package eshell-syntax-highlighting
-  :straight t
+  :ensure t
   :defer t
   :hook (eshell-mode . eshell-syntax-highlighting-mode))
 
 (use-package capf-autosuggest
-  :straight (capf-autosuggest :host github :repo "emacs-straight/capf-autosuggest")
+  :ensure (capf-autosuggest :host github :repo "emacs-straight/capf-autosuggest")
   :disabled t
   :hook ((eshell-mode comint-mode) . capf-autosuggest-mode))
 

@@ -1,7 +1,7 @@
 ;;; my-corfu.el -*- lexical-binding: t; -*-
 
 (use-package corfu
-  :straight (corfu :host github :repo "minad/corfu")
+  :ensure (corfu :host github :repo "minad/corfu")
   :hook (lsp-completion-mode . corfu-setup-lsp)
   :bind (:map corfu-map
               ("<tab>" . corfu-insert)
@@ -34,7 +34,7 @@
   (global-corfu-mode))
 
 (use-package corfu-popupinfo
-  :straight (:host github :repo "minad/corfu"
+  :ensure (:host github :repo "minad/corfu"
              :files ("extensions/corfu-popupinfo.el"))
   :after corfu
   :bind (:map corfu-map
@@ -45,14 +45,14 @@
   :init (corfu-popupinfo-mode 1))
 
 (use-package corfu-quick
-  :straight (:host github :repo "minad/corfu"
+  :ensure (:host github :repo "minad/corfu"
              :files ("extensions/corfu-quick.el"))
   :after corfu
   :bind (:map corfu-map
               ([remap avy-goto-char-timer] . corfu-quick-insert)))
 
 (use-package kind-icon
-  :straight t
+  :ensure t
   :after corfu
   :custom
   (kind-icon-default-face 'corfu-default)

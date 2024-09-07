@@ -1,7 +1,7 @@
 ;;; my-workflow.el -*- lexical-binding: t; -*-
 
 (use-package project
-  :straight (project :type built-in)
+  :ensure nil
   :demand t
   :init
   (global-set-key (kbd "C-c p") project-prefix-map)
@@ -21,19 +21,22 @@
           ("C-c p e" . project-eshell)
           ("C-c p g" . consult-ripgrep)))
 
+(use-package transient
+  :ensure t)
+
 (use-package magit
-  :straight t
+  :ensure t
   :commands (magit-status magit-get-current-branch)
   :bind ("C-c g" . magit-status)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (use-package forge
-  :straight t
+  :ensure t
   :after magit)
 
 (use-package git-gutter
-  :straight t
+  :ensure t
   :disabled t
   :hook (prog-mode . git-gutter-mode)
   :custom-face
@@ -69,7 +72,7 @@
   ("C-c C-v a" . git-gutter:start-of-hunk))
 
 (use-package diff-hl
-  :straight t
+  :ensure t
   :hook (prog-mode . diff-hl-mode)
   :hook (diff-hl-mode . diff-hl-margin-mode)
   :hook (diff-hl-mode . diff-hl-flydiff-mode)
@@ -104,7 +107,7 @@
     (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
 
 (use-package pdf-tools
-  :straight t
+  :ensure t
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :hook (pdf-view-mode . pdf-view-midnight-minor-mode)
   :hook (pdf-annot-list-mode . hide-mode-line-mode)
@@ -113,7 +116,7 @@
   (setq-default pdf-view-display-size 'fit-width))
 
 (use-package saveplace-pdf-view
-  :straight t
+  :ensure t
   :after pdf-view
   :init
   (save-place-mode 1))

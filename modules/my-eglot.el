@@ -1,7 +1,7 @@
 ;;; my-eglot.el -*- lexical-binding: t; -*-
 
 (use-package eglot
-  :straight t
+  :ensure t
   :commands eglot eglot-ensure
   :hook(eglot . +lsp-optimization-mode)
   :bind
@@ -48,7 +48,7 @@ server getting expensively restarted when reverting buffers."
        (funcall fn server))))
 
 (use-package xref
-  :straight (xref :type built-in)
+  :ensure nil
   :hook (xref-after-jump . recenter)
   :bind
   ("C-c o ," . xref-go-back)
@@ -58,14 +58,14 @@ server getting expensively restarted when reverting buffers."
   ("C-c o g" . xref-find-definitions))
 
 (use-package eldoc
-  :straight (eldoc :type built-in)
+  :ensure nil
   :bind
   ("C-c o d" . eldoc-doc-buffer)
   :init
   (global-eldoc-mode))
 
 (use-package consult-eglot
-  :straight t
+  :ensure t
   :defer t)
 
 (provide 'my-eglot)

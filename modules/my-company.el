@@ -60,7 +60,7 @@ Examples:
 (put '+company-init-backends-h 'permanent-local-hook t)
 
 (use-package company
-  :straight t
+  :ensure t
   :bind (:map company-active-map
               ("<tab>" . company-complete-selection))
   :config

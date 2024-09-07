@@ -53,7 +53,7 @@
   (visual-line-mode 1))
 
 (use-package org
-  :straight (org :type built-in)
+  :ensure nil
   :commands (org-capture org-agenda)
   :hook ((org-mode . org-mode-setup)
          (org-mode . visual-fill-column-mode))
@@ -191,7 +191,7 @@
               ("C-c o s" . my/org-new-sub-heading)))
 
 (use-package org-modern
-  :straight t
+  :ensure t
   :config
   (setq line-spacing 0.2)
   (setq org-modern-star '("◉" "✳"))
@@ -223,7 +223,7 @@
   (global-org-modern-mode))
 
 (use-package org-roam
-  :straight t
+  :ensure t
   :init
   (setq org-roam-v2-ack t)
   :custom
@@ -248,17 +248,17 @@
   (org-roam-db-autosync-mode))
 
 (use-package org-auctex
-  :straight (org-auctex :host github :repo "karthink/org-auctex")
+  :ensure (org-auctex :host github :repo "karthink/org-auctex")
   :disabled t
   :hook (org-mode . org-auctex-mode))
 
 (use-package toc-org
-  :straight t
+  :ensure t
   :defer 5
   :hook (org-mode . toc-org-mode))
 
 (use-package org-fragtog
-  :straight t
+  :ensure t
   :hook (org-mode . org-fragtog-mode))
 
 (provide 'my-org)

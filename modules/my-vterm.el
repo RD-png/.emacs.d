@@ -1,7 +1,7 @@
 ;;; my-vterm.el -*- lexical-binding: t; -*-
 
 (use-package vterm
-  :straight t
+  :ensure t
   :commands vterm-mode
   :config
   (setq vterm-kill-buffer-on-exit t)

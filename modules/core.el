@@ -48,7 +48,7 @@
 
 ;;; GC.
 (use-package gcmh
-  :straight t
+  :ensure t
   :defer 2
   :config
   (setq gcmh-auto-idle-delay-factor 10
@@ -137,7 +137,7 @@ possible."
 
 ;;; Built-in.
 (use-package dired
-  :straight (dired :type built-in)
+  :ensure nil
   :hook ((dired-mode . hl-line-mode)
          (dired-mode . toggle-truncate-lines))
   :commands (dired dired-jump)
@@ -155,7 +155,7 @@ possible."
         dired-hide-details-hide-symlink-targets nil))
 
 (use-package recentf
-  :straight (recentf :type built-in)
+  :ensure nil
   :hook (after-init . recentf-mode)
   :commands recentf-open-files
   :custom (recentf-save-file (concat user-emacs-directory "var/recentf"))
@@ -175,7 +175,7 @@ possible."
   (add-hook 'kill-emacs-hook #'recentf-cleanup))
 
 (use-package savehist
-  :straight (savehist :type built-in)
+  :ensure nil
   :defer 2
   :hook (after-init . savehist-mode)
   :config
@@ -189,7 +189,7 @@ possible."
           search-ring regexp-search-ring)))
 
 (use-package server
-  :straight t
+  :ensure nil
   :when (display-graphic-p)
   :custom (server-auth-dir (concat user-emacs-directory "server/"))
   :init
@@ -200,7 +200,7 @@ possible."
     (server-start)))
 
 (use-package tramp
-  :straight (tramp :type built-in)
+  :ensure nil
   :defer 2
   :custom
   (tramp-default-method "ssh")
@@ -214,7 +214,7 @@ possible."
                                      "[/\\\\]node_modules")))
 
 (use-package helpful
-  :straight t
+  :ensure t
   :commands helpful--read-symbol
   :hook (helpful-mode . visual-line-mode)
   :init
@@ -226,12 +226,12 @@ possible."
   (global-set-key [remap describe-symbol]   #'helpful-symbol))
 
 (use-package info-colors
-  :straight t
+  :ensure t
   :init
   (add-hook 'Info-selection-hook 'info-colors-fontify-node))
 
 (use-package smartparens
-  :straight t
+  :ensure t
   :bind
   ("C-M-w" . sp-copy-sexp)
   ("C-M-k" . sp-kill-sexp)
@@ -249,18 +249,18 @@ possible."
   (smartparens-global-mode +1))
 
 (use-package exec-path-from-shell
-  :straight t
+  :ensure t
   :init
   (exec-path-from-shell-initialize))
 
 (use-package direnv
-  :straight t
+  :ensure t
   :config
   (setq direnv-always-show-summary nil)
   (advice-add 'lsp :before (lambda (&optional n) (direnv-update-environment)))
   (direnv-mode))
 
 (use-package no-littering
-  :straight t)
+  :ensure t)
 
 (provide 'core)

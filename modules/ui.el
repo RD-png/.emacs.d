@@ -66,20 +66,20 @@
 (setq ansi-color-for-comint-mode t)
 
 (use-package display-fill-column-indicator
-  :straight (display-fill-column-indicator :type built-in)
+  :ensure nil
   :config
   (setq-default fill-column 78)
   :custom-face
   (fill-column-indicator ((t (:background "light blue")))))
 
 (use-package comint
-  :straight (comint :type built-in)
+  :ensure nil
   :config
   (setq comint-prompt-read-only t
         comint-buffer-maximum-size 2048))
 
 (use-package compile
-  :straight (compile :type built-in)
+  :ensure nil
   :config
   (setq compilation-always-kill t
         compilation-ask-about-save nil
@@ -89,7 +89,7 @@
   (add-hook 'compilation-filter-hook #'comint-truncate-buffer))
 
 (use-package window
-  :straight (window :type built-in)
+  :ensure nil
   :config
   (setq display-buffer-alist
         `(("\\*\\(scheme\\|eshell\\|vterm\\)\\*"
@@ -107,7 +107,7 @@
   (setq window-combination-resize t))
 
 (use-package winner
-  :straight (winner :type built-in)
+  :ensure nil
   :hook (after-init . winner-mode)
   :preface (defvar winner-dont-bind-my-keys t)
   :bind
@@ -119,7 +119,7 @@
                                 "*esh command on file*")))
 
 (use-package ediff
-  :straight (ediff :type built-in)
+  :ensure nil
   :config
   (setq ediff-diff-options "-w"
         ediff-split-window-function #'split-window-horizontally
@@ -127,7 +127,7 @@
         ediff-ancestor-buffer t))
 
 (use-package paren
-  :straight (paren :type built-in)
+  :ensure nil
   :config
   (setq show-paren-delay 0.1
         show-paren-highlight-openparen t
@@ -148,14 +148,14 @@
 
 ;;; External.
 (use-package highlight-numbers
-  :straight t
+  :ensure t
   :hook ((prog-mode conf-mode) . highlight-numbers-mode)
   :config (setq highlight-numbers-generic-regexp "\\_<[[:digit:]]+\\(?:\\.[0-9]*\\)?\\_>"))
 
 (setq image-animate-loop t)
 
 (use-package dashboard
-  :straight t
+  :ensure t
   :bind
   ("C-x c e" . dashboard-refresh-buffer)
   :config
@@ -170,7 +170,7 @@
   )
 
 (use-package popper
-  :straight t
+  :ensure t
   :bind (("C-x C-." . popper-toggle-latest)
          ("C-x M-." . popper-kill-latest-popup)
          ("C-x C-/" . popper-cycle)
@@ -233,18 +233,18 @@
   (popper-echo-mode +1))
 
 (use-package all-the-icons
-  :straight t
+  :ensure t
   :config
   (setq all-the-icons-scale-factor 1))
 
 (use-package all-the-icons-dired
-  :straight t
+  :ensure t
   :hook (dired-mode . all-the-icons-dired-mode)
   :config
   (setq all-the-icons-dired-monochrome nil))
 
 (use-package diredfl
-  :straight t
+  :ensure t
   :disabled t
   :hook (dired-mode . diredfl-mode)
   :init
@@ -252,14 +252,14 @@
   (diredfl-global-mode 1))
 
 (use-package visual-fill-column
-  :straight t
+  :ensure t
   :hook (Info-mode . visual-fill-column-mode)
   :init
   (setq visual-fill-column-center-text t
         visual-fill-column-width 75))
 
 (use-package hide-mode-line
-  :straight t
+  :ensure t
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (Info-mode . hide-mode-line-mode))
 

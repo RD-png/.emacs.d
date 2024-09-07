@@ -1,7 +1,7 @@
 ;;; my-vertico.el -*- lexical-binding: t; -*-
 
 (use-package vertico
-  :straight (vertico :repo "minad/vertico")
+  :ensure (vertico :repo "minad/vertico")
   :demand t
   :preface
   (defun consult-vertico-save ()
@@ -26,7 +26,7 @@ consult based prompts."
   (vertico-mode))
 
 (use-package vertico-directory
-  :straight (:host github :repo "minad/vertico"
+  :ensure (:host github :repo "minad/vertico"
              :files ("extensions/vertico-directory.el"))
   :after vertico
   :bind (:map vertico-map

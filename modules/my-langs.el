@@ -25,7 +25,7 @@
                                       font-lock-maximum-decoration)))
 
 (use-package prog-mode
-  :straight (prog-mode :type built-in)
+  :ensure nil
   :hook (prog-mode . display-line-numbers-mode)
   :hook (prog-mode . display-fill-column-indicator-mode)
   :hook (before-save . delete-trailing-whitespace)
@@ -33,33 +33,33 @@
               ("C-a" . my/beginning-of-line)))
 
 (use-package conf-mode
-  :straight (conf-mode :type built-in)
+  :ensure nil
   :hook (conf-mode . display-line-numbers-mode))
 
 (use-package php-mode
-  :straight t
+  :ensure t
   :mode "\\.php\\'"
   :hook (php-mode . my/lsp-hook))
 
 (use-package markdown-mode
-  :straight t
+  :ensure t
   :hook (markdown-mode . display-line-numbers-mode))
 
 (use-package ts
-  :straight t)
+  :ensure t)
 
 (use-package htmlize
-  :straight t
+  :ensure t
   :config
   (setq org-html-htmlize-output-type 'css))
 
 (use-package pip-requirements
-  :straight t
+  :ensure t
   :config
   (add-hook 'pip-requirements-mode-hook #'pip-requirements-auto-complete-setup))
 
 (use-package python-mode
-  :straight t
+  :ensure t
   :hook (python-mode . my/lsp-hook)
   :bind (:map python-mode-map
               ([remap lsp-format-buffer] . python-black-buffer))
@@ -71,30 +71,30 @@
               (local-unset-key (kbd "DEL")))))
 
 (use-package pyimport
-  :straight t
+  :ensure t
   :after python-mode)
 
 (use-package pyvenv
-  :straight
+  :ensure t
   :defer 5
   :config
   (setq pyvenv-menu t))
 
 (use-package python-black
-  :straight t
+  :ensure t
   :defer 5)
 
 (use-package nix-mode
-  :straight t
+  :ensure t
   :mode "\\.nix\\'"
   :hook (nix-mode . my/lsp-hook))
 
 (use-package nix-update
-  :straight t
+  :ensure t
   :commands nix-update-fetch)
 
 (use-package web-mode
-  :straight t
+  :ensure t
   :mode ("\\.vue\\'")
   :hook (web-mode . my/lsp-hook)
   :config
@@ -112,11 +112,11 @@
   (setf (alist-get "javascript" web-mode-comment-formats nil nil #'equal) "//"))
 
 (use-package css-mode
-  :straight t
+  :ensure nil
   :mode ("\\.css\\'"))
 
 (use-package haskell-mode
-  :straight t
+  :ensure t
   :mode ("\\.hs\\'")
   :hook (haskell-mode . my/lsp-hook)
   :hook (haskell-mode . dumb-jump-mode)
@@ -137,7 +137,7 @@
   (mode-unicode-conversions '(haskell-mode haskell-literate-mode) haskell-unicode-conversions))
 
 (use-package lsp-haskell
-  :straight t
+  :ensure t
   ;; :config
   ;; (setq lsp-haskell-plugin-ghcide-type-lenses-global-on nil)
   ;; (setq lsp-haskell-plugin-import-lens-code-lens-on nil)
@@ -146,7 +146,7 @@
   )
 
 (use-package typescript-mode
-  :straight t
+  :ensure t
   :mode
   ("\\.ts\\'"
    "\\.js\\'")
@@ -155,7 +155,7 @@
   (setq typescript-indent-level 4))
 
 (use-package emacs-lisp-mode
-  :straight (emacs-lisp-mode :type built-in)
+  :ensure nil
   :hook (lisp-mode . emacs-lisp-mode)
   :hook (company-mode . (lambda () (set-company-backend! 'emacs-lisp-mode
                                 '(company-elisp :with company-yasnippet company-files))))
@@ -168,35 +168,35 @@
   (mode-unicode-conversions '(emacs-lisp-mode) elisp-unicode-conversions))
 
 (use-package scheme-mode
-  :straight (scheme-mode :type built-in)
+  :ensure nil
   :mode ("\\.sld\\'"))
 
 (use-package geiser
-  :straight t
+  :ensure t
   :config
   (setq geiser-scheme-implementation 'guile)
   (setq geiser-active-implementations '(guile))
   (setq geiser-implementations-alist '(((regexp "\\.scm$") guile))))
 
 (use-package geiser-guile
-  :straight t
+  :ensure t
   :after geiser)
 
 
 (use-package racket-mode
-  :straight t
+  :ensure t
   :mode ("\\.rkt\\'"))
 
 (use-package clojure-mode
-  :straight t
+  :ensure t
   :mode ("\\.clj\\'")
   :hook (clojure-mode . my/lsp-hook))
 
 (use-package cider
-  :straight t)
+  :ensure t)
 
 (use-package go-mode
-  :straight t
+  :ensure t
   :mode ("\\.go\\'")
   :hook(go-mode . my/lsp-hook)
   :config
@@ -213,7 +213,7 @@
   (setq lsp-gopls-server-path "/home/ryan/go/bin/gopls"))
 
 (use-package rustic
-  :straight t
+  :ensure t
   :mode ("\\.rs$" . rustic-mode)
   :hook (rustic-mode-hook . rustic-lsp-mode-setup)
   :config
@@ -223,7 +223,7 @@
   (setq rustic-indent-method-chain t))
 
 (use-package erlang
-  :straight t
+  :ensure t
   :mode ("\\.erlang\\'" . erlang-mode)
   :mode ("/rebar\\.config\\(?:\\.script\\)?\\'" . erlang-mode)
   :mode ("/\\(?:app\\|sys\\)\\.config\\'" . erlang-mode)
@@ -255,7 +255,7 @@
   (setq inferior-erlang-machine-options '("-sname" "emacs")))
 
 (use-package tuareg
-  :straight t
+  :ensure t
   :mode ("\\.ml$" . tuareg-mode)
   :bind ((:map tuareg-mode-map
                ("C-c m s" . utop)))
@@ -266,7 +266,7 @@
   :hook (tuareg-mode . my/lsp-hook))
 
 (use-package merlin
-  :straight t
+  :ensure t
   :disabled t
   :bind (:map merlin-mode-map
               ("C-c o g" . merlin-locate)
@@ -274,29 +274,29 @@
               ("C-c o r" . merlin-occurrences)))
 
 (use-package utop
-  :straight t)
+  :ensure t)
 
 (use-package yaml-mode
-  :straight t
+  :ensure t
   :mode ("\\.yaml$" . yaml-mode))
 
 (use-package latex
-  :straight (latex :type built-in)
+  :ensure nil
   :defer 5
   :after tex
   :mode ("\\.tex\\'" . LaTeX-mode))
 
 ;; (use-package auctex
-;;   :straight (auctex :type built-in))
+;;   :ensure nil)
 
 (use-package cdlatex
-  :straight (cdlatex :type built-in)
+  :ensure nil
   :defer 5
   :after latex
   :hook (LaTeX-mode . turn-on-cdlatex))
 
 (use-package eldoc
-  :straight (eldoc :type built-in)
+  :ensure nil
   :custom
   (eldoc-idle-delay 0)
   (eldoc-echo-area-prefer-doc-buffer t)
@@ -304,7 +304,7 @@
   (eldoc-echo-area-display-truncation-message nil))
 
 (use-package devdocs
-  :straight t
+  :ensure t
   :defer 2
   :config
   (defun my/devdocs-lookup ()

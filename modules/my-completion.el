@@ -1,14 +1,14 @@
 ;;; my-completion.el -*- lexical-binding: t; -*-
 
 (use-package prescient
-  :straight t
+  :ensure t
   :custom
   (prescient-history-length 1000)
   :init
   (setq prescient-persist-mode t))
 
 (use-package affe
-  :straight t
+  :ensure t
   :defer 2
   :config
   (defun affe-orderless-regexp-compiler (input _type _ignorecase)
@@ -19,7 +19,7 @@
   (setq affe-regexp-compiler #'affe-orderless-regexp-compiler))
 
 (use-package marginalia
-  :straight t
+  :ensure t
   :init
   (marginalia-mode)
   :custom
@@ -28,7 +28,7 @@
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 
 (use-package cape
-  :straight t
+  :ensure t
   :init
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-tex)
@@ -36,7 +36,7 @@
   (add-to-list 'completion-at-point-functions #'cape-keyword))
 
 (use-package all-the-icons-completion
-  :straight t
+  :ensure t
   :hook (marginalia-mode-hook . all-the-icons-completion-marginalia-setup)
   :init
   (all-the-icons-completion-mode +1))

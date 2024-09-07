@@ -1,8 +1,8 @@
 ;;; my-theme.el -*- lexical-binding: t; -*-
 
 ;;; Font.
-(defvar default-font-size 120)
-(defvar default-variable-font-size 110)
+(defvar default-font-size 150)
+(defvar default-variable-font-size 150)
 (set-face-attribute 'default nil
                     :font "Fantasque Sans Mono"
                     :foundry "PfEd"
@@ -28,7 +28,7 @@
 (set-face-attribute 'cursor nil :background "IndianRed3")
 
 (use-package modus-themes
-  :straight (modus-themes :host github :repo "protesilaos/modus-themes")
+  :ensure (modus-themes :host github :repo "protesilaos/modus-themes")
   :disabled t
   :config
   (setq modus-themes-common-palette-overrides
@@ -78,7 +78,7 @@
   (load-theme 'modus-vivendi-deuteranopia t))
 
 (use-package ef-themes
-  :straight t
+  :ensure t
   :disabled t
   :config
   (set-face-attribute 'bold nil :weight 'regular)
@@ -89,7 +89,7 @@
 
 
 (use-package circadian
-  :straight t
+  :ensure t
   :disabled t
   :config
   (setq circadian-themes '(("8:00" . modus-operandi)
@@ -97,7 +97,7 @@
   (circadian-setup))
 
 (use-package standard-themes
-  :straight (standard-themes :host github :repo "protesilaos/standard-themes")
+  :ensure (standard-themes :host github :repo "protesilaos/standard-themes")
   :custom-face
   ;; Light
   (default ((t (:background "#fff5ee"))))
@@ -111,7 +111,7 @@
   (load-theme 'standard-light t))
 
 (use-package ligature
-  :straight (ligature :host github :repo "mickeynp/ligature.el")
+  :ensure (ligature :host github :repo "mickeynp/ligature.el")
   :config
   (ligature-set-ligatures 't '("www"))
   (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
@@ -132,7 +132,7 @@
   (global-ligature-mode +1))
 
 (use-package doom-modeline
-  :straight t
+  :ensure t
   :custom
   (doom-modeline-height 10)
   :config
@@ -165,7 +165,7 @@
   (doom-modeline-mode +1))
 
 (use-package nano-modeline
-  :straight t
+  :ensure t
   :disabled t
   :config
   (setq nano-modeline-prefix 'status)
@@ -221,7 +221,7 @@
   (nano-modeline-mode 1))
 
 (use-package smart-mode-line
-  :straight t
+  :ensure t
   :disabled t
   :commands sml/setup
   :init
@@ -234,7 +234,7 @@
   (add-to-list 'sml/replacer-regexp-list '("^~/[dD]ocuments/[rR]oam.*/" ":ROAM:")))
 
 (use-package minions
-  :straight t
+  :ensure t
   :custom
   (minions-prominent-modes '(flymake-mode))
   :init

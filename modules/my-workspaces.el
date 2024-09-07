@@ -1,13 +1,13 @@
-;;; my-tabspaces.el -*- lexical-binding: t; -*-
+;;; my-workspaces.el -*- lexical-binding: t; -*-
 
 (use-package tab-bar
-  :straight (tab-bar :type built-in)
+  :ensure nil
   :bind (("C-x C-'" . tab-bar-switch-to-recent-tab))
   :config
   (setq tab-bar-show nil))
 
 (use-package tab-bar-echo-area
-  :straight t
+  :ensure t
   :disabled t
   :after tab-bar
   :init
@@ -16,7 +16,7 @@
   (tab-bar-echo-area-mode 1))
 
 (use-package tabspaces
-  :straight t
+  :ensure t
   :disabled t
   :hook (after-init . tabspaces-mode)
   :bind (("C-c s s" . tabspaces-switch-or-create-workspace)
@@ -37,7 +37,7 @@
   (tabspaces-session-auto-restore t))
 
 (use-package activities
-  :straight t
+  :ensure t
   :bind (("C-c s c" . activities-new)
          ("C-c s s" . activities-switch)
          ("C-c s k" . activities-kill)
@@ -51,7 +51,7 @@
   (activities-tabs-mode))
 
 (use-package bufferlo
-  :straight t
+  :ensure t
   :bind (("C-x k" . bufferlo-kill-buffer))
   :preface
   (defun bufferlo-kill-buffer (buffer)
@@ -99,4 +99,4 @@
   (bufferlo-mode 1)
   (tab-line-mode nil))
 
-(provide 'my-tabspaces)
+(provide 'my-workspaces)

@@ -3,7 +3,7 @@
 ;; avoid lsp restarting so much.
 
 (use-package lsp-mode
-  :straight t
+  :ensure t
   :preface
   (defun my/lsp-hook ()
     (lsp-deferred))
@@ -122,7 +122,7 @@ server getting expensively restarted when reverting buffers."
   (lsp-completion-mode . my/lsp-mode-setup-completion))
 
 (use-package consult-lsp
-  :straight t
+  :ensure t
   :bind (:map lsp-mode-map
               ("C-c o l" . consult-lsp-symbols)))
 

@@ -1,7 +1,7 @@
 ;;; my-embark.el -*- lexical-binding: t; -*-
 
 (use-package embark
-  :straight t
+  :ensure t
   :demand t
   :after minibuffer
   :init
@@ -28,7 +28,7 @@
   ("C-h h" . embark-bindings))
 
 (use-package embark-consult
-  :straight t
+  :ensure t
   :demand t
   :hook
   (embark-collect-mode . embark-consult-preview-minor-mode))

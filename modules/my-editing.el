@@ -1,14 +1,14 @@
 ;;; my-editing.el -*- lexical-binding: t; -*-
 
 (use-package embrace
-  :straight t
+  :ensure t
   :bind
   ("C-c c a" . embrace-add)
   ("C-c c c" . embrace-change)
   ("C-c c d" . embrace-delete))
 
 (use-package isearch
-  :straight (isearch :type built-in)
+  :ensure nil
   :bind
   ("M-s" . isearch-forward-thing-at-point)
   ("M-r" . isearch-forward-thing-at-point)
@@ -17,13 +17,13 @@
   (define-key isearch-mode-map (kbd "M-r") 'isearch-repeat-backward))
 
 (use-package expand-region
-  :straight t
+  :ensure t
   :bind (("C-}" . er/expand-region)
          ("C-M-}" . er/mark-outside-pairs)
          ("C-{" . er/select-text-in-delims)))
 
 (use-package anzu
-  :straight t
+  :ensure t
   :bind
   ([remap query-replace] . anzu-query-replace)
   ([remap query-replace-regexp] . anzu-query-replace-regexp)
@@ -31,14 +31,14 @@
   (global-anzu-mode +1))
 
 (use-package paredit
-  :straight t)
+  :ensure t)
 
 (use-package evil-nerd-commenter
-  :straight t
+  :ensure t
   :bind ("C-;" . evilnc-comment-or-uncomment-lines))
 
 (use-package rainbow-delimiters
-  :straight t
+  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode)
   :config
   (setq show-paren-mode 1)
@@ -46,7 +46,7 @@
 
 ;; Colors for # colors
 (use-package rainbow-mode
-  :straight t
+  :ensure t
   :defer t
   :hook (org-mode
          emacs-lisp-mode
@@ -54,7 +54,7 @@
          web-mode))
 
 (use-package yasnippet
-  :straight t
+  :ensure t
   :demand t
   :custom
   (yas-triggers-in-field t)
@@ -79,7 +79,7 @@
   )
 
 (use-package flymake
-  :straight (flymake :type built-in)
+  :ensure nil
   :hook (prog-mode . flymake-mode)
   :init
   (setq-default flymake-diagnostic-functions nil)
@@ -90,7 +90,7 @@
         flymake-start-on-save-buffer t))
 
 (use-package flymake-diagnostic-at-point
-  :straight t
+  :ensure t
   :disabled t
   :after flymake
   :hook (flymake-mode . flymake-diagnostic-at-point-mode)
@@ -98,7 +98,7 @@
   (setq flymake-diagnostic-at-point-timer-delay 0.66))
 
 (use-package flymake-popon
-  :straight t
+  :ensure t
   :after flymake
   :hook (flymake-mode . flymake-popon-mode)
   :config
@@ -106,7 +106,7 @@
         flymake-popon-delay 0.66))
 
 (use-package flyspell
-  :straight (flyspell :type built-in)
+  :ensure nil
   :hook (text-mode . flyspell-mode))
 
 ;;;###autoload
@@ -120,7 +120,7 @@
     (set-mark $p1)))
 
 (use-package multiple-cursors
-  :straight t
+  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C-<" . mc/mark-next-like-this)
          ("C->" . mc/mark-previous-like-this)

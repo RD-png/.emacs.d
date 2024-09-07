@@ -1,7 +1,7 @@
 ;;; my-navigation.el -*- lexical-binding: t; -*-
 
 (use-package point-history
-  :straight (point-history :host github :repo "blue0513/point-history")
+  :ensure (point-history :host github :repo "blue0513/point-history")
   :bind
   ("C-c h" . point-history-show)
   (:map point-history-show-mode-map
@@ -19,7 +19,7 @@
   (point-history-mode t))
 
 (use-package wgrep
-  :straight t
+  :ensure t
   :config
   (defun custom-wgrep-apply-save ()
     "Apply the edits and save the buffers"
@@ -32,7 +32,7 @@
               ("C-x C-s" . custom-wgrep-apply-save)))
 
 (use-package ace-window
-  :straight t
+  :ensure t
   :config
   (setq aw-dispatch-always t)
   (setq aw-scope 'frame)
@@ -44,7 +44,7 @@
          ("C-x M-0" . delete-other-windows)))
 
 (use-package avy
-  :straight t
+  :ensure t
   :config
   (setq avy-timeout-seconds 0.35)
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?l ?\;
@@ -118,16 +118,16 @@
   t)
 
 (use-package dumb-jump
-  :straight t
+  :ensure t
   :init
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package rg
-  :straight t
+  :ensure t
   :defer 3)
 
 (use-package fzf
-  :straight t
+  :ensure t
   :bind
   ("C-c C-x C-f" . fzf-find-file)
   :config

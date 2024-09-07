@@ -1,7 +1,7 @@
 ;;; my-consult.el -*- lexical-binding: t; -*-
 
 (use-package consult
-  :straight t
+  :ensure t
   :after project
   :demand t
   :config
@@ -45,7 +45,7 @@
   )
 
 (use-package consult-dir
-  :straight t
+  :ensure t
   :bind (("C-x C-d" . consult-dir)
          :map minibuffer-local-map
          ("C-x j" . consult-dir-jump-file)))

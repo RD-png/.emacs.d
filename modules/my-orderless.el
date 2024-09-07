@@ -1,7 +1,7 @@
 ;;; my-orderless.el -*- lexical-binding: t; -*-
 
 (use-package orderless
-  :straight t
+  :ensure t
   :config
   (defun just-one-face (fn &rest args)
     (let ((orderless-match-faces [completions-common-part]))

@@ -1,7 +1,7 @@
 ;;; my-perspective.el -*- lexical-binding: t; -*-
 
 (use-package perspective
-  :straight t
+  :ensure t
   :hook (after-init . (lambda () (persp-switch "Main") (persp-add-buffer "*Messages*")))
   :bind (("C-c s s" . persp-switch)
          ("C-c s k" . persp-kill)
