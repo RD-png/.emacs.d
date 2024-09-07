@@ -52,7 +52,16 @@
 
 (use-package bufferlo
   :straight t
-  :bind (("C-x k" . bufferlo-remove))
+  :bind (("C-x k" . bufferlo-kill-buffer))
+  :preface
+  (defun bufferlo-kill-buffer (buffer)
+    (interactive
+     (list
+      (let ((lbs (mapcar #'buffer-name (bufferlo-buffer-list))))
+        (read-buffer
+         "Kill local buffer: " (current-buffer) nil
+         (lambda (b) (member (if (stringp b) b (car b)) lbs))))))
+    (kill-buffer buffer))
   :config
   (defvar my-consult--source-buffer
     `(:name "All Buffers"
@@ -84,6 +93,7 @@
   (setq consult-buffer-sources '(consult--source-hidden-buffer
                                  my-consult--source-buffer
                                  my-consult--source-local-buffer))
+  (setq bufferlo-include-buffer-filters '("^\\*\\Messages" "^\\*Warnings"))
 
   :init
   (bufferlo-mode 1)
