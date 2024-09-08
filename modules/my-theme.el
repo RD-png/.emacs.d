@@ -98,15 +98,22 @@
 
 (use-package standard-themes
   :ensure (standard-themes :host github :repo "protesilaos/standard-themes")
-  :custom-face
-  ;; Light
-  (default ((t (:background "#fff5ee"))))
-  (fringe ((t (:background "#fff5ee"))))
-  (font-lock-string-face ((t (:foreground "#316500"))))
-
-  ;; Dark
-  ;; (default ((t (:background "#1d2021"))))
-  ;; (fringe ((t (:background "#1d2021"))))
+  :preface
+  (setq pdf-view-midnight-colors '("#dfdfdf" . "#1d2021"))
+  (setq standard-themes-common-palette-overrides '((cursor "IndianRed3")))
+  (setq standard-light-palette-overrides '((bg-main "#fff5ee")
+                                           (fring "#fff5ee")
+                                           (fg-line-number-active "#0000b0")
+                                           (bg-mode-line-active "#d0d6ff")
+                                           (string "#316500")))
+  (setq standard-dark-palette-overrides '((bg-main "#1d2021")
+                                          (fg-main "#dfdfdf")
+                                          (fringe "#1d2021")
+                                          (fg-line-number-active "#79a8ff")
+                                          (bg-mode-line-active "#484d67")
+                                          (comment "#ff8f88")
+                                          (string "DarkOliveGreen3")
+                                          (cyan magenta-faint)))
   :init
   (load-theme 'standard-light t))
 

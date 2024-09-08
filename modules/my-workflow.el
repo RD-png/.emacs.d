@@ -109,7 +109,7 @@
 (use-package pdf-tools
   :ensure t
   :mode ("\\.pdf\\'" . pdf-view-mode)
-  :hook (pdf-view-mode . pdf-view-midnight-minor-mode)
+  ;; :hook (pdf-view-mode . pdf-view-midnight-minor-mode)
   :hook (pdf-annot-list-mode . hide-mode-line-mode)
   :config
   (pdf-tools-install-noverify)
