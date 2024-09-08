@@ -100,4 +100,6 @@
 (require 'my-helpers)
 (require 'my-theme)
 
+(elpaca-wait)
+
 ;;; init.el ends here.

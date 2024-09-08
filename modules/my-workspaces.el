@@ -36,6 +36,13 @@
   (tabspaces-session t)
   (tabspaces-session-auto-restore t))
 
+(use-package desktop
+  :ensure nil
+  :config
+  (setq desktop-auto-save-timeout 5)
+  :init
+  (desktop-save-mode))
+
 (use-package activities
   :ensure t
   :bind (("C-c s c" . activities-new)
@@ -46,7 +53,6 @@
          ("C-c s o" . activities-resume)
          ("C-c s K" . activities-discard))
   :init
-  (desktop-save-mode)
   (activities-mode)
   (activities-tabs-mode))
 
