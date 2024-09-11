@@ -102,7 +102,7 @@
   (setq pdf-view-midnight-colors '("#dfdfdf" . "#1d2021"))
   (setq standard-themes-common-palette-overrides '((cursor "IndianRed3")))
   (setq standard-light-palette-overrides '((bg-main "#fff5ee")
-                                           (fring "#fff5ee")
+                                           (fringe "#fff5ee")
                                            (fg-line-number-active "#0000b0")
                                            (bg-mode-line-active "#d0d6ff")
                                            (string "#316500")))
