@@ -31,7 +31,48 @@
   (global-anzu-mode +1))
 
 (use-package paredit
-  :ensure t)
+  :ensure t
+  :config
+  (defun my/paredit-forward-down ()
+    (interactive)
+    (sp-down-sexp)
+    (sp-next-sexp))
+
+  (defun my/paredit-start-of-sexp ()
+    (interactive)
+    (when (not (= ?\( (following-char)))
+      (progn
+        (sp-end-of-sexp)
+        (sp-forward-sexp)))
+    (backward-sexp))
+
+  (defun my/paredit-end-of-sexp ()
+    (interactive)
+    (when (not (= ?\( (following-char)))
+      (progn
+       (sp-beginning-of-sexp)
+       (sp-backward-sexp)))
+    (forward-sexp)
+    (backward-char))
+
+  (setcdr paredit-mode-map nil)
+  :bind ((:map paredit-mode-map
+               ("C-M-n" . sp-next-sexp)
+               ("C-M-p" . paredit-backward)
+               ("C-M-d" . sp-down-sexp)
+               ("C-M-u" . sp-up-sexp)
+               ("C-M-f" . my/paredit-forward-down)
+               ("C-M-b" . paredit-backward-up)
+               ("C-M-a" . my/paredit-start-of-sexp)
+               ("C-M-e" . my/paredit-end-of-sexp)
+               ("M-[" . paredit-backward-slurp-sexp)
+               ("M-]" . paredit-forward-slurp-sexp)
+               ("M-{" . paredit-backward-barf-sexp)
+               ("M-}" . paredit-forward-barf-sexp)
+               ("C-M-r" . paredit-raise-sexp)
+               ("M-j" . paredit-join-sexp)
+               ("C-M-o" . paredit-splice-sexp)
+               ("C-k" . paredit-kill))))
 
 (use-package evil-nerd-commenter
   :ensure t

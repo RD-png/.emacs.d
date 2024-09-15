@@ -157,8 +157,7 @@
 (use-package emacs-lisp-mode
   :ensure nil
   :hook (lisp-mode . emacs-lisp-mode)
-  :hook (company-mode . (lambda () (set-company-backend! 'emacs-lisp-mode
-                                '(company-elisp :with company-yasnippet company-files))))
+  :hook (emacs-lisp-mode . paredit-mode)
   :bind ((:map emacs-lisp-mode-map
                ("C-c m s" . ielm)))
   :preface
@@ -190,10 +189,22 @@
 (use-package clojure-mode
   :ensure t
   :mode ("\\.clj\\'")
-  :hook (clojure-mode . my/lsp-hook))
+  :hook (clojure-mode . my/lsp-hook)
+  :hook (clojure-mode . paredit-mode)
+  :bind ((:map clojure-mode-map
+              ("C-c m s" . cider-jack-in-clj)))
+  :config
+  (setq-local lsp-lens-enable t))
 
 (use-package cider
-  :ensure t)
+  :ensure t
+  :bind ((:map cider-mode-map
+               ("C-x C-e" . cider-eval-last-sexp)
+               ("C-c C-e" . cider-eval-buffer)
+               ("C-c e r" . cider-eval-region))
+         :map cider-repl-mode-map
+         ("S-<return>" . cider-repl-newline-and-indent)
+         ("C-l" . cider-repl-clear-buffer)))
 
 (use-package go-mode
   :ensure t
